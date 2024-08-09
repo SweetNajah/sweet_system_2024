@@ -394,7 +394,7 @@ public class Testing {
     }
     @Then("the report should be downloadable in PDF format")
     public void theReportShouldBeDownloadableInPDFFormat() {
-        boolean isPDFGenerated = application.report.downloadFinancialReportAsPDF(); // Assuming there's a method for downloading the report as PDF
+        boolean isPDFGenerated = application.report.downloadFinancialReportAsPDF();
         assertTrue(isPDFGenerated);
     }
 
@@ -549,20 +549,7 @@ public class Testing {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-////////////////////////
-
-
+////////////////////////Content
 
 
     @When("I access the content management section")
@@ -610,10 +597,6 @@ public class Testing {
 
 
     }
-
-
-
-
 
 
 }
