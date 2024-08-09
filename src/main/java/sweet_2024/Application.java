@@ -7,18 +7,13 @@ import java.util.logging.*;
 public class Application {
     private static final String NO_INFORMATIONS = "There is no information";
     private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
-
     public boolean loggedIn;
     public   Login login;
     public User newUser;
     public Report report;
     Scanner scanner = new Scanner(System.in);
-
-
     String carname;
-
     static ArrayList<TypeProduct> categories;
-
     static int[] indexes=new int[2];
 
     private static void gf(){
