@@ -547,8 +547,6 @@ public class Testing {
     }
 
 
-
-
 ////////////////////////Content
 
 
@@ -572,8 +570,6 @@ public class Testing {
     public void iShouldSeeAConfirmationMessage(String string) {
 
     }
-
-
 
 
     @When("I view the user feedback section")
