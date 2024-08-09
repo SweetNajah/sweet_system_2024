@@ -1,5 +1,6 @@
 package sweet_2024;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.*;
 
@@ -11,13 +12,25 @@ public class Application {
     public   Login login;
     public User newUser;
     public Report report;
-    private  Scanner scanner = new Scanner(System.in);
+    Scanner scanner = new Scanner(System.in);
+
+
+    String carname;
+
+    static ArrayList<TypeProduct> categories;
+
+    static int[] indexes=new int[2];
+
+    private static void gf(){
+        categories=new ArrayList<>();
+    }
 
     public Application() {
         this.loggedIn = false;
         this.newUser = new User("ali55@gmail.com", "147852", "Customer");
         this.login = new Login(newUser);
         this.report=new Report();
+
     }
 
     public void setUser(String email, String password, String type) {
@@ -89,7 +102,19 @@ public class Application {
                 System.out.println("Invalid choice.");
         }
     }
-
+    public boolean foundc(String name){
+        for(int i=0;i<categories.size();i++){
+            if(name.equals(categories.get(i).name)){
+                set(i,i);
+                return true;
+            }
+        }
+        return false;
+    }
+    private static void set(int x1,int x2){
+        indexes[0]=x1;
+        indexes[1]=x2;
+    }
     public boolean report(String report, String filename) {
         return switch (report) {
 
