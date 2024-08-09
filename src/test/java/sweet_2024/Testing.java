@@ -560,9 +560,56 @@ public class Testing {
 
 
 
+////////////////////////
 
 
 
+
+    @When("I access the content management section")
+    public void iAccessTheContentManagementSection() {
+
+    }
+    @When("I create a new recipe titled {string}")
+    public void iCreateANewRecipeTitled(String string) {
+
+    }
+    @When("I add the recipe details and upload an image")
+    public void iAddTheRecipeDetailsAndUploadAnImage() {
+
+    }
+    @Then("the recipe should be successfully published")
+    public void theRecipeShouldBeSuccessfullyPublished() {
+
+    }
+    @Then("I should see a confirmation message {string}")
+    public void iShouldSeeAConfirmationMessage(String string) {
+
+    }
+
+
+
+
+    @When("I view the user feedback section")
+    public void iViewTheUserFeedbackSection() {
+
+    }
+    @When("I select feedback with ID {string}")
+    public void iSelectFeedbackWithID(String string) {
+
+    }
+    @Then("I should see the feedback details")
+    public void iShouldSeeTheFeedbackDetails() {
+
+    }
+    @When("I mark the feedback as {string}")
+    public void iMarkTheFeedbackAs(String string) {
+
+    }
+    @Then("the feedback status should be updated to {string}")
+    public void theFeedbackStatusShouldBeUpdatedTo(String string) {
+
+
+    }
 
 
 
