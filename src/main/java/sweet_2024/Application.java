@@ -1,13 +1,12 @@
 package sweet_2024;
 
-import java.util.List;
 import java.util.Scanner;
 import java.util.logging.*;
 
 public class Application {
     private static final String NO_INFORMATIONS = "There is no information";
     private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
-    private List<Store> stores;
+
     public boolean loggedIn;
     public   Login login;
     public User newUser;
@@ -20,9 +19,7 @@ public class Application {
         this.login = new Login(newUser);
         this.report=new Report();
     }
-    public List<Store> getStores() {
-        return stores;
-    }
+
     public void setUser(String email, String password, String type) {
         newUser = new User(email, password, type);
         login.setUser(newUser);
