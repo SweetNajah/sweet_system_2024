@@ -611,6 +611,107 @@ public class Testing {
 
     }
 
+    @Given("I am logged in as a beneficiary user")
+    public void i_am_logged_in_as_a_beneficiary_user() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
+
+    @When("I navigate to the messaging system")
+    public void i_navigate_to_the_messaging_system() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
+
+    @When("I compose an inquiry")
+    public void i_compose_an_inquiry() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
+
+    @Then("the inquiry should be sent")
+    public void the_inquiry_should_be_sent() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
+
+    @When("I navigate to the feedback system")
+    public void i_navigate_to_the_feedback_system() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
+
+    @When("I select a purchased product")
+    public void i_select_a_purchased_product() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
+
+    @When("I provide my feedback")
+    public void i_provide_my_feedback() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
+
+    @Then("my feedback should be submitted")
+    public void my_feedback_should_be_submitted() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
+
+    @Given("I am logged in as a beneficiary user")
+    public void i_am_logged_in_as_a_beneficiary_users() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
+
+    @When("I navigate to the recipes menu")
+    public void i_navigate_to_the_recipes_menu() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
+
+    @Then("I should see a list of dessert recipes")
+    public void i_should_see_a_list_of_dessert_recipes() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
+
+    @When("I apply dietary filters")
+    public void i_apply_dietary_filters() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
+
+    @Then("I should see a list of filtered dessert recipes")
+    public void i_should_see_a_list_of_filtered_dessert_recipes() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
+
+    @When("I navigate to the store menu")
+    public void i_navigate_to_the_store_menu() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
+
+    @When("I select a dessert")
+    public void i_select_a_dessert() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
+
+    @When("I chose the purchase option.")
+    public void i_chose_the_purchase_option() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
+
+    @Then("I should be able to complete the purchase")
+    public void i_should_be_able_to_complete_the_purchase() {
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
+    }
 
 
 
