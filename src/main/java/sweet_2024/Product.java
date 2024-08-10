@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Product {
-    private String name;
+    private final String name;
     private int unitsSold;
     private double revenue;
     int quantity;
