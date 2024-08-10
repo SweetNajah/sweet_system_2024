@@ -1,6 +1,7 @@
 package sweet_2024;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.*;
 
@@ -15,7 +16,10 @@ public class Application {
     String carname;
     static ArrayList<TypeProduct> categories;
     static int[] indexes=new int[2];
-
+    private List<Products> availableProducts;
+    private List<Order> customerOrders;
+    private List<InstallationRequest> installationRequests;
+    private List<String> feedbackList;
     private static void gf(){
         categories=new ArrayList<>();
     }
@@ -27,7 +31,32 @@ public class Application {
         this.report=new Report();
 
     }
-
+    public List<InstallationRequest> getInstallationRequests() {
+        return installationRequests;
+    }
+    public void markAsInstalled(Order requestId) {
+        for (InstallationRequest request : installationRequests) {
+            if (request.getRequestId() == requestId) {
+                request.setInstalled(true);
+                LOGGER.info("Installation request " + requestId + " marked as installed.");
+                return;
+            }
+        }
+        LOGGER.warning("Installation request not found.");
+    }
+    public void submitFeedback(String feedback) {
+        feedbackList.add(feedback);
+        LOGGER.info("Feedback submitted successfully!");
+    }
+    public List<Products> getAvailableProducts() {
+        return availableProducts;
+    }
+    public void placeOrder(Order order) {
+        customerOrders.add(order);
+    }
+    public List<Order> getCustomerOrders() {
+        return customerOrders;
+    }
     public void setUser(String email, String password, String type) {
         newUser = new User(email, password, type);
         login.setUser(newUser);
