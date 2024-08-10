@@ -7,17 +7,10 @@ import java.util.List;
 
 public class Products {
     private double revenue;
-    int quantity;
-    int price;
+
     float rateAvg;
-    LocalDate manufactureDate;
-    LocalDate expirationDate;
     protected List<Integer> rates= new ArrayList<>();
     protected List<String> reviews= new ArrayList<>();
-
-
-
-
     public double getRevenue() {
         return revenue;
     }
@@ -167,12 +160,6 @@ public class Products {
         }
     }
 
-
-
-
-
-
-
     // Method to apply a discount
     public void applyDiscount(double discountPercentage, String discountDuration) {
         this.discountPercentage = discountPercentage;
@@ -241,7 +228,7 @@ public class Products {
                     product.getProductName(), product.getUnitsSold(), product.getTotalRevenue());
 
             // Highlight the best-selling product
-            if (product == productsList.get(0)) {
+            if (product == productsList.getFirst()) {
                 System.out.println("-> Best-Selling Product!");
             }
 

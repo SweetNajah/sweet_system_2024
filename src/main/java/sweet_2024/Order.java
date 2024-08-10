@@ -8,7 +8,7 @@ public class Order {
     private int orderId;
     private String storeOwnerName;
     private String productName;
-    private int quantity;
+    private final int quantity;
     private String status;
     private static int idCounter = 0; // Used to generate unique IDs for each order
 
