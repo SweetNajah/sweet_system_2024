@@ -157,11 +157,233 @@ public class MainClass {
                 case 1 -> manageUsers(adminScanner, sweetSystem);
                 case 2 -> viewReports(sweetSystem);
                 case 3 -> manageContent(adminScanner, sweetSystem);
+                case 4 -> mainMenu(adminScanner, sweetSystem);
+                case 5 -> signOut();
+                default -> invalidChoice();
+            }
+        } while (adminChoice != 5);
+    }
+    private static void mainMenu(Scanner scanner, Application sweetSystem) {
+        int mainChoice = -1;
+
+        do {
+            try {
+                LOGGER.info("Main Menu");
+                LOGGER.info("1-Admin Dashboard\n2-Customer Dashboard\n3-Installer Dashboard\n4-Sign out");
+                mainChoice = scanner.nextInt();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                LOGGER.warning(INVALID_INPUT_MESSAGE);
+                scanner.nextLine();
+                continue;
+            }
+
+            switch (mainChoice) {
+                case 1 -> adminDashboard(scanner, sweetSystem);
+                case 2 -> customerDashboard(scanner, sweetSystem);
+                case 3 -> installerDashboard(scanner, sweetSystem);
                 case 4 -> signOut();
                 default -> invalidChoice();
             }
-        } while (adminChoice != 4);
+        } while (mainChoice != 4);
     }
+
+    // Customer Dashboard method
+    private static void customerDashboard(Scanner scanner, Application sweetSystem) {
+        int customerChoice = -1;
+
+        do {
+            try {
+                LOGGER.info("Customer Dashboard");
+                LOGGER.info("1-Order Products\n2-View Orders\n3-Provide Feedback\n4-Main Menu\n5-Sign out");
+                customerChoice = scanner.nextInt();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                LOGGER.warning(INVALID_INPUT_MESSAGE);
+                scanner.nextLine();
+                continue;
+            }
+
+            switch (customerChoice) {
+                case 1 -> orderProducts(scanner, sweetSystem);
+                case 2 -> viewOrders(sweetSystem);
+                case 3 -> provideFeedback(scanner, sweetSystem);
+                case 4 -> mainMenu(scanner, sweetSystem);
+                case 5 -> signOut();
+                default -> invalidChoice();
+            }
+        } while (customerChoice != 5);
+    }
+
+    // Installer Dashboard method
+    private static void installerDashboard(Scanner scanner, Application sweetSystem) {
+        int installerChoice = -1;
+
+        do {
+            try {
+                LOGGER.info("Installer Dashboard");
+                LOGGER.info("1-Install Product\n2-View Installation Requests\n3-Provide Feedback\n4-Main Menu\n5-Sign out");
+                installerChoice = scanner.nextInt();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                LOGGER.warning(INVALID_INPUT_MESSAGE);
+                scanner.nextLine();
+                continue;
+            }
+
+            switch (installerChoice) {
+                case 1 -> installProduct(scanner, sweetSystem);
+                case 2 -> viewInstallationRequests(sweetSystem);
+                case 3 -> provideFeedback(scanner, sweetSystem);
+                case 4 -> mainMenu(scanner, sweetSystem);  // Go back to the Main Menu
+                case 5 -> signOut();
+                default -> invalidChoice();
+            }
+        } while (installerChoice != 5);
+    }
+
+
+    private static void orderProducts(Scanner scanner, Application sweetSystem) {
+        LOGGER.info("Ordering products...");
+
+        // Display available products
+        List<Products> products = sweetSystem.getAvailableProducts();
+        if (products.isEmpty()) {
+            LOGGER.info("No products available.");
+            return;
+        }
+
+        LOGGER.info("Available products:");
+        for (int i = 0; i < products.size(); i++) {
+            LOGGER.info((i + 1) + "- " + products.get(i).getProductName() + " - " + products.get(i).getProductPrice() + " USD");
+        }
+
+        // Prompt user to select a product to order
+        LOGGER.info("Enter the number of the product you want to order:");
+        int productIndex;
+        try {
+            productIndex = scanner.nextInt() - 1;
+            scanner.nextLine(); // Consume newline
+        } catch (InputMismatchException e) {
+            LOGGER.warning("Invalid input. Please enter a number.");
+            scanner.nextLine(); // Consume the invalid input
+            return;
+        }
+
+        if (productIndex < 0 || productIndex >= products.size()) {
+            LOGGER.warning("Invalid product selection.");
+            return;
+        }
+
+        Products selectedProduct = products.get(productIndex);
+
+        // Prompt user to enter quantity
+        LOGGER.info("Enter the quantity:");
+        int quantity;
+        try {
+            quantity = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+        } catch (InputMismatchException e) {
+            LOGGER.warning("Invalid input. Please enter a number.");
+            scanner.nextLine(); // Consume the invalid input
+            return;
+        }
+
+        if (quantity <= 0) {
+            LOGGER.warning("Quantity must be greater than zero.");
+            return;
+        }
+
+        // Create order and add to customer's order list
+        Order order = new Order(selectedProduct, quantity);
+        sweetSystem.placeOrder(order);
+
+        LOGGER.info("Order placed successfully! " + quantity + " x " + selectedProduct.getProductName());
+    }
+
+
+    private static void viewOrders(Application sweetSystem) {
+        LOGGER.info("Viewing orders...");
+
+        List<Order> orders = sweetSystem.getCustomerOrders();
+        if (orders.isEmpty()) {
+            LOGGER.info("No orders have been placed yet.");
+            return;
+        }
+
+        LOGGER.info("Your Orders:");
+        for (Order order : orders) {
+            LOGGER.info(order.toString());
+        }
+    }
+
+
+    private static void installProduct(Scanner scanner, Application sweetSystem) {
+        LOGGER.info("Installing product...");
+
+
+        List<InstallationRequest> installationRequests = sweetSystem.getInstallationRequests();
+        if (installationRequests.isEmpty()) {
+            LOGGER.info("No installation requests available.");
+            return;
+        }
+
+        LOGGER.info("Installation Requests:");
+        for (int i = 0; i < installationRequests.size(); i++) {
+            LOGGER.info((i + 1) + "- " + installationRequests.get(i).toString());
+        }
+
+        // Prompt user to select an installation request
+        LOGGER.info("Enter the number of the request to mark as installed:");
+        int requestIndex;
+        try {
+            requestIndex = scanner.nextInt() - 1;
+            scanner.nextLine(); // Consume newline
+        } catch (InputMismatchException e) {
+            LOGGER.warning("Invalid input. Please enter a number.");
+            scanner.nextLine(); // Consume the invalid input
+            return;
+        }
+
+        if (requestIndex < 0 || requestIndex >= installationRequests.size()) {
+            LOGGER.warning("Invalid request selection.");
+            return;
+        }
+
+        Order selectedRequest = installationRequests.get(requestIndex).getOrder();
+        sweetSystem.markAsInstalled(selectedRequest);
+
+       // LOGGER.info("Product marked as installed: " + selectedRequest.getProduct().getName());
+    }
+
+
+    private static void viewInstallationRequests(Application sweetSystem) {
+        LOGGER.info("Viewing installation requests...");
+
+        List<InstallationRequest> installationRequests = sweetSystem.getInstallationRequests();
+        if (installationRequests.isEmpty()) {
+            LOGGER.info("No installation requests available.");
+            return;
+        }
+
+        LOGGER.info("Pending Installation Requests:");
+        for (InstallationRequest request : installationRequests) {
+            LOGGER.info(request.toString());
+        }
+    }
+
+
+    private static void provideFeedback(Scanner scanner, Application sweetSystem) {
+        LOGGER.info("Providing feedback...");
+
+        LOGGER.info("Enter your feedback:");
+        String feedback = scanner.nextLine();
+
+        sweetSystem.submitFeedback(feedback);
+        LOGGER.info("Thank you for your feedback!");
+    }
+
+
 
     private static void manageUsers(Scanner adminScanner, Application sweetSystem) {
         LOGGER.info("Manage Users");
