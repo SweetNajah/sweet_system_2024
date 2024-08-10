@@ -14,7 +14,6 @@ public class Login {
     List<User> users=new ArrayList<>();
     int roles;
     boolean isLogged;
-
     int verificationCode;
     User u;
     boolean validEmail;

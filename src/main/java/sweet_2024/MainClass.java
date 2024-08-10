@@ -15,7 +15,7 @@ public class MainClass {
     private static final String SUPPLIER_STRING = "Supplier";
     private static final String INVALID_INPUT_MESSAGE = "Invalid Input";
     private static final String INVALID_INFORMATION_PLEASE_TRY_AGAIN = "Invalid information! Please try again.";
-    private static final String STRING = "********************************************************************";
+    private static final String STRING = "*********************************************************************";
     private static final Logger LOGGER = Logger.getLogger(MainClass.class.getName());
 
     static {
@@ -31,12 +31,10 @@ public class MainClass {
 
         Application sweetSystem = new Application();
         setupLogger();
-
         Scanner scanner = new Scanner(System.in);
         LOGGER.info("SWEET MANAGEMENT SYSTEM");
 
         int authen = -1;
-
         do {
             try {
                 LOGGER.info("1-Sign-up \n2-Sign-in \n3-Exit");

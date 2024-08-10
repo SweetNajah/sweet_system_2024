@@ -13,7 +13,6 @@ public class Report {
     public void generateFinancialReport() {
         System.out.println("Generating financial report...");
 
-        // Sample data for revenues and expenses
         Map<String, Double> revenues = new HashMap<>();
         revenues.put("January", 15000.0);
         revenues.put("February", 12000.0);
@@ -40,7 +39,6 @@ public class Report {
         System.out.println("Financial report complete.");
     }
 
-    // ميثود للحصول على أرباح المتاجر
     public Map<String, Double> getStoreProfits() {
         Map<String, Double> storeProfits = new HashMap<>();
 
@@ -54,11 +52,9 @@ public class Report {
     public boolean downloadFinancialReportAsPDF() {
         System.out.println("Downloading financial report as PDF...");
 
-        // Here you can add logic to create and download a PDF report
         String pdfFilePath = "financial_report.pdf";
 
         try (FileWriter writer = new FileWriter(pdfFilePath)) {
-            // This is just a simulation of PDF content generation
             writer.write("Financial Report\n");
             writer.write("=================\n");
             writer.write("Month: January | Revenue: $15000.00 | Expenses: $7000.00 | Profit: $8000.00\n");

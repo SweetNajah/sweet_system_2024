@@ -16,8 +16,6 @@ public class Products {
     protected List<String> reviews= new ArrayList<>();
 
 
-
-
     public double getRevenue() {
         return revenue;
     }

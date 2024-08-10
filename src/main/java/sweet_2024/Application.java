@@ -85,7 +85,6 @@ public class Application {
 
         int choice = scanner.nextInt();
         scanner.nextLine(); // consume newline
-
         switch (choice) {
             case 1:
                 handleLogin();
@@ -114,7 +113,6 @@ public class Application {
         return switch (report) {
 
             default -> false;
-
 
         };
     }
