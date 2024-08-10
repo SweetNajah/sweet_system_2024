@@ -73,7 +73,7 @@ public class Feedback {
     public String toString() {
         return "Feedback{" +
                 "user=" + user.getEmail() +
-                ", product=" + products.getName() +
+                ", product=" + products.getProductName() +
                 ", feedbackMessage='" + feedbackMessage + '\'' +
                 ", rating=" + rating +
                 '}';
