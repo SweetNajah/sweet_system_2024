@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class TypeProduct {
     protected String name ;
-    protected List<Product>products=new ArrayList<>();
+    protected List<Products>products=new ArrayList<>();
     public TypeProduct(String name){
         this.name=name;
     }
