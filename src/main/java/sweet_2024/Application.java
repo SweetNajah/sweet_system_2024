@@ -34,9 +34,10 @@ public class Application {
     public List<InstallationRequest> getInstallationRequests() {
         return installationRequests;
     }
+
     public void markAsInstalled(Order requestId) {
         for (InstallationRequest request : installationRequests) {
-            if (request.getRequestId() == requestId) {
+            if (request.getOrderId() == requestId.getOrderId()) {
                 request.setInstalled(true);
                 LOGGER.info("Installation request " + requestId + " marked as installed.");
                 return;
@@ -44,6 +45,7 @@ public class Application {
         }
         LOGGER.warning("Installation request not found.");
     }
+
     public void submitFeedback(String feedback) {
         feedbackList.add(feedback);
         LOGGER.info("Feedback submitted successfully!");

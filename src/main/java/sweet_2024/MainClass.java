@@ -15,7 +15,7 @@ public class MainClass {
     private static final String SUPPLIER_STRING = "Supplier";
     private static final String INVALID_INPUT_MESSAGE = "Invalid Input";
     private static final String INVALID_INFORMATION_PLEASE_TRY_AGAIN = "Invalid information! Please try again.";
-    private static final String STRING = "********************************************************************";
+    private static final String STRING = "--------------------------------------------------------------------";
     private static final Logger LOGGER = Logger.getLogger(MainClass.class.getName());
 
     static {
@@ -190,7 +190,7 @@ public class MainClass {
         } while (mainChoice != 4);
     }
 
-    // Customer Dashboard method
+
     private static void customerDashboard(Scanner scanner, Application sweetSystem) {
         int customerChoice = -1;
 
@@ -217,7 +217,7 @@ public class MainClass {
         } while (customerChoice != 5);
     }
 
-    // Installer Dashboard method
+
     private static void installerDashboard(Scanner scanner, Application sweetSystem) {
         int installerChoice = -1;
 
@@ -237,7 +237,7 @@ public class MainClass {
                 case 1 -> installProduct(scanner, sweetSystem);
                 case 2 -> viewInstallationRequests(sweetSystem);
                 case 3 -> provideFeedback(scanner, sweetSystem);
-                case 4 -> mainMenu(scanner, sweetSystem);  // Go back to the Main Menu
+                case 4 -> mainMenu(scanner, sweetSystem);
                 case 5 -> signOut();
                 default -> invalidChoice();
             }
@@ -355,7 +355,7 @@ public class MainClass {
         Order selectedRequest = installationRequests.get(requestIndex).getOrder();
         sweetSystem.markAsInstalled(selectedRequest);
 
-       // LOGGER.info("Product marked as installed: " + selectedRequest.getProduct().getName());
+        LOGGER.info("Product marked as installed: " + selectedRequest.getProduct().getName());
     }
 
 

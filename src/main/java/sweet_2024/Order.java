@@ -64,4 +64,7 @@ public class Order {
     }
 
 
+    public Principal getProduct() {
+        return getProduct();
+    }
 }
