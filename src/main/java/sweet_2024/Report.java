@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class Report {
 
+
     public void generateFinancialReport() {
         System.out.println("Generating financial report...");
 

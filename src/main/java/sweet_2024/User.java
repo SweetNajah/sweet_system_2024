@@ -15,7 +15,11 @@ public class User {
         firstName="Ahmad";
         lastName="Ali";
     }
+    private String city;
 
+    public String getCity() {
+        return city;
+    }
     public User(String email, String password) {
         this.email = email;
         this.password = password;
