@@ -36,7 +36,7 @@ public class Application {
     }
     public void markAsInstalled(Order requestId) {
         for (InstallationRequest request : installationRequests) {
-            if (request.getRequestId() == requestId) {
+            if (request.getRequestId() == requestId.getOrderId()) {
                 request.setInstalled(true);
                 LOGGER.info("Installation request " + requestId + " marked as installed.");
                 return;
