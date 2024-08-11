@@ -3,6 +3,7 @@ package sweet_2024;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.Assert;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
@@ -10,6 +11,8 @@ import javax.mail.Message;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +33,10 @@ public class Testing {
     boolean userAdded=false;
     boolean isUserUpdating = false;
     boolean isUserDeleting = false;
+    private Report report;
+    private String chosenReportType;
+    String reportKind;
+
 
     private final Application application;
 
@@ -37,7 +44,7 @@ public class Testing {
         this.application = application;
         u = new User("ali55@gmail.com","123456","Customer");
         o = new User("abd3@gmail.com","123","Admin");
-
+        this.report = new Report();
     }
 
 //////////////////////////////////////////////////////////////////////////////////UserManagement
@@ -456,7 +463,7 @@ public class Testing {
     }
     @Then("the system should display the number of registered users for each city")
     public void theSystemShouldDisplayTheNumberOfRegisteredUsersForEachCity() {
-        Map<String, Integer> userStatistics = application.report.getUserStatisticsByCity();
+        Map<String, Integer> userStatistics = application.report.getUserStatisticsBy();
         assertNotNull(userStatistics);
         for (Map.Entry<String, Integer> entry : userStatistics.entrySet()) {
             System.out.println("City: " + entry.getKey() + " - Registered Users: " + entry.getValue());
@@ -479,7 +486,7 @@ public class Testing {
     }
     @Then("the report should include a total count of users for each city")
     public void theReportShouldIncludeATotalCountOfUsersForEachCity() {
-        Map<String, Integer> userStatistics = application.report.getUserStatisticsByCity();
+        Map<String, Integer> userStatistics = application.report.getUserStatisticsBy();
         int totalNablusUsers = 0;
         int totalJeninUsers = 0;
 
@@ -505,46 +512,64 @@ public class Testing {
 
     @Given("I am an admin\\(report)")
     public void i_am_an_admin_report() {
-        assertEquals("Admin", u.type);
+        report.setReportType("Admin");
+        Assert.assertEquals("Admin", report.getReportType());
     }
 
     @Then("I am asked to choose report1 kind {string}")
-    public void i_am_asked_to_choose_report1_kind(String string) {
-        text=string;
+    public void i_am_asked_to_choose_report1_kind(String reportType) {
+
+        report.setReportType(reportType);
+        assertNotNull(report.getReportType());
     }
 
     @Then("The report1 details are printed in a file {string}")
-    public void the_report1_details_are_printed_in_a_file(String string) {
-        file=string;
-        LocalDate d =LocalDate.now();
-
-        assertTrue(application.report(text,file));
+    public void the_report1_details_are_printed_in_a_file(String filename) {
+        File file = new File(filename);
+        try {
+            report.generateReport(chosenReportType, file.getPath());
+            assertTrue("File must exist", file.exists());
+        } catch (IOException e) {
+            fail("Should not have thrown any exception: " + e.getMessage());
+        }
     }
 
     @Then("I am asked to choose report2 kind {string}")
-    public void i_am_asked_to_choose_report2_kind(String string) {
-        text=string;
+    public void i_am_asked_to_choose_report2_kind(String reportType) {
+
+        report.setReportType(reportType);
+        assertNotNull(report.getReportType());
     }
 
     @Then("The report2 details are printed in a file {string}")
-    public void the_report2_details_are_printed_in_a_file(String string) {
-        file=string;
-
-        assertTrue(application.report(text,file));
+    public void the_report2_details_are_printed_in_a_file(String filename) {
+        try {
+            File file = new File(filename);
+            report.generateReport(chosenReportType, String.valueOf(file));
+            assertTrue("File must exist", file.exists());
+        } catch (IOException e) {
+            fail("Should not have thrown any exception");
+        }
     }
 
     @Then("I am asked to choose report3 kind {string}")
-    public void i_am_asked_to_choose_report3_kind(String string) {
-        text=string;
-
+    public void i_am_asked_to_choose_report3_kind(String reportType) {
+        report.setReportType(reportType);
+        assertNotNull(report.getReportType());
 
     }
 
     @Then("The report3 details are printed in a file {string}")
-    public void the_report3_details_are_printed_in_a_file(String string) {
-        file=string;
-        assertTrue(application.report(text,file));
+    public void the_report3_details_are_printed_in_a_file(String filename) {
+        try {
+            File file = new File(filename);
+            report.generateReport(chosenReportType, String.valueOf(file));
+            assertTrue("File must exist", file.exists());
+        } catch (IOException e) {
+            fail("Should not have thrown any exception");
+        }
     }
+
 
 
 ////////////////////////Content
@@ -596,104 +621,90 @@ public class Testing {
 
     @Given("I am logged in as a beneficiary user")
     public void i_am_logged_in_as_a_beneficiary_user() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @When("I navigate to the messaging system")
     public void i_navigate_to_the_messaging_system() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @When("I compose an inquiry")
     public void i_compose_an_inquiry() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @Then("the inquiry should be sent")
     public void the_inquiry_should_be_sent() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @When("I navigate to the feedback system")
     public void i_navigate_to_the_feedback_system() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @When("I select a purchased product")
     public void i_select_a_purchased_product() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @When("I provide my feedback")
     public void i_provide_my_feedback() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @Then("my feedback should be submitted")
     public void my_feedback_should_be_submitted() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @Given("I am logged in as a beneficiary user")
     public void i_am_logged_in_as_a_beneficiary_users() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @When("I navigate to the recipes menu")
     public void i_navigate_to_the_recipes_menu() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @Then("I should see a list of dessert recipes")
     public void i_should_see_a_list_of_dessert_recipes() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @When("I apply dietary filters")
     public void i_apply_dietary_filters() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @Then("I should see a list of filtered dessert recipes")
     public void i_should_see_a_list_of_filtered_dessert_recipes() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @When("I navigate to the store menu")
     public void i_navigate_to_the_store_menu() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @When("I select a dessert")
     public void i_select_a_dessert() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @When("I chose the purchase option.")
     public void i_chose_the_purchase_option() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
+
     }
 
     @Then("I should be able to complete the purchase")
     public void i_should_be_able_to_complete_the_purchase() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
+
     }
 
 }
+
