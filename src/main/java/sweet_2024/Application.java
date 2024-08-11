@@ -14,15 +14,11 @@ public class Application {
     public Report report;
     Scanner scanner = new Scanner(System.in);
     String carname;
-    static ArrayList<TypeProduct> categories;
     static int[] indexes=new int[2];
     private List<Products> availableProducts;
     private List<Order> customerOrders;
     private List<InstallationRequest> installationRequests;
     private List<String> feedbackList;
-    private static void gf(){
-        categories=new ArrayList<>();
-    }
 
     public Application() {
         this.loggedIn = false;
@@ -128,15 +124,9 @@ public class Application {
                 System.out.println("Invalid choice.");
         }
     }
-    public boolean foundc(String name){
-        for(int i=0;i<categories.size();i++){
-            if(name.equals(categories.get(i).name)){
-                set(i,i);
-                return true;
-            }
-        }
-        return false;
-    }
+
+
+
     private static void set(int x1,int x2){
         indexes[0]=x1;
         indexes[1]=x2;
