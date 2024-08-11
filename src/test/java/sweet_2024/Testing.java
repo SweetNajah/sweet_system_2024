@@ -3,6 +3,7 @@ package sweet_2024;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
@@ -27,18 +28,31 @@ public class Testing {
     String text,file;
     boolean exist;
     boolean newAccount=false;
-    boolean userAdded=false;
+    boolean userAdded ;
     boolean isUserUpdating = false;
     boolean isUserDeleting = false;
+    private User beneficiaryUser;
+    private Inquiry inquiry;
+    private Feedback feedback;
+    private Products product;
 
     private final Application application;
+    public Testing() {
+        this.application = new Application();  // Or however you would initialize it
+        u = new User("ali55@gmail.com", "123456", "Customer");
+        o = new User("abd3@gmail.com", "123", "Admin");
+    }
 
-    public Testing(Application application) {
+
+   /*
+   public Testing(Application application) {
         this.application = application;
         u = new User("ali55@gmail.com","123456","Customer");
         o = new User("abd3@gmail.com","123","Admin");
 
+
     }
+    */
 
 //////////////////////////////////////////////////////////////////////////////////UserManagement
 
@@ -51,19 +65,28 @@ public class Testing {
         }
         assertTrue(f);
         assertEquals(0, application.login.getRoles());
+
     }
+
+
     @When("i choose to add new user but the user is already exist")
     public void iChooseToAddNewUserButTheUserIsAlreadyExist() {
         String  email="ali.dawood@gmail.com";
+        userAdded = true ;
         for(User u : application.login.users){
+
             if(u.getEmail().equals(email)){
+
                 userAdded=false;
                 break;
             }
+
         }
+
         assertFalse(userAdded);
 
     }
+
     @Then("user added failed")
     public void userAddedFailed() {
         assertFalse(userAdded);
@@ -593,9 +616,12 @@ public class Testing {
 
 
     }
-
+@Test
     @Given("I am logged in as a beneficiary user")
     public void i_am_logged_in_as_a_beneficiary_user() {
+        beneficiaryUser = new User("user@example.com", "password", "beneficiary");
+
+        assertEquals("beneficiary", beneficiaryUser.getType());
 
     }
 
@@ -608,10 +634,14 @@ public class Testing {
     public void i_compose_an_inquiry() {
 
     }
-
+     @Test
     @Then("the inquiry should be sent")
     public void the_inquiry_should_be_sent() {
 
+        String inquiryMessage = "I need help with my order.";
+        inquiry = new Inquiry(beneficiaryUser, inquiryMessage);
+        assertNotNull(inquiry);
+        assertEquals(inquiryMessage, inquiry.getInquiryMessage());
     }
 
     @When("I navigate to the feedback system")
@@ -627,16 +657,31 @@ public class Testing {
     @When("I provide my feedback")
     public void i_provide_my_feedback() {
 
-    }
 
+
+    }
+    @Test
     @Then("my feedback should be submitted")
     public void my_feedback_should_be_submitted() {
+        String feedbackMessage = "The dessert was delicious!";
+        int rating = 5; // Assume rating is out of 5
 
+        product = new Products();
+        feedback = new Feedback(beneficiaryUser, product, feedbackMessage, rating);
+
+        // Then my feedback should be submitted (Feedback is submitted if it's not null)
+        assertNotNull(feedback);
+        assertEquals(feedbackMessage, feedback.getFeedbackMessage());
+        assertEquals(rating, feedback.getRating());
+        assertEquals(beneficiaryUser, feedback.getUser());
+        assertEquals(product, feedback.getProduct());
     }
-
+@Test
     @Given("I am logged in as a beneficiary user")
     public void i_am_logged_in_as_a_beneficiary_users() {
+        beneficiaryUser = new User("user@example.com", "password", "beneficiary");
 
+        assertEquals("beneficiary", beneficiaryUser.getType());
     }
 
     @When("I navigate to the recipes menu")
