@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.*;
 
+
 public class MainClass {
     private static final String ADMIN_STRING = "Admin";
     private static final String STORE_OWNER_STRING = "Store Owner";
