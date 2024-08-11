@@ -22,7 +22,7 @@ Feature:Login
       | Email                | Password |
       | ali.dawood@gmail.com | 123456   |
       | loay@gmail.com       | 654321   |
-      | bdalbaset@gmail.com  | 987654   |
+      | abdalbaset@gmail.com | 987654   |
 
   Scenario Outline: Invalid password
     Given that the user is not logged in

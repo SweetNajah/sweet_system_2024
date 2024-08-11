@@ -2,13 +2,13 @@ package sweet_2024;
 
 public class Feedback {
     private User user;
-    private Product product;
+    private Products products;
     private String feedbackMessage;
     private int rating;
 
-    public Feedback(User user, Product product, String feedbackMessage, int rating) {
+    public Feedback(User user, Products products, String feedbackMessage, int rating) {
         this.user = user;
-        this.product = product;
+        this.products = products;
         this.feedbackMessage = feedbackMessage;
         this.rating = rating;
         addFeedbackToProduct();
@@ -22,12 +22,12 @@ public class Feedback {
         this.user = user;
     }
 
-    public Product getProduct() {
-        return product;
+    public Products getProduct() {
+        return products;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setProduct(Products products) {
+        this.products = products;
     }
 
     public String getFeedbackMessage() {
@@ -59,24 +59,24 @@ public class Feedback {
     }
 
     private void addFeedbackToProduct() {
-        product.reviews.add(feedbackMessage);
-        product.rates.add(rating);
+        products.reviews.add(feedbackMessage);
+        products.rates.add(rating);
         updateProductRating();
     }
 
     private void updateProductRating() {
         int sum = 0;
-        for (int rate : product.rates) {
+        for (int rate : products.rates) {
             sum += rate;
         }
-        product.rateAvg = sum / (float) product.rates.size();
+        products.rateAvg = sum / (float) products.rates.size();
     }
 
     @Override
     public String toString() {
         return "Feedback{" +
                 "user=" + user.getEmail() +
-                ", product=" + product.getName() +
+                ", product=" + products.getProductName() +
                 ", feedbackMessage='" + feedbackMessage + '\'' +
                 ", rating=" + rating +
                 '}';
