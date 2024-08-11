@@ -14,6 +14,7 @@ public class Login {
     List<User> users=new ArrayList<>();
     int roles;
     boolean isLogged;
+    Mailing m;
     int verificationCode;
     User u;
     boolean validEmail;
@@ -61,9 +62,9 @@ public class Login {
 
             for (User s : users) {
                 if (u.getPassword().equals(s.getPassword()) && u.getEmail().equalsIgnoreCase(s.getEmail())) {
-
+                    m = new Mailing(u.getEmail());
                     setValidEmail(true);
-
+                    m.sendVerificationCode();
                     userIndex=users.indexOf(s);
                     return true;
                 }
@@ -89,12 +90,11 @@ public class Login {
 
     public boolean confirmLogin(int verificationCode){
         this.verificationCode=verificationCode;
-//        if(validEmail&&m.verificationCode==this.verificationCode){
-//
-//            setLogged(true);
-//            return true;
-//
-//        }
+        if(validEmail&&m.verificationCode==this.verificationCode){
+
+            setLogged(true);
+            return true;
+        }
         return false;
     }
 
@@ -160,19 +160,19 @@ public class Login {
         for (User u : users) {
             if (u.getEmail().equals(email)) {
                 users.remove(u);
-                return true; // User found and removed
+                return true;
             }
         }
-        return false; // User not found
+        return false;
     }
 
     public User findUserByEmail(String email) {
         for (User u : users) {
             if (u.getEmail().equals(email)) {
-                return u; // Return the user if found
+                return u;
             }
         }
-        return null; // Return null if user not found
+        return null;
     }
 
     public boolean deleteUser(User u){
