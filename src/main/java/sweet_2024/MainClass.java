@@ -15,7 +15,7 @@ public class MainClass {
     private static final String SUPPLIER_STRING = "Supplier";
     private static final String INVALID_INPUT_MESSAGE = "Invalid Input";
     private static final String INVALID_INFORMATION_PLEASE_TRY_AGAIN = "Invalid information! Please try again.";
-    private static final String STRING = "********************************************************************";
+    private static final String STRING = "*********************************************************************";
     private static final Logger LOGGER = Logger.getLogger(MainClass.class.getName());
 
     static {
@@ -297,7 +297,6 @@ public class MainClass {
         LOGGER.info("Product marked as installed: " + selectedRequest.getProductName());
     }
 
-
     private static void viewInstallationRequests(Application sweetSystem) {
         LOGGER.info("Viewing installation requests...");
         List<InstallationRequest> installationRequests = sweetSystem.getInstallationRequests();
@@ -313,12 +312,10 @@ public class MainClass {
 
     private static void provideFeedback(Scanner scanner, Application sweetSystem) {
         LOGGER.info("Providing feedback...");
-        User user = selectUser(scanner, sweetSystem);  // You need to implement this method
-        Products product = selectProduct(scanner, sweetSystem); // You need to implement this method
-
+        User user = selectUser(scanner, sweetSystem);
+        Products product = selectProduct(scanner, sweetSystem);
         LOGGER.info("Enter your feedback message:");
         String feedbackMessage = scanner.nextLine();
-
         LOGGER.info("Enter your rating (0-5):");
         int rating;
         try {
@@ -330,7 +327,6 @@ public class MainClass {
             LOGGER.warning("Invalid rating. Please enter a number between 0 and 5.");
             return;
         }
-
         boolean feedbackSuccess = sweetSystem.submitFeedback(feedbackMessage, user, product, rating);
         if (feedbackSuccess) {
             LOGGER.info("Feedback submitted successfully.");
@@ -340,12 +336,11 @@ public class MainClass {
     }
 
     private static User selectUser(Scanner scanner, Application sweetSystem) {
-        List<User> users = sweetSystem.getUsers();  // Assuming you have a method to get all users
+        List<User> users = sweetSystem.getUsers();
         if (users.isEmpty()) {
             LOGGER.info("No users available.");
             return null;
         }
-
         LOGGER.info("Select a user:");
         for (int i = 0; i < users.size(); i++) {
             LOGGER.info((i + 1) + ": " + users.get(i).getEmail() + " - " + users.get(i).getRole());
@@ -355,18 +350,16 @@ public class MainClass {
             return users.get(choice);
         } else {
             LOGGER.warning("Invalid choice. Please try again.");
-            return selectUser(scanner, sweetSystem);  // Recursive call if invalid input
+            return selectUser(scanner, sweetSystem);
         }
     }
 
-
     private static Products selectProduct(Scanner scanner, Application sweetSystem) {
-        List<Products> products = sweetSystem.getAvailableProducts();  // Assuming a method to list products
+        List<Products> products = sweetSystem.getAvailableProducts();
         if (products.isEmpty()) {
             LOGGER.info("No products available.");
             return null;
         }
-
         LOGGER.info("Select a product:");
         for (int i = 0; i < products.size(); i++) {
             LOGGER.info((i + 1) + ": " + products.get(i).getProductName() + " - $" + products.get(i).getProductPrice());
@@ -376,11 +369,9 @@ public class MainClass {
             return products.get(choice);
         } else {
             LOGGER.warning("Invalid choice. Please try again.");
-            return selectProduct(scanner, sweetSystem);  // Recursive call if invalid input
+            return selectProduct(scanner, sweetSystem);
         }
     }
-
-
 
     private static void manageUsers(Scanner scanner, Application sweetSystem) {
         int choice = -1;
@@ -588,6 +579,7 @@ public class MainClass {
             }
         } while (choice != 4);
     }
+
     private static void addPost(Scanner scanner, Application sweetSystem) {
         LOGGER.info("Enter post title:");
         String title = scanner.nextLine();
@@ -624,7 +616,6 @@ public class MainClass {
         }
         LOGGER.info("Post updated successfully.");
     }
-
 
     private static void manageFeedback(Scanner scanner, Application sweetSystem) {
         int choice = -1;

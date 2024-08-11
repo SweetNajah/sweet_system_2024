@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class Report {
-
+    private static final Logger LOGGER = Logger.getLogger(Report.class.getName());
 
     public void generateFinancialReport() {
-        System.out.println("Generating financial report...");
+        LOGGER.info("Generating financial report...");
 
-        // Sample data for revenues and expenses
         Map<String, Double> revenues = new HashMap<>();
         revenues.put("January", 15000.0);
         revenues.put("February", 12000.0);
@@ -24,26 +24,24 @@ public class Report {
         expenses.put("February", 5000.0);
         expenses.put("March", 6000.0);
 
-        System.out.println("Financial Report:\n");
-        System.out.printf("%-10s %-10s %-10s %-10s%n", "Month", "Revenue", "Expenses", "Profit");
-        System.out.println("----------------------------------------");
+        LOGGER.info("Financial Report:\n");
+        LOGGER.info(String.format("%-10s %-10s %-10s %-10s%n", "Month", "Revenue", "Expenses", "Profit"));
+        LOGGER.info("----------------------------------------");
 
         for (String month : revenues.keySet()) {
             double revenue = revenues.get(month);
             double expense = expenses.get(month);
             double profit = revenue - expense;
 
-            System.out.printf("%-10s %-10.2f %-10.2f %-10.2f%n", month, revenue, expense, profit);
+            LOGGER.info(String.format("%-10s %-10.2f %-10.2f %-10.2f%n", month, revenue, expense, profit));
         }
 
-        System.out.println("----------------------------------------");
-        System.out.println("Financial report complete.");
+        LOGGER.info("----------------------------------------");
+        LOGGER.info("Financial report complete.");
     }
 
-    // ميثود للحصول على أرباح المتاجر
     public Map<String, Double> getStoreProfits() {
         Map<String, Double> storeProfits = new HashMap<>();
-
         storeProfits.put("NubluStors1", 1500.0);
         storeProfits.put("NubluStors2", 2500.5);
         storeProfits.put("JeninStors1", 3200.75);
@@ -52,48 +50,42 @@ public class Report {
     }
 
     public boolean downloadFinancialReportAsPDF() {
-        System.out.println("Downloading financial report as PDF...");
+        LOGGER.info("Downloading financial report as PDF...");
 
-        // Here you can add logic to create and download a PDF report
         String pdfFilePath = "financial_report.pdf";
-
         try (FileWriter writer = new FileWriter(pdfFilePath)) {
-            // This is just a simulation of PDF content generation
             writer.write("Financial Report\n");
             writer.write("=================\n");
             writer.write("Month: January | Revenue: $15000.00 | Expenses: $7000.00 | Profit: $8000.00\n");
             writer.write("Month: February | Revenue: $12000.00 | Expenses: $5000.00 | Profit: $7000.00\n");
             writer.write("Month: March | Revenue: $18000.00 | Expenses: $6000.00 | Profit: $12000.00\n");
 
-            System.out.println("Financial report downloaded successfully as PDF.");
-            return true; // Return true if downloaded successfully
+            LOGGER.info("Financial report downloaded successfully as PDF.");
+            return true;
         } catch (IOException e) {
-            System.out.println("An error occurred while downloading the report: " + e.getMessage());
-            return false; // Return false if there was an error
+            LOGGER.severe("An error occurred while downloading the report: " + e.getMessage());
+            return false;
         }
     }
 
     public void generateBestSellingProductsReport() {
-        System.out.println("Generating report on best-selling products...");
+        LOGGER.info("Generating report on best-selling products...");
 
-        // Sample best-selling products data
         String[] bestSellingProducts = {"Product A", "Product B", "Product C"};
         int[] salesCounts = {120, 90, 75};
 
-        System.out.printf("%-15s %-10s%n", "Product", "Sales Count");
-        System.out.println("---------------------------------");
+        LOGGER.info(String.format("%-15s %-10s%n", "Product", "Sales Count"));
+        LOGGER.info("---------------------------------");
 
         for (int i = 0; i < bestSellingProducts.length; i++) {
-            System.out.printf("%-15s %-10d%n", bestSellingProducts[i], salesCounts[i]);
+            LOGGER.info(String.format("%-15s %-10d%n", bestSellingProducts[i], salesCounts[i]));
         }
 
-        System.out.println("Best-selling products report generated successfully.");
+        LOGGER.info("Best-selling products report generated successfully.");
     }
 
     public Map<String, List<String>> getBestSellingProducts() {
         Map<String, List<String>> bestSellingProducts = new HashMap<>();
-
-        // Sample data
         List<String> bestForCategoryA = new ArrayList<>();
         bestForCategoryA.add("product 1");
         bestForCategoryA.add("product 2");
@@ -107,11 +99,8 @@ public class Report {
         return bestSellingProducts;
     }
 
-
     public Map<String, Map<String, Double>> getProductSales() {
         Map<String, Map<String, Double>> productSales = new HashMap<>();
-
-        // Dummy data
         Map<String, Double> salesForProduct1 = new HashMap<>();
         salesForProduct1.put("January", 500.0);
         salesForProduct1.put("February", 300.0);
@@ -124,10 +113,9 @@ public class Report {
 
         return productSales;
     }
-    public void generateUserStatisticsByCity() {
-        System.out.println("Generating user statistics by city...");
 
-        // Dummy data for statistics by city
+    public void generateUserStatisticsByCity() {
+        LOGGER.info("Generating user statistics by city...");
         Map<String, Integer> userStatistics = new HashMap<>();
         userStatistics.put("Jenin", 120);
         userStatistics.put("Nablus", 85);
@@ -135,33 +123,26 @@ public class Report {
         userStatistics.put("Hebron", 75);
         userStatistics.put("Gaza", 100);
 
-        // Print the statistics
-        System.out.printf("%-15s %-10s%n", "City", "Number of Users");
-        System.out.println("---------------------------------");
+        LOGGER.info(String.format("%-15s %-10s%n", "City", "Number of Users"));
+        LOGGER.info("---------------------------------");
 
         for (Map.Entry<String, Integer> entry : userStatistics.entrySet()) {
-            System.out.printf("%-15s %-10d%n", entry.getKey(), entry.getValue());
+            LOGGER.info(String.format("%-15s %-10d%n", entry.getKey(), entry.getValue()));
         }
 
-        System.out.println("User statistics by city generated successfully.");
+        LOGGER.info("User statistics by city generated successfully.");
     }
 
-
-    // Method to get user statistics by city
-    public Map<String, Integer> getUserStatisticsByCity() {
+    public Map<String, Integer> getUserStatisticsBy() {
         Map<String, Integer> userStatistics = new HashMap<>();
-
-        // Dummy data
         userStatistics.put("Nablus", 120);
         userStatistics.put("Jenin", 95);
 
         return userStatistics;
     }
 
-    // Method to get user breakdown by city and store
     public Map<String, Map<String, Integer>> getUserBreakdownByCityAndStore() {
         Map<String, Map<String, Integer>> userBreakdown = new HashMap<>();
-
         Map<String, Integer> nablusStores = new HashMap<>();
         nablusStores.put("Store A", 50);
         nablusStores.put("Store B", 70);
@@ -175,12 +156,3 @@ public class Report {
         return userBreakdown;
     }
 }
-
-
-
-
-
-
-
-
-
