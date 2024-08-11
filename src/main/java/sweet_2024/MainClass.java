@@ -955,5 +955,8 @@ public class MainClass {
         }
         LOGGER.info("Supply updated successfully.");
     }
+    public static void kop(){
+        LOGGER.info("Nothing");
+    }
 
 }

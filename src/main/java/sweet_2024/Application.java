@@ -1,5 +1,7 @@
 package sweet_2024;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.logging.*;
 
@@ -7,12 +9,11 @@ public class Application {
     private static final String NO_INFORMATIONS = "There is no information";
     private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
     public boolean loggedIn;
-    public   Login login;
+    public Login login;
     public User newUser;
     public Report report;
     Scanner scanner = new Scanner(System.in);
     String carname;
-    static int[] indexes=new int[2];
 
     private List<User> users;
     private List<Products> availableProducts;
@@ -156,15 +157,6 @@ public class Application {
                 LOGGER.warning("Invalid choice.");
         }
     }
-
-
-
-    private static void set(int x1,int x2){
-        indexes[0]=x1;
-        indexes[1]=x2;
-    }
-
-
 
     private static void removeUser(Scanner scanner, Application sweetSystem) {
         LOGGER.info("Enter email of user to remove:");
@@ -411,10 +403,21 @@ public class Application {
         return users;
     }
 
+    public static boolean printTextToFile(String fileName, String text) {
+        try(FileWriter writer = new FileWriter(fileName)) {
+            writer.write(text);
+            return true;
+        } catch (IOException ignored) {
+            return false;
+        }
+    }
 
     public boolean report(String report, String filename) {
         return switch (report) {
-
+//            case "Sales" -> printTextToFile(filename, salesreport());
+//            case "Product rates" -> printTextToFile(filename, ratesReport());
+//            case "Category products" -> printTextToFile(filename, productreport());
+//            case "rates and reviews" -> printTextToFile(filename, ratesReviewsReport());
             default -> false;
 
         };
