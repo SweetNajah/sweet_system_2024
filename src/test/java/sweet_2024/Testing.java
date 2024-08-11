@@ -3,7 +3,6 @@ package sweet_2024;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.junit.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
@@ -28,31 +27,18 @@ public class Testing {
     String text,file;
     boolean exist;
     boolean newAccount=false;
-    boolean userAdded ;
+    boolean userAdded=false;
     boolean isUserUpdating = false;
     boolean isUserDeleting = false;
-    private User beneficiaryUser;
-    private Inquiry inquiry;
-    private Feedback feedback;
-    private Products product;
 
     private final Application application;
-    public Testing() {
-        this.application = new Application();  // Or however you would initialize it
-        u = new User("ali55@gmail.com", "123456", "Customer");
-        o = new User("abd3@gmail.com", "123", "Admin");
-    }
 
-
-   /*
-   public Testing(Application application) {
+    public Testing(Application application) {
         this.application = application;
         u = new User("ali55@gmail.com","123456","Customer");
         o = new User("abd3@gmail.com","123","Admin");
 
-
     }
-    */
 
 //////////////////////////////////////////////////////////////////////////////////UserManagement
 
@@ -65,28 +51,19 @@ public class Testing {
         }
         assertTrue(f);
         assertEquals(0, application.login.getRoles());
-
     }
-
-
     @When("i choose to add new user but the user is already exist")
     public void iChooseToAddNewUserButTheUserIsAlreadyExist() {
         String  email="ali.dawood@gmail.com";
-        userAdded = true ;
         for(User u : application.login.users){
-
             if(u.getEmail().equals(email)){
-
                 userAdded=false;
                 break;
             }
-
         }
-
         assertFalse(userAdded);
 
     }
-
     @Then("user added failed")
     public void userAddedFailed() {
         assertFalse(userAdded);
@@ -616,112 +593,107 @@ public class Testing {
 
 
     }
-@Test
+
     @Given("I am logged in as a beneficiary user")
     public void i_am_logged_in_as_a_beneficiary_user() {
-        beneficiaryUser = new User("user@example.com", "password", "beneficiary");
-
-        assertEquals("beneficiary", beneficiaryUser.getType());
-
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
     }
 
     @When("I navigate to the messaging system")
     public void i_navigate_to_the_messaging_system() {
-
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
     }
 
     @When("I compose an inquiry")
     public void i_compose_an_inquiry() {
-
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
     }
-     @Test
+
     @Then("the inquiry should be sent")
     public void the_inquiry_should_be_sent() {
-
-        String inquiryMessage = "I need help with my order.";
-        inquiry = new Inquiry(beneficiaryUser, inquiryMessage);
-        assertNotNull(inquiry);
-        assertEquals(inquiryMessage, inquiry.getInquiryMessage());
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
     }
 
     @When("I navigate to the feedback system")
     public void i_navigate_to_the_feedback_system() {
-
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
     }
 
     @When("I select a purchased product")
     public void i_select_a_purchased_product() {
-
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
     }
 
     @When("I provide my feedback")
     public void i_provide_my_feedback() {
-
-
-
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
     }
-    @Test
+
     @Then("my feedback should be submitted")
     public void my_feedback_should_be_submitted() {
-        String feedbackMessage = "The dessert was delicious!";
-        int rating = 5; // Assume rating is out of 5
-
-        product = new Products();
-        feedback = new Feedback(beneficiaryUser, product, feedbackMessage, rating);
-
-        // Then my feedback should be submitted (Feedback is submitted if it's not null)
-        assertNotNull(feedback);
-        assertEquals(feedbackMessage, feedback.getFeedbackMessage());
-        assertEquals(rating, feedback.getRating());
-        assertEquals(beneficiaryUser, feedback.getUser());
-        assertEquals(product, feedback.getProduct());
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
     }
-@Test
+
     @Given("I am logged in as a beneficiary user")
     public void i_am_logged_in_as_a_beneficiary_users() {
-        beneficiaryUser = new User("user@example.com", "password", "beneficiary");
-
-        assertEquals("beneficiary", beneficiaryUser.getType());
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
     }
 
     @When("I navigate to the recipes menu")
     public void i_navigate_to_the_recipes_menu() {
-
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
     }
 
     @Then("I should see a list of dessert recipes")
     public void i_should_see_a_list_of_dessert_recipes() {
-
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
     }
 
     @When("I apply dietary filters")
     public void i_apply_dietary_filters() {
-
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
     }
 
     @Then("I should see a list of filtered dessert recipes")
     public void i_should_see_a_list_of_filtered_dessert_recipes() {
-
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
     }
 
     @When("I navigate to the store menu")
     public void i_navigate_to_the_store_menu() {
-
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
     }
 
     @When("I select a dessert")
     public void i_select_a_dessert() {
-
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
     }
 
     @When("I chose the purchase option.")
     public void i_chose_the_purchase_option() {
-
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
     }
 
     @Then("I should be able to complete the purchase")
     public void i_should_be_able_to_complete_the_purchase() {
-
+        // Write code here that turns the phrase above into concrete actions
+        throw new io.cucumber.java.PendingException();
     }
 
 }

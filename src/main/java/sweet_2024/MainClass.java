@@ -225,7 +225,7 @@ public class MainClass {
     private static void orderProducts(Scanner scanner, Application sweetSystem) {
         LOGGER.info("Ordering products...");
         List<Products> products = sweetSystem.getAvailableProducts();
-        if (products.isEmpty()) {
+        if (products == null || products.isEmpty()) {
             LOGGER.info("No products available.");
             return;
         }

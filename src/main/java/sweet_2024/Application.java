@@ -25,7 +25,7 @@ public class Application {
     private List<Sale> sales;
     private List<Supply> supplies;
     private List<SupplyRequest> supplyRequests;
-
+    private List<Products> products = new ArrayList<>();
 
 
 
@@ -52,7 +52,7 @@ public class Application {
         supplyRequests.add(new SupplyRequest("Sugar", 100, "Pending"));
         supplyRequests.add(new SupplyRequest("Flour", 200, "Approved"));
 
-
+        products = new ArrayList<>();
 
 
     }
