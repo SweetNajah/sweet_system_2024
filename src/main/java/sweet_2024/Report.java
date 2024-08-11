@@ -274,4 +274,5 @@ public class Report {
         return this.chosenReportType;
     }
 
+
 }

@@ -456,7 +456,7 @@ public class Testing {
     }
     @Then("the system should display the number of registered users for each city")
     public void theSystemShouldDisplayTheNumberOfRegisteredUsersForEachCity() {
-        Map<String, Integer> userStatistics = application.report.getUserStatisticsByCity();
+        Map<String, Integer> userStatistics = application.report.getUserStatisticsBy();
         assertNotNull(userStatistics);
         for (Map.Entry<String, Integer> entry : userStatistics.entrySet()) {
             System.out.println("City: " + entry.getKey() + " - Registered Users: " + entry.getValue());
@@ -479,7 +479,7 @@ public class Testing {
     }
     @Then("the report should include a total count of users for each city")
     public void theReportShouldIncludeATotalCountOfUsersForEachCity() {
-        Map<String, Integer> userStatistics = application.report.getUserStatisticsByCity();
+        Map<String, Integer> userStatistics = application.report.getUserStatisticsBy();
         int totalNablusUsers = 0;
         int totalJeninUsers = 0;
 
@@ -505,7 +505,7 @@ public class Testing {
 
     @Given("I am an admin\\(report)")
     public void i_am_an_admin_report() {
-        assertEquals("Admin", u.type);
+        assertEquals("Admin", u.role);
     }
 
     @Then("I am asked to choose report1 kind {string}")
