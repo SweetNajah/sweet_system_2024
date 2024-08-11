@@ -62,6 +62,7 @@ public class Application {
 
     public void markAsInstalled(Order requestId) {
         for (InstallationRequest request : installationRequests) {
+
             if (request.getOrderId() == requestId.getOrderId()) {
                 request.setInstalled(true);
                 LOGGER.info("Installation request " + requestId + " marked as installed.");
@@ -143,6 +144,7 @@ public class Application {
         LOGGER.info("2. Sign Up");
         int choice = scanner.nextInt();
         scanner.nextLine();
+
         switch (choice) {
             case 1:
                 handleLogin();
@@ -414,7 +416,6 @@ public class Application {
         return switch (report) {
 
             default -> false;
-
 
         };
     }
