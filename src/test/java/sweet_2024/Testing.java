@@ -60,7 +60,7 @@ public class Testing {
     public void iAmAnAdmin() {
         boolean f = false;
         application.setUser(application.newUser.getEmail(),application.newUser.getPassword(),"Admin");
-        if(application.newUser.getType().equals("Admin")){
+        if(application.newUser.getRole().equals("Admin")){
             f=true;
         }
         assertTrue(f);
@@ -377,8 +377,8 @@ public class Testing {
         assertEquals("hiword", user2.getPassword());
         assertEquals("ali.d@example.org", user.getEmail());
         assertEquals("ali.d@example.org", user2.getEmail());
-        assertNull(user.getType());
-        assertNull(user2.getType());
+        assertNull(user.getRole());
+        assertNull(user2.getRole());
         assertEquals(0, login.getRoles());
         assertEquals(4, login.users.size());
         assertFalse(login.isLogged());

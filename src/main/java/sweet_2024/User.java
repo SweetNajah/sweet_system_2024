@@ -3,14 +3,14 @@ package sweet_2024;
 public class User {
     String email;
     String password;
-    String type;
+    String role;
     String firstName;
     String lastName;
 
-    public User(String email, String password, String type) {
+    public User(String email, String password, String role) {
         this.email = email;
         this.password = password;
-        this.type = type;
+        this.role = role;
         firstName="Ahmad";
         lastName="Ali";
     }
@@ -40,11 +40,11 @@ public class User {
         this.password = password;
     }
 
-    public String getType() {
-        return type;
+    public String getRole() {
+        return role;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setRole(String role) {
+        this.role = role;
     }
 }

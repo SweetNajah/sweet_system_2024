@@ -1,14 +1,17 @@
 package sweet_2024;
 
 import java.security.Principal;
+import java.util.List;
 
 public class Order {
-    private final Products selectedProduct;
+    private  Products selectedProduct;
+    private List<Products> orderedProducts;
+    private double totalPrice;
 
     private int orderId;
     private String storeOwnerName;
     private String productName;
-    private int quantity;
+    private  int quantity;
     private String status;
     private static int idCounter = 0; // Used to generate unique IDs for each order
 
@@ -21,10 +24,30 @@ public class Order {
         this.quantity = quantity;
         this.status = "Pending"; // Default status is "Pending"
     }
+    public Order(Products selectedProduct, List<Products> orderedProducts, int quantity) {
+        this.selectedProduct = selectedProduct;
+        this.orderedProducts = orderedProducts;
+        this.quantity = quantity;
+        this.totalPrice = calculateTotalPrice();
+    }
 
     public Order(Products selectedProduct, int quantity) {
-        this.selectedProduct=selectedProduct;
+        this.selectedProduct = selectedProduct;
         this.quantity=quantity;
+
+    }
+
+    private double calculateTotalPrice() {
+        double total = 0.0;
+        for (Products product : orderedProducts) {
+            total += product.getPrice();
+        }
+        return total;
+    }
+
+
+    public List<Products> getOrderedProducts() {
+        return orderedProducts;
     }
 
     // Getters
@@ -53,6 +76,11 @@ public class Order {
         this.status = status;
     }
 
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
     // toString method for displaying order details
     @Override
     public String toString() {
@@ -64,4 +92,7 @@ public class Order {
     }
 
 
+    public Principal getProduct() {
+        return getProduct();
+    }
 }

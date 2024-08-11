@@ -49,5 +49,9 @@ public class InstallationRequest {
     public void setInstalled(boolean b) {
 
     }
+
+    public int getOrderId() {
+        return order.getOrderId();
+    }
 }
 

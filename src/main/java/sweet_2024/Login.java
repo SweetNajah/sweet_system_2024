@@ -99,7 +99,7 @@ public class Login {
     }
 
     public void setRoles() {
-        String type=users.get(userIndex).getType();
+        String type=users.get(userIndex).getRole();
         if (type.equalsIgnoreCase(adminString)){
             roles=0;
         }
@@ -149,12 +149,30 @@ public class Login {
             }
         }
         if(emailValidator(newUser.getEmail())){
-            users.get(userIndex).setType(newUser.getType());
+            users.get(userIndex).setRole(newUser.getRole());
             users.get(userIndex).setPassword(newUser.getPassword());
             users.get(userIndex).setEmail(newUser.getEmail());
             isUpdating=true;
         }
         return isUpdating;
+    }
+    public boolean removeUser(String email) {
+        for (User u : users) {
+            if (u.getEmail().equals(email)) {
+                users.remove(u);
+                return true; // User found and removed
+            }
+        }
+        return false; // User not found
+    }
+
+    public User findUserByEmail(String email) {
+        for (User u : users) {
+            if (u.getEmail().equals(email)) {
+                return u; // Return the user if found
+            }
+        }
+        return null; // Return null if user not found
     }
 
     public boolean deleteUser(User u){
