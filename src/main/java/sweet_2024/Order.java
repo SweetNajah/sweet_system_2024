@@ -1,6 +1,5 @@
 package sweet_2024;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -14,18 +13,18 @@ public class Order {
     private int orderId;
     private String storeOwnerName;
     private String productName;
-    private  int quantity;
+    private final int quantity;
     private String status;
     private static int idCounter = 0; // Used to generate unique IDs for each order
 
     // Constructor
     public Order(Products selectedProduct, String storeOwnerName, String productName, int quantity) {
         this.selectedProduct = selectedProduct;
-        this.orderId = ++idCounter; // Increment and assign unique ID
+        this.orderId = ++idCounter;
         this.storeOwnerName = storeOwnerName;
         this.productName = productName;
         this.quantity = quantity;
-        this.status = "Pending"; // Default status is "Pending"
+        this.status = "Pending";
     }
     public Order(Products selectedProduct, List<Products> orderedProducts, int quantity) {
         this.selectedProduct = selectedProduct;
@@ -84,7 +83,6 @@ public class Order {
         return totalPrice;
     }
 
-    // toString method for displaying order details
     @Override
     public String toString() {
         return "Order ID: " + orderId +
@@ -92,11 +90,6 @@ public class Order {
                 "\nProduct: " + productName +
                 "\nQuantity: " + quantity +
                 "\nStatus: " + status + "\n";
-    }
-
-
-    public Principal getProduct() {
-        return getProduct();
     }
 
     public void processOrder(Order order) {

@@ -21,7 +21,6 @@ public class StoreMenu {
         for (Dessert dessert : recipeMenu.desserts) {
             if (dessert.getName().equalsIgnoreCase(dessertName)) {
                 System.out.println("Purchasing " + dessert.getName() + " for $" + dessert.getPrice());
-                // Simulate purchase
                 System.out.println("Purchase completed successfully!");
                 return;
             }
