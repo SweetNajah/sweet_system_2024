@@ -20,6 +20,7 @@ public class Feedback {
         this.feedbackMessage = feedbackMessage;
         this.rating = rating;
         this.response = ""; // Initialize with no response
+        this.product = products;
     }
 
     public int getId() {
