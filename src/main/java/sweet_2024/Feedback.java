@@ -3,7 +3,6 @@ package sweet_2024;
 public class Feedback {
 
 
-
     private final int id; // Unique identifier for feedback
 
     private User user;
@@ -73,8 +72,8 @@ public class Feedback {
         else if (rating > 5){
             this.rating = 5;
         }
-           else
-               this.rating = 0;
+        else
+            this.rating = 0;
 
     }
 
@@ -97,12 +96,8 @@ public class Feedback {
         String productName = (this.products != null) ? this.products.getName() : "No product";
         String userName = (this.user != null) ? this.user.getUserName() : "No user";
         return "Feedback{" +
-
                 "productName='" + productName + '\'' +
                 ", userName='" + userName + '\'' +
-                "user=" + user.getEmail() +
-                ", product=" + products.getProductName() +
-                ", feedbackMessage='" + feedbackMessage + '\'' +
                 ", rating=" + rating +
                 ", feedbackMessage='" + feedbackMessage + '\'' +
                 '}';
