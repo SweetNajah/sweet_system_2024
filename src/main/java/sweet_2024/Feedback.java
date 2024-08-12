@@ -1,24 +1,22 @@
 package sweet_2024;
 
-import io.cucumber.messages.types.Product;
-
 public class Feedback {
 
 
 
     private final int id; // Unique identifier for feedback
+
     private User user;
     private Products products;
     private String feedbackMessage;
     private String response; // For storing responses to feedback
     private int rating;
     private static int idCounter = 1; // Static counter to generate unique IDs
+    private InventoryItem product;
 
-
-    public Feedback(User user, Products products, String feedbackMessage, int rating) {
+    public Feedback(User user, InventoryItem products, String feedbackMessage, int rating) {
         this.id = idCounter++;
         this.user = user;
-        this.products = products;
         this.feedbackMessage = feedbackMessage;
         this.rating = rating;
         this.response = ""; // Initialize with no response
@@ -96,11 +94,15 @@ public class Feedback {
 
     @Override
     public String toString() {
+        String productName = (this.products != null) ? this.products.getProductName() : "No product";
+        String userName = (this.user != null) ? this.user.getUserName() : "No user";
         return "Feedback{" +
-                "user=" + user.getEmail() +
-                ", product=" + products.getProductName() +
-                ", feedbackMessage='" + feedbackMessage + '\'' +
+                "productName='" + productName + '\'' +
+                ", userName='" + userName + '\'' +
                 ", rating=" + rating +
+                ", feedbackMessage='" + feedbackMessage + '\'' +
                 '}';
     }
+
+
 }

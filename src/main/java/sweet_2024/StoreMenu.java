@@ -3,7 +3,7 @@ package sweet_2024;
 import java.util.Scanner;
 
 public class StoreMenu {
-    private RecipeMenu recipeMenu;
+    private final RecipeMenu recipeMenu;
 
     public StoreMenu(RecipeMenu recipeMenu) {
         this.recipeMenu = recipeMenu;

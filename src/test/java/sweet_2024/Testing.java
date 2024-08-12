@@ -37,10 +37,9 @@ public class Testing {
         this.application = application;
         u = new User("ali55@gmail.com","123456","Customer");
         o = new User("abd3@gmail.com","123","Admin");
-
     }
 
-//////////////////////////////////////////////////////////////////////////////////UserManagement
+
 
     @Given("I am an admin")
     public void iAmAnAdmin() {
@@ -348,7 +347,7 @@ public class Testing {
 
         // Assert
         Login login = actualSignUp.l;
-        User user = login.u;
+        User user = login.user;
         assertEquals("hiword", user.getPassword());
         User user2 = actualSignUp.newUser;
         assertEquals("hiword", user2.getPassword());

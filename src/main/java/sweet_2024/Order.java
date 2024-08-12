@@ -2,9 +2,12 @@ package sweet_2024;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.logging.Logger;
+
 
 public class Order {
-    private  Products selectedProduct;
+    private static final Logger LOGGER = Logger.getLogger(Order.class.getName());
+    private final Products selectedProduct;
     private List<Products> orderedProducts;
     private double totalPrice;
 
@@ -95,4 +98,16 @@ public class Order {
     public Principal getProduct() {
         return getProduct();
     }
+
+    public void processOrder(Order order) {
+        if (order == null) {
+            LOGGER.warning("Order is null, cannot process.");
+            return;
+        }
+        order.setStatus("Processed");
+        LOGGER.info("Order processed successfully.");
+    }
+
+
+
 }
