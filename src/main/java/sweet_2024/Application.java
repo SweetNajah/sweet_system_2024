@@ -19,12 +19,10 @@ public class Application {
     private List<Products> availableProducts;
     private List<Order> customerOrders;
     private List<InstallationRequest> installationRequests;
-    private List<Recipe> recipes;
+    private List<RecipeMenu> recipes;
     private List<Post> posts;
     private List<Feedback> feedbackList;
-    private List<Sale> sales;
     private List<Supply> supplies;
-    private List<SupplyRequest> supplyRequests;
     private List<Products> products = new ArrayList<>();
 
 
@@ -39,8 +37,7 @@ public class Application {
         this.posts = new ArrayList<>();
         this.feedbackList = new ArrayList<>();
         this.supplies = new ArrayList<>();
-        this.sales = new ArrayList<>();
-        this.supplyRequests = new ArrayList<>();
+        this.supplies = new ArrayList<>();
         this.installationRequests = new ArrayList<>();
         this.availableProducts = new ArrayList<>();
         this.customerOrders = new ArrayList<>();
@@ -51,11 +48,11 @@ public class Application {
         this.availableProducts.add(new Products("Vanilla Cake", 30, 15.00));
         this.availableProducts.add(new Products("Candy", 100, 0.10));
 
-        this.sales.add(new Sale("Chocolate Cake", 20, 300.00));
-        this.sales.add(new Sale("Candy Pack", 50, 100.00));
+        this.supplies.add(new Supply("Chocolate Cake", 20, 300.00));
+        this.supplies.add(new Supply("Candy Pack", 50, 100.00));
 
-        this.supplyRequests.add(new SupplyRequest("Sugar", 100, "Pending"));
-        this.supplyRequests.add(new SupplyRequest("Flour", 200, "Approved"));
+        this.supplies.add(new Supply("Sugar", 100, "Pending"));
+        this.supplies.add(new Supply("Flour", 200, "Approved"));
 
     }
     public List<InstallationRequest> getInstallationRequests() {
@@ -205,19 +202,19 @@ public class Application {
         return bestSellers;
     }
 
-    public boolean addRecipe(Recipe recipe) {
+    public boolean addRecipe(RecipeMenu recipe) {
         recipes.add(recipe);
         return true;
     }
 
-    public List<Recipe> getRecipes() {
+    public List<RecipeMenu> getRecipes() {
         return recipes;
     }
 
     public boolean removeRecipe(String name) {
-        Iterator<Recipe> iterator = recipes.iterator();
+        Iterator<RecipeMenu> iterator = recipes.iterator();
         while (iterator.hasNext()) {
-            Recipe recipe = iterator.next();
+            RecipeMenu recipe = iterator.next();
             if (recipe.getName().equalsIgnoreCase(name)) {
                 iterator.remove();
                 return true;
@@ -226,8 +223,8 @@ public class Application {
         return false;
     }
 
-    public Recipe findRecipeByName(String name) {
-        for (Recipe recipe : recipes) {
+    public RecipeMenu findRecipeByName(String name) {
+        for (RecipeMenu recipe : recipes) {
             if (recipe.getName().equalsIgnoreCase(name)) {
                 return recipe;
             }
@@ -327,8 +324,8 @@ public class Application {
         return null;
     }
 
-    public List<Sale> getSales() {
-        return new ArrayList<>(this.sales);
+    public List<Supply> getSales() {
+        return new ArrayList<>(this.supplies);
     }
 
     public List<Order> getOrders() {
@@ -432,8 +429,8 @@ public class Application {
         return null;
     }
 
-    public List<SupplyRequest> getSupplyRequests() {
-        return supplyRequests;
+    public List<Supply> getSupplyRequests() {
+        return supplies;
     }
 
     public List<User> getUsers() {
@@ -477,7 +474,7 @@ public class Application {
         StringBuilder report = new StringBuilder();
         report.append("Sales Report\n");
         report.append("============\n");
-        for (Sale sale : sales) {
+        for (Supply sale : supplies) {
             report.append(sale.toString()).append("\n");
         }
         return report.toString();

@@ -517,7 +517,7 @@ public class MainClass {
         String ingredients = scanner.nextLine();
         LOGGER.info("Enter recipe steps:");
         String steps = scanner.nextLine();
-        Recipe recipe = new Recipe(name, ingredients, steps);
+        RecipeMenu recipe = new RecipeMenu(name, ingredients, steps);
         sweetSystem.addRecipe(recipe);
         LOGGER.info("Recipe added successfully.");
     }
@@ -536,7 +536,7 @@ public class MainClass {
     private static void updateRecipe(Scanner scanner, Application sweetSystem) {
         LOGGER.info("Enter recipe name to update:");
         String name = scanner.nextLine();
-        Recipe recipe = sweetSystem.findRecipeByName(name);
+        RecipeMenu recipe = sweetSystem.findRecipeByName(name);
         if (recipe == null) {
             LOGGER.warning("Recipe not found. Please try again.");
             return;
@@ -793,12 +793,12 @@ public class MainClass {
 
     private static void viewSales(Application sweetSystem) {
         LOGGER.info("Generating sales report...");
-        List<Sale> sales = sweetSystem.getSales();
+        List<Supply> sales = sweetSystem.getSales();
         if (sales == null || sales.isEmpty()) {
             LOGGER.info("No sales data available.");
         } else {
             LOGGER.info("Sales Report:");
-            for (Sale sale : sales) {
+            for (Supply sale : sales) {
                 LOGGER.info(sale.toString());
             }
         }
@@ -871,12 +871,12 @@ public class MainClass {
 
     private static void viewRequests(Application sweetSystem) {
         LOGGER.info("Generating supply requests report...");
-        List<SupplyRequest> requests = sweetSystem.getSupplyRequests();
+        List<Supply> requests = sweetSystem.getSupplyRequests();
         if (requests == null || requests.isEmpty()) {
             LOGGER.info("No supply requests available.");
         } else {
             LOGGER.info("Supply Requests Report:");
-            for (SupplyRequest request : requests) {
+            for (Supply request : requests) {
                 LOGGER.info(request.toString());
             }
         }
