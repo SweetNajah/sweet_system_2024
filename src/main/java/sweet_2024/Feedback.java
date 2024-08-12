@@ -97,8 +97,12 @@ public class Feedback {
         String productName = (this.products != null) ? this.products.getName() : "No product";
         String userName = (this.user != null) ? this.user.getUserName() : "No user";
         return "Feedback{" +
+
                 "productName='" + productName + '\'' +
                 ", userName='" + userName + '\'' +
+                "user=" + user.getEmail() +
+                ", product=" + products.getProductName() +
+                ", feedbackMessage='" + feedbackMessage + '\'' +
                 ", rating=" + rating +
                 ", feedbackMessage='" + feedbackMessage + '\'' +
                 '}';
