@@ -5,6 +5,13 @@ public class InventoryItem {
     private int quantity;
     private double price;
 
+
+    public InventoryItem() {
+
+
+    }
+
+
     public InventoryItem(String name, int quantity, double price) {
         this.name = name;
         this.quantity = quantity;

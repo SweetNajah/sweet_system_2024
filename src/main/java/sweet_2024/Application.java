@@ -76,7 +76,7 @@ public class Application {
         LOGGER.warning("Installation request not found.");
     }
 
-    public boolean submitFeedback(String feedbackMessage, User user, InventoryItem product, int rating) {
+    public boolean submitFeedback(String feedbackMessage, User user, Products product, int rating) {
         Feedback feedback = new Feedback(user, product, feedbackMessage, rating);
         feedbackList.add(feedback);
         LOGGER.info("Feedback submitted successfully!");
