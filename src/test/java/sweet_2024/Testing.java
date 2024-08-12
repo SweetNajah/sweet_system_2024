@@ -34,7 +34,9 @@ public class Testing {
     private User beneficiaryUser;
     private Inquiry inquiry;
     private Feedback feedback;
-    private InventoryItem product;
+    private Products product;
+    private RecipeMenu recipeMenu;
+    private StoreMenu storeMenu;
 
     private final Application application;
 
@@ -652,7 +654,7 @@ public class Testing {
         String feedbackMessage = "The dessert was delicious!";
         int rating = 5; // Assume rating is out of 5
 
-        product = new InventoryItem("aa",4,20);
+        product = new Products();
         feedback = new Feedback(beneficiaryUser, product, feedbackMessage, rating);
 
         // Then my feedback should be submitted (Feedback is submitted if it's not null)
@@ -660,7 +662,7 @@ public class Testing {
         assertEquals(feedbackMessage, feedback.getFeedbackMessage());
         assertEquals(rating, feedback.getRating());
         assertEquals(beneficiaryUser, feedback.getUser());
-    //    assertEquals(product, feedback.getProduct());
+        assertEquals(product, feedback.getProduct());
     }
     @Test
     @Given("I am logged in as a beneficiary user")
@@ -668,6 +670,10 @@ public class Testing {
         beneficiaryUser = new User("user@example.com", "password", "beneficiary");
 
         assertEquals("beneficiary", beneficiaryUser.getRole());
+        recipeMenu = new RecipeMenu();
+        recipeMenu.displayRecipes();
+        assertFalse(recipeMenu.desserts.isEmpty());
+
     }
 
     @When("I navigate to the recipes menu")
@@ -679,10 +685,20 @@ public class Testing {
     public void i_should_see_a_list_of_dessert_recipes() {
 
     }
-
+@Test
     @When("I apply dietary filters")
     public void i_apply_dietary_filters() {
+        String dietaryNeed = "Vegan";
+    recipeMenu = new RecipeMenu();  // Properly initializing recipeMenu
 
+    recipeMenu.filterRecipes(dietaryNeed);
+    beneficiaryUser = new User("user@example.com", "password", "beneficiary");
+     storeMenu = new StoreMenu(recipeMenu);
+
+      boolean allMatch = recipeMenu.desserts.stream().allMatch
+        (dessert -> dessert.getDietaryInfo().equalsIgnoreCase(dietaryNeed));
+
+        assertTrue(allMatch);
     }
 
     @Then("I should see a list of filtered dessert recipes")

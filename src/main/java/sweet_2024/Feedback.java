@@ -12,15 +12,15 @@ public class Feedback {
     private String response; // For storing responses to feedback
     private int rating;
     private static int idCounter = 1; // Static counter to generate unique IDs
-    private InventoryItem product;
+ //   private InventoryItem product;
 
-    public Feedback(User user, InventoryItem products, String feedbackMessage, int rating) {
+    public Feedback(User user, Products products, String feedbackMessage, int rating) {
         this.id = idCounter++;
         this.user = user;
         this.feedbackMessage = feedbackMessage;
         this.rating = rating;
         this.response = ""; // Initialize with no response
-        this.product = products;
+        this.products = products;
     }
 
     public int getId() {

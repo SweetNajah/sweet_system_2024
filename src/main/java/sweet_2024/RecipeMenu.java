@@ -23,13 +23,8 @@ public class RecipeMenu {
     }
 
     public void filterRecipes(String dietaryNeed) {
-        List<Dessert> filteredDesserts = desserts.stream()
-                .filter(dessert -> dessert.getDietaryInfo().equalsIgnoreCase(dietaryNeed))
-                .collect(Collectors.toList());
+        desserts.removeIf(dessert -> !dessert.getDietaryInfo().equalsIgnoreCase(dietaryNeed));
 
-        System.out.println("Filtered Dessert Recipes:");
-        for (Dessert dessert : filteredDesserts) {
-            System.out.println(dessert);
-        }
+
     }
 }

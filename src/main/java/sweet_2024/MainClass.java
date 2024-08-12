@@ -320,7 +320,7 @@ public class MainClass {
     private static void provideFeedback(Scanner scanner, Application sweetSystem) {
         LOGGER.info("Providing feedback...");
         User user = selectUser(scanner, sweetSystem);
-        InventoryItem product = selectProduct(scanner, sweetSystem);
+        Products product = new Products();
         LOGGER.info("Enter your feedback message:");
         String feedbackMessage = scanner.nextLine();
         LOGGER.info("Enter your rating (0-5):");
