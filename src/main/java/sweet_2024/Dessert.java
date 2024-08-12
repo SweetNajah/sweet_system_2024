@@ -1,9 +1,9 @@
 package sweet_2024;
 
 public class Dessert {
-    private String name;
-    private String dietaryInfo;
-    private double price;
+    private final String name;
+    private final String dietaryInfo;
+    private final double price;
 
     public Dessert(String name, String dietaryInfo, double price) {
         this.name = name;

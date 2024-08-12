@@ -14,6 +14,7 @@ public class Login {
     List<User> users=new ArrayList<>();
     int roles;
     boolean isLogged;
+    Mailing m;
     int verificationCode;
     User u;
     boolean validEmail;
@@ -61,9 +62,9 @@ public class Login {
 
             for (User s : users) {
                 if (u.getPassword().equals(s.getPassword()) && u.getEmail().equalsIgnoreCase(s.getEmail())) {
-
+                    m = new Mailing(u.getEmail());
                     setValidEmail(true);
-
+                    m.sendVerificationCode();
                     userIndex=users.indexOf(s);
                     return true;
                 }
@@ -89,17 +90,16 @@ public class Login {
 
     public boolean confirmLogin(int verificationCode){
         this.verificationCode=verificationCode;
-//        if(validEmail&&m.verificationCode==this.verificationCode){
-//
-//            setLogged(true);
-//            return true;
-//
-//        }
+        if(validEmail&&m.verificationCode==this.verificationCode){
+
+            setLogged(true);
+            return true;
+        }
         return false;
     }
 
     public void setRoles() {
-        String type=users.get(userIndex).getType();
+        String type=users.get(userIndex).getRole();
         if (type.equalsIgnoreCase(adminString)){
             roles=0;
         }
@@ -149,12 +149,30 @@ public class Login {
             }
         }
         if(emailValidator(newUser.getEmail())){
-            users.get(userIndex).setType(newUser.getType());
+            users.get(userIndex).setRole(newUser.getRole());
             users.get(userIndex).setPassword(newUser.getPassword());
             users.get(userIndex).setEmail(newUser.getEmail());
             isUpdating=true;
         }
         return isUpdating;
+    }
+    public boolean removeUser(String email) {
+        for (User u : users) {
+            if (u.getEmail().equals(email)) {
+                users.remove(u);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public User findUserByEmail(String email) {
+        for (User u : users) {
+            if (u.getEmail().equals(email)) {
+                return u;
+            }
+        }
+        return null;
     }
 
     public boolean deleteUser(User u){
