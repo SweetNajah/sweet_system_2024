@@ -18,7 +18,7 @@ public class Application {
     private List<User> users;
     private List<Products> availableProducts;
     private List<Order> customerOrders;
-    private List<InstallationRequest> installationRequests;
+    private List<Order> installationRequests;
     private List<RecipeMenu> recipes;
     private List<Post> posts;
     private List<Feedback> feedbackList;
@@ -55,12 +55,12 @@ public class Application {
         this.supplies.add(new Supply("Flour", 200, "Approved"));
 
     }
-    public List<InstallationRequest> getInstallationRequests() {
+    public List<Order> getInstallationRequests() {
         return installationRequests;
     }
 
     public void markAsInstalled(Order requestId) {
-        for (InstallationRequest request : installationRequests) {
+        for (Order request : installationRequests) {
 
             if (request.getOrderId() == requestId.getOrderId()) {
                 request.setInstalled(true);

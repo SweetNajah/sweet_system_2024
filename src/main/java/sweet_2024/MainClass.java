@@ -276,7 +276,7 @@ public class MainClass {
 
     private static void installProduct(Scanner scanner, Application sweetSystem) {
         LOGGER.info("Installing product...");
-        List<InstallationRequest> installationRequests = sweetSystem.getInstallationRequests();
+        List<Order> installationRequests = sweetSystem.getInstallationRequests();
         if (installationRequests == null || installationRequests.isEmpty()) {
             LOGGER.info("No installation requests available.");
             return;
@@ -306,13 +306,13 @@ public class MainClass {
 
     private static void viewInstallationRequests(Application sweetSystem) {
         LOGGER.info("Viewing installation requests...");
-        List<InstallationRequest> installationRequests = sweetSystem.getInstallationRequests();
+        List<Order> installationRequests = sweetSystem.getInstallationRequests();
         if (installationRequests == null || installationRequests.isEmpty()) {
             LOGGER.info("No installation requests available.");
             return;
         }
         LOGGER.info("Pending Installation Requests:");
-        for (InstallationRequest request : installationRequests) {
+        for (Order request : installationRequests) {
             LOGGER.info(request.toString());
         }
     }
