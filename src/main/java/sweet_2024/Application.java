@@ -35,26 +35,29 @@ public class Application {
         this.newUser = new User("ali55@gmail.com", "147852", "Customer");
         this.login = new Login(newUser);
         this.report=new Report();
-        this.recipes = new ArrayList<>();
-        posts = new ArrayList<>();
-        feedbackList = new ArrayList<>();
-        supplies = new ArrayList<>();
 
+        this.recipes = new ArrayList<>();
+        this.posts = new ArrayList<>();
+        this.feedbackList = new ArrayList<>();
+        this.supplies = new ArrayList<>();
         this.inventory = new ArrayList<>();
+        this.sales = new ArrayList<>();
+        this.supplyRequests = new ArrayList<>();
+        this.installationRequests = new ArrayList<>();
+        this.availableProducts = new ArrayList<>();
+        this.customerOrders = new ArrayList<>();
+        this.users = new ArrayList<>();
+        this.products = new ArrayList<>();
+
         this.inventory.add(new InventoryItem("Chocolate Bar", 50, 1.99));
         this.inventory.add(new InventoryItem("Vanilla Cake", 30, 15.00));
         this.inventory.add(new InventoryItem("Candy", 100, 0.10));
 
-        this.sales = new ArrayList<>();
         this.sales.add(new Sale("Chocolate Cake", 20, 300.00));
         this.sales.add(new Sale("Candy Pack", 50, 100.00));
 
-        supplyRequests = new ArrayList<>();
-        supplyRequests.add(new SupplyRequest("Sugar", 100, "Pending"));
-        supplyRequests.add(new SupplyRequest("Flour", 200, "Approved"));
-
-        products = new ArrayList<>();
-
+        this.supplyRequests.add(new SupplyRequest("Sugar", 100, "Pending"));
+        this.supplyRequests.add(new SupplyRequest("Flour", 200, "Approved"));
 
     }
     public List<InstallationRequest> getInstallationRequests() {
@@ -73,7 +76,7 @@ public class Application {
         LOGGER.warning("Installation request not found.");
     }
 
-    public boolean submitFeedback(String feedbackMessage, User user, Products product, int rating) {
+    public boolean submitFeedback(String feedbackMessage, User user, InventoryItem product, int rating) {
         Feedback feedback = new Feedback(user, product, feedbackMessage, rating);
         feedbackList.add(feedback);
         LOGGER.info("Feedback submitted successfully!");
@@ -352,6 +355,53 @@ public class Application {
         LOGGER.warning("No order found with ID: " + orderId);
         return null;
     }
+    public void addUser(User user) {
+        if (user != null) {
+            users.add(user);
+            LOGGER.info("User added successfully.");
+        } else {
+            LOGGER.warning("Failed to add user: User is null.");
+        }
+    }
+//    public void listUsers() {
+//        if (users == null || users.isEmpty()) {
+//            LOGGER.info("No users available.");
+//        } else {
+//            LOGGER.info("Listing all users:");
+//            for (User user : users) {
+//                LOGGER.info(user.toString());
+//            }
+//        }
+//    }
+
+    public static void listUsers(Application sweetSystem) {
+        List<User> users = sweetSystem.getUsers();
+        if (users == null || users.isEmpty()) {
+            LOGGER.info("No users available.");
+        } else {
+            LOGGER.info("Listing users:");
+            for (User user : users) {
+                LOGGER.info(user.toString());
+            }
+        }
+    }
+
+    public User findUserByEmail(String email) {
+        if (email == null || email.isEmpty()) {
+            LOGGER.warning("Invalid email input.");
+            return null;
+        }
+
+        for (User user : users) {
+            if (user.getEmail().equalsIgnoreCase(email)) {
+                return user;
+            }
+        }
+
+        LOGGER.info("User not found with email: " + email);
+        return null;
+    }
+
 
     public void addSupply(Supply supply) {
         if (supply != null) {
@@ -412,14 +462,73 @@ public class Application {
         }
     }
 
-    public boolean report(String report, String filename) {
-        return switch (report) {
-//            case "Sales" -> printTextToFile(filename, salesreport());
-//            case "Product rates" -> printTextToFile(filename, ratesReport());
-//            case "Category products" -> printTextToFile(filename, productreport());
-//            case "rates and reviews" -> printTextToFile(filename, ratesReviewsReport());
-            default -> false;
+    public boolean report(String reportType, String filename) {
+        String reportContent = "";
 
-        };
+        switch (reportType) {
+            case "Sales":
+                reportContent = generateSalesReport();
+                break;
+            case "Product rates":
+                reportContent = generateProductRatesReport();
+                break;
+            case "Category products":
+                reportContent = generateCategoryProductsReport();
+                break;
+            case "Rates and reviews":
+                reportContent = generateRatesAndReviewsReport();
+                break;
+            default:
+                LOGGER.warning("Invalid report type: " + reportType);
+                return false;
+        }
+
+        return printTextToFile(filename, reportContent);
     }
+
+    private String generateSalesReport() {
+        StringBuilder report = new StringBuilder();
+        report.append("Sales Report\n");
+        report.append("============\n");
+        for (Sale sale : sales) {
+            report.append(sale.toString()).append("\n");
+        }
+        return report.toString();
+    }
+
+    private String generateProductRatesReport() {
+        StringBuilder report = new StringBuilder();
+        report.append("Product Rates Report\n");
+        report.append("====================\n");
+        for (Products product : availableProducts) {
+            report.append(product.getProductName()).append(": ").append(product.getProductRating()).append("\n");
+        }
+        return report.toString();
+    }
+
+    private String generateCategoryProductsReport() {
+        StringBuilder report = new StringBuilder();
+        report.append("Category Products Report\n");
+        report.append("========================\n");
+        report.append("Category: Sweets\n");
+        for (Products product : availableProducts) {
+            if (product.getCategory().equals("Sweets")) {
+                report.append(product.getProductName()).append("\n");
+            }
+        }
+        return report.toString();
+    }
+
+    private String generateRatesAndReviewsReport() {
+        StringBuilder report = new StringBuilder();
+        report.append("Rates and Reviews Report\n");
+        report.append("========================\n");
+        for (Feedback feedback : feedbackList) {
+            report.append("Product: ").append(feedback.getProduct().getProductName()).append("\n");
+            report.append("Rating: ").append(feedback.getRating()).append("\n");
+            report.append("Review: ").append(feedback.getFeedbackMessage()).append("\n\n");
+        }
+        return report.toString();
+    }
+
 }

@@ -14,21 +14,20 @@ public class Login {
     List<User> users=new ArrayList<>();
     int roles;
     boolean isLogged;
-    Mailing m;
+    Mailing mailing;
     int verificationCode;
-    User u;
+    User user;
     boolean validEmail;
     int userIndex;
-    Login(User u){
-        this.u=u;
+
+    Login(User user){
+        this.user = user;
         try {
             LOGGER.setUseParentHandlers(false);
-
             Handler[] handlers = LOGGER.getHandlers();
             for (Handler handler : handlers) {
                 LOGGER.removeHandler(handler);
             }
-
             ConsoleHandler consoleHandler = new ConsoleHandler();
             consoleHandler.setLevel(Level.INFO);
             consoleHandler.setFormatter(new SimpleFormatter() {
@@ -43,9 +42,6 @@ public class Login {
         catch (Exception e) {
             LOGGER.log(Level.SEVERE, "An unexpected error occurred during logger configuration", e);
         }
-
-
-
         User u1=new User("ali.dawood@gmail.com","123456", adminString);
         User u2=new User("loay@gmail.com","654321", installerString);
         User u3=new User("abdalbaset@gmail.com","987654", installerString);
@@ -56,15 +52,16 @@ public class Login {
         users.add(u4);
         isLogged=false;
     }
+
     public boolean login() {
 
-        if (emailValidator(u.getEmail())) {
+        if (emailValidator(user.getEmail())) {
 
             for (User s : users) {
-                if (u.getPassword().equals(s.getPassword()) && u.getEmail().equalsIgnoreCase(s.getEmail())) {
-                    m = new Mailing(u.getEmail());
+                if (user.getPassword().equals(s.getPassword()) && user.getEmail().equalsIgnoreCase(s.getEmail())) {
+                    mailing = new Mailing(user.getEmail());
                     setValidEmail(true);
-                    m.sendVerificationCode();
+                    mailing.sendVerificationCode();
                     userIndex=users.indexOf(s);
                     return true;
                 }
@@ -90,8 +87,7 @@ public class Login {
 
     public boolean confirmLogin(int verificationCode){
         this.verificationCode=verificationCode;
-        if(validEmail&&m.verificationCode==this.verificationCode){
-
+        if(validEmail&& mailing.verificationCode==this.verificationCode){
             setLogged(true);
             return true;
         }
@@ -118,8 +114,6 @@ public class Login {
         return roles;
     }
 
-
-
     public void setLogged(boolean logged) {
         isLogged = logged;
     }
@@ -127,9 +121,6 @@ public class Login {
     public boolean isLogged() {
         return isLogged;
     }
-
-
-
 
     public boolean addUser(User u){
         if(emailValidator(u.getEmail())){
@@ -139,7 +130,7 @@ public class Login {
         return false;
     }
     public void setUser(User u){
-        this.u=u;
+        this.user =u;
     }
     public boolean updateUser(User oldUser,User newUser){
         boolean isUpdating=false;

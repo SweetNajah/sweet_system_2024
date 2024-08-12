@@ -1,9 +1,5 @@
 package sweet_2024;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.time.LocalDate;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -83,8 +79,10 @@ public class MainClass {
         LOGGER.info("Enter your role (Admin/Store Owner/Supplier): ");
         String role = scanner.nextLine();
         if (sweetSystem.login.emailValidator(email)) {
-            sweetSystem.login.addUser(new User(email, password, role));
+            User newUser = new User(email, password, role);
+            sweetSystem.addUser(newUser);
             LOGGER.info("User Created Successfully");
+            sendEmailToUser(email);
         } else {
             LOGGER.info(INVALID_INFORMATION_PLEASE_TRY_AGAIN);
         }
@@ -95,13 +93,22 @@ public class MainClass {
         String signInEmail = scanner.nextLine();
         LOGGER.info("Enter your password: ");
         String signInPassword = scanner.nextLine();
-        sweetSystem.login.setUser(new User(signInEmail, signInPassword, ""));
-        if (sweetSystem.login.login()) {
-            sweetSystem.login.setRoles();
+        User user = sweetSystem.findUserByEmail(signInEmail);
+        if (user != null && user.getPassword().equals(signInPassword)) {
+            sweetSystem.login.setUser(user);
+            Mailing mailing = new Mailing(signInEmail);
+            mailing.sendVerificationCode();
+            LOGGER.info("Verification code sent to " + signInEmail);
             handleRoles(scanner, sweetSystem, signInEmail, signInPassword);
         } else {
             LOGGER.info(INVALID_INFORMATION_PLEASE_TRY_AGAIN);
         }
+    }
+
+    private static void sendEmailToUser(String email) {
+        Mailing mailing = new Mailing(email);
+        mailing.sendEmail("Welcome to Sweet Management System", "Thank you for signing up!");
+        LOGGER.info("Email sent to " + email);
     }
 
     private static void handleRoles(Scanner scanner, Application sweetSystem, String signInEmail, String signInPassword) {
@@ -270,7 +277,7 @@ public class MainClass {
     private static void installProduct(Scanner scanner, Application sweetSystem) {
         LOGGER.info("Installing product...");
         List<InstallationRequest> installationRequests = sweetSystem.getInstallationRequests();
-        if (installationRequests.isEmpty()) {
+        if (installationRequests == null || installationRequests.isEmpty()) {
             LOGGER.info("No installation requests available.");
             return;
         }
@@ -300,7 +307,7 @@ public class MainClass {
     private static void viewInstallationRequests(Application sweetSystem) {
         LOGGER.info("Viewing installation requests...");
         List<InstallationRequest> installationRequests = sweetSystem.getInstallationRequests();
-        if (installationRequests.isEmpty()) {
+        if (installationRequests == null || installationRequests.isEmpty()) {
             LOGGER.info("No installation requests available.");
             return;
         }
@@ -313,7 +320,7 @@ public class MainClass {
     private static void provideFeedback(Scanner scanner, Application sweetSystem) {
         LOGGER.info("Providing feedback...");
         User user = selectUser(scanner, sweetSystem);
-        Products product = selectProduct(scanner, sweetSystem);
+        InventoryItem product = selectProduct(scanner, sweetSystem);
         LOGGER.info("Enter your feedback message:");
         String feedbackMessage = scanner.nextLine();
         LOGGER.info("Enter your rating (0-5):");
@@ -337,7 +344,7 @@ public class MainClass {
 
     private static User selectUser(Scanner scanner, Application sweetSystem) {
         List<User> users = sweetSystem.getUsers();
-        if (users.isEmpty()) {
+        if (users == null || users.isEmpty()) {
             LOGGER.info("No users available.");
             return null;
         }
@@ -354,19 +361,19 @@ public class MainClass {
         }
     }
 
-    private static Products selectProduct(Scanner scanner, Application sweetSystem) {
-        List<Products> products = sweetSystem.getAvailableProducts();
-        if (products.isEmpty()) {
+    private static InventoryItem selectProduct(Scanner scanner, Application sweetSystem) {
+        List<InventoryItem> inventoryItems = sweetSystem.getInventoryItems();
+        if (inventoryItems == null || inventoryItems.isEmpty()) {
             LOGGER.info("No products available.");
             return null;
         }
         LOGGER.info("Select a product:");
-        for (int i = 0; i < products.size(); i++) {
-            LOGGER.info((i + 1) + ": " + products.get(i).getProductName() + " - $" + products.get(i).getProductPrice());
+        for (int i = 0; i < inventoryItems.size(); i++) {
+            LOGGER.info((i + 1) + ": " + inventoryItems.get(i).getName() + " - $" + inventoryItems.get(i).getPrice());
         }
         int choice = Integer.parseInt(scanner.nextLine()) - 1;
-        if (choice >= 0 && choice < products.size()) {
-            return products.get(choice);
+        if (choice >= 0 && choice < inventoryItems.size()) {
+            return inventoryItems.get(choice);
         } else {
             LOGGER.warning("Invalid choice. Please try again.");
             return selectProduct(scanner, sweetSystem);
@@ -386,7 +393,7 @@ public class MainClass {
                 continue;
             }
             switch (choice) {
-                case 1 -> listUsers(sweetSystem);
+                case 1 -> Application.listUsers(sweetSystem);
                 case 2 -> addUser(scanner, sweetSystem);
                 case 3 -> removeUser(scanner, sweetSystem);
                 case 4 -> updateUser(scanner, sweetSystem);
@@ -396,17 +403,6 @@ public class MainClass {
         } while (choice != 5);
     }
 
-    private static void listUsers(Application sweetSystem) {
-        List<User> users = sweetSystem.getUsers();
-        if (users.isEmpty()) {
-            LOGGER.info("No users available.");
-        } else {
-            LOGGER.info("Listing users:");
-            for (User user : users) {
-                LOGGER.info(user.toString());
-            }
-        }
-    }
 
     private static void addUser(Scanner scanner, Application sweetSystem) {
         LOGGER.info("Enter email for new user:");
@@ -640,7 +636,7 @@ public class MainClass {
 
     private static void viewFeedback(Application sweetSystem) {
         List<Feedback> feedbackList = sweetSystem.getFeedback();
-        if (feedbackList.isEmpty()) {
+        if (feedbackList == null || feedbackList.isEmpty()) {
             LOGGER.info("No feedback available.");
         } else {
             LOGGER.info("Listing feedback:");
@@ -798,7 +794,7 @@ public class MainClass {
     private static void viewSales(Application sweetSystem) {
         LOGGER.info("Generating sales report...");
         List<Sale> sales = sweetSystem.getSales();
-        if (sales.isEmpty()) {
+        if (sales == null || sales.isEmpty()) {
             LOGGER.info("No sales data available.");
         } else {
             LOGGER.info("Sales Report:");
@@ -832,7 +828,7 @@ public class MainClass {
 
     private static void viewOrders(Application sweetSystem) {
         List<Order> orders = sweetSystem.getOrders();
-        if (orders.isEmpty()) {
+        if (orders == null || orders.isEmpty()) {
             LOGGER.info("No orders available.");
         } else {
             LOGGER.info("Listing orders:");
@@ -876,7 +872,7 @@ public class MainClass {
     private static void viewRequests(Application sweetSystem) {
         LOGGER.info("Generating supply requests report...");
         List<SupplyRequest> requests = sweetSystem.getSupplyRequests();
-        if (requests.isEmpty()) {
+        if (requests == null || requests.isEmpty()) {
             LOGGER.info("No supply requests available.");
         } else {
             LOGGER.info("Supply Requests Report:");
