@@ -7,10 +7,13 @@ import java.util.List;
 
 public class Products {
     private double revenue;
-
+    private double productRating;  // التقييم كرقم عشري
+    private String category;
     float rateAvg;
     protected List<Integer> rates= new ArrayList<>();
     protected List<String> reviews= new ArrayList<>();
+    private Products products;
+
     public double getRevenue() {
         return revenue;
     }
@@ -60,8 +63,12 @@ public class Products {
     }
 
     public String getProductName() {
-        return productName;
+        if (this.products == null) {
+            return "No product";
+        }
+        return this.products.getProductName();
     }
+
 
     public void setProductName(String productName) {
         this.productName = productName;
@@ -301,10 +308,13 @@ public class Products {
     }
 
 
+    public char[] getProductRating() {
+        String ratingStr = String.valueOf(productRating);
+        return ratingStr.toCharArray();
+    }
 
-
-
-
-
+    public Object getCategory() {
+        return category;
+    }
 }
 

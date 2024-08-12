@@ -6,6 +6,7 @@ public class User {
     String role;
     String firstName;
     String lastName;
+    private User user;
 
     public User(String email, String password, String role) {
         this.email = email;
@@ -46,5 +47,12 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getUserName() {
+        if (this.user == null) {
+            return "No user";
+        }
+        return this.user.getUserName();
     }
 }
