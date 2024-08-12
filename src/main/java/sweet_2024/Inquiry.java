@@ -44,7 +44,7 @@ public class Inquiry {
         return "Inquiry{" +
                 "user=" + user.getEmail() +
                 ", inquiryMessage='" + inquiryMessage + '\'' +
-                (products != null ? ", product=" + products.getName() : "") +
+                (products != null ? ", product=" + products.getProductName() : "") +
                 '}';
     }
 }
