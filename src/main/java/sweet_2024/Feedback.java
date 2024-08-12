@@ -12,7 +12,6 @@ public class Feedback {
     private String response; // For storing responses to feedback
     private int rating;
     private static int idCounter = 1; // Static counter to generate unique IDs
- //   private InventoryItem product;
 
     public Feedback(User user, Products products, String feedbackMessage, int rating) {
         this.id = idCounter++;
@@ -95,7 +94,7 @@ public class Feedback {
 
     @Override
     public String toString() {
-        String productName = (this.products != null) ? this.products.getProductName() : "No product";
+        String productName = (this.products != null) ? this.products.getName() : "No product";
         String userName = (this.user != null) ? this.user.getUserName() : "No user";
         return "Feedback{" +
                 "productName='" + productName + '\'' +

@@ -238,7 +238,7 @@ public class MainClass {
         }
         LOGGER.info("Available products:");
         for (int i = 0; i < products.size(); i++) {
-            LOGGER.info((i + 1) + "- " + products.get(i).getProductName() + " - " + products.get(i).getProductPrice() + " USD");
+            LOGGER.info((i + 1) + "- " + products.get(i).getName() + " - " + products.get(i).getPrice() + " USD");
         }
         LOGGER.info("Enter the number of the product you want to order:");
         int productIndex;
@@ -271,7 +271,7 @@ public class MainClass {
         }
         Order order = new Order(selectedProduct, quantity);
         sweetSystem.placeOrder(order);
-        LOGGER.info("Order placed successfully! " + quantity + " x " + selectedProduct.getProductName());
+        LOGGER.info("Order placed successfully! " + quantity + " x " + selectedProduct.getName());
     }
 
     private static void installProduct(Scanner scanner, Application sweetSystem) {
@@ -361,8 +361,8 @@ public class MainClass {
         }
     }
 
-    private static InventoryItem selectProduct(Scanner scanner, Application sweetSystem) {
-        List<InventoryItem> inventoryItems = sweetSystem.getInventoryItems();
+    private static Products selectProduct(Scanner scanner, Application sweetSystem) {
+        List<Products> inventoryItems = sweetSystem.getInventoryItems();
         if (inventoryItems == null || inventoryItems.isEmpty()) {
             LOGGER.info("No products available.");
             return null;
@@ -517,7 +517,7 @@ public class MainClass {
         String ingredients = scanner.nextLine();
         LOGGER.info("Enter recipe steps:");
         String steps = scanner.nextLine();
-        Recipe recipe = new Recipe(name, ingredients, steps);
+        RecipeMenu recipe = new RecipeMenu(name, ingredients, steps);
         sweetSystem.addRecipe(recipe);
         LOGGER.info("Recipe added successfully.");
     }
@@ -536,7 +536,7 @@ public class MainClass {
     private static void updateRecipe(Scanner scanner, Application sweetSystem) {
         LOGGER.info("Enter recipe name to update:");
         String name = scanner.nextLine();
-        Recipe recipe = sweetSystem.findRecipeByName(name);
+        RecipeMenu recipe = sweetSystem.findRecipeByName(name);
         if (recipe == null) {
             LOGGER.warning("Recipe not found. Please try again.");
             return;
@@ -751,7 +751,7 @@ public class MainClass {
         LOGGER.info("Enter item price:");
         double price = scanner.nextDouble();
         scanner.nextLine();
-        InventoryItem item = new InventoryItem(name, quantity, price);
+        Products item = new Products(name, quantity, price);
         sweetSystem.addInventoryItem(item);
         LOGGER.info("Inventory item added successfully.");
     }
@@ -770,7 +770,7 @@ public class MainClass {
     private static void updateInventoryItem(Scanner scanner, Application sweetSystem) {
         LOGGER.info("Enter item name to update:");
         String name = scanner.nextLine();
-        InventoryItem item = sweetSystem.findInventoryItemByName(name);
+        Products item = sweetSystem.findInventoryItemByName(name);
         if (item == null) {
             LOGGER.warning("Inventory item not found. Please try again.");
             return;
@@ -793,12 +793,12 @@ public class MainClass {
 
     private static void viewSales(Application sweetSystem) {
         LOGGER.info("Generating sales report...");
-        List<Sale> sales = sweetSystem.getSales();
+        List<Supply> sales = sweetSystem.getSales();
         if (sales == null || sales.isEmpty()) {
             LOGGER.info("No sales data available.");
         } else {
             LOGGER.info("Sales Report:");
-            for (Sale sale : sales) {
+            for (Supply sale : sales) {
                 LOGGER.info(sale.toString());
             }
         }
@@ -871,12 +871,12 @@ public class MainClass {
 
     private static void viewRequests(Application sweetSystem) {
         LOGGER.info("Generating supply requests report...");
-        List<SupplyRequest> requests = sweetSystem.getSupplyRequests();
+        List<Supply> requests = sweetSystem.getSupplyRequests();
         if (requests == null || requests.isEmpty()) {
             LOGGER.info("No supply requests available.");
         } else {
             LOGGER.info("Supply Requests Report:");
-            for (SupplyRequest request : requests) {
+            for (Supply request : requests) {
                 LOGGER.info(request.toString());
             }
         }

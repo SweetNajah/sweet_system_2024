@@ -19,13 +19,10 @@ public class Application {
     private List<Products> availableProducts;
     private List<Order> customerOrders;
     private List<InstallationRequest> installationRequests;
-    private List<Recipe> recipes;
+    private List<RecipeMenu> recipes;
     private List<Post> posts;
     private List<Feedback> feedbackList;
-    private List<InventoryItem> inventory;
-    private List<Sale> sales;
     private List<Supply> supplies;
-    private List<SupplyRequest> supplyRequests;
     private List<Products> products = new ArrayList<>();
 
 
@@ -40,24 +37,22 @@ public class Application {
         this.posts = new ArrayList<>();
         this.feedbackList = new ArrayList<>();
         this.supplies = new ArrayList<>();
-        this.inventory = new ArrayList<>();
-        this.sales = new ArrayList<>();
-        this.supplyRequests = new ArrayList<>();
+        this.supplies = new ArrayList<>();
         this.installationRequests = new ArrayList<>();
         this.availableProducts = new ArrayList<>();
         this.customerOrders = new ArrayList<>();
         this.users = new ArrayList<>();
         this.products = new ArrayList<>();
 
-        this.inventory.add(new InventoryItem("Chocolate Bar", 50, 1.99));
-        this.inventory.add(new InventoryItem("Vanilla Cake", 30, 15.00));
-        this.inventory.add(new InventoryItem("Candy", 100, 0.10));
+        this.availableProducts.add(new Products("Chocolate Bar", 50, 1.99));
+        this.availableProducts.add(new Products("Vanilla Cake", 30, 15.00));
+        this.availableProducts.add(new Products("Candy", 100, 0.10));
 
-        this.sales.add(new Sale("Chocolate Cake", 20, 300.00));
-        this.sales.add(new Sale("Candy Pack", 50, 100.00));
+        this.supplies.add(new Supply("Chocolate Cake", 20, 300.00));
+        this.supplies.add(new Supply("Candy Pack", 50, 100.00));
 
-        this.supplyRequests.add(new SupplyRequest("Sugar", 100, "Pending"));
-        this.supplyRequests.add(new SupplyRequest("Flour", 200, "Approved"));
+        this.supplies.add(new Supply("Sugar", 100, "Pending"));
+        this.supplies.add(new Supply("Flour", 200, "Approved"));
 
     }
     public List<InstallationRequest> getInstallationRequests() {
@@ -207,19 +202,19 @@ public class Application {
         return bestSellers;
     }
 
-    public boolean addRecipe(Recipe recipe) {
+    public boolean addRecipe(RecipeMenu recipe) {
         recipes.add(recipe);
         return true;
     }
 
-    public List<Recipe> getRecipes() {
+    public List<RecipeMenu> getRecipes() {
         return recipes;
     }
 
     public boolean removeRecipe(String name) {
-        Iterator<Recipe> iterator = recipes.iterator();
+        Iterator<RecipeMenu> iterator = recipes.iterator();
         while (iterator.hasNext()) {
-            Recipe recipe = iterator.next();
+            RecipeMenu recipe = iterator.next();
             if (recipe.getName().equalsIgnoreCase(name)) {
                 iterator.remove();
                 return true;
@@ -228,8 +223,8 @@ public class Application {
         return false;
     }
 
-    public Recipe findRecipeByName(String name) {
-        for (Recipe recipe : recipes) {
+    public RecipeMenu findRecipeByName(String name) {
+        for (RecipeMenu recipe : recipes) {
             if (recipe.getName().equalsIgnoreCase(name)) {
                 return recipe;
             }
@@ -284,57 +279,57 @@ public class Application {
         return null;
     }
 
-    public void addInventoryItem(InventoryItem item) {
-        inventory.add(item);
+    public void addInventoryItem(Products item) {
+        availableProducts.add(item);
         LOGGER.info("Inventory item added: " + item.getName());
     }
 
-    public List<InventoryItem> getInventory() {
-        return inventory;
+    public List<Products> getInventory() {
+        return availableProducts;
     }
 
     public boolean removeInventoryItem(String itemName) {
-        for (InventoryItem item : inventory) {
+        for (Products item : availableProducts) {
             if (item.getName().equalsIgnoreCase(itemName)) {
-                inventory.remove(item);
+                availableProducts.remove(item);
                 LOGGER.info("Inventory item removed: " + itemName);
-                return true; // Item found and removed
+                return true;
             }
         }
         LOGGER.warning("No inventory item found with the name: " + itemName);
         return false; // No item found
     }
 
-    public List<InventoryItem> getInventoryItems() {
-        return inventory;
+    public List<Products> getInventoryItems() {
+        return availableProducts;
     }
 
     public void listInventoryItems() {
-        if (inventory.isEmpty()) {
+        if (availableProducts.isEmpty()) {
             LOGGER.info("No inventory items available.");
         } else {
             LOGGER.info("Listing all inventory items:");
-            for (InventoryItem item : inventory) {
+            for (Products item : availableProducts) {
                 LOGGER.info(item.toString());
             }
         }
     }
 
-    public InventoryItem findInventoryItemByName(String name) {
-        for (InventoryItem item : inventory) {
+    public Products findInventoryItemByName(String name) {
+        for (Products item : availableProducts) {
             if (item.getName().equalsIgnoreCase(name)) {
                 return item;
             }
         }
-        return null;  // Return null if no item found
+        return null;
     }
 
-    public List<Sale> getSales() {
-        return new ArrayList<>(this.sales);
+    public List<Supply> getSales() {
+        return new ArrayList<>(this.supplies);
     }
 
     public List<Order> getOrders() {
-        return customerOrders; // Return the list of orders
+        return customerOrders;
     }
 
     public void addOrder(Order order) {
@@ -363,16 +358,6 @@ public class Application {
             LOGGER.warning("Failed to add user: User is null.");
         }
     }
-//    public void listUsers() {
-//        if (users == null || users.isEmpty()) {
-//            LOGGER.info("No users available.");
-//        } else {
-//            LOGGER.info("Listing all users:");
-//            for (User user : users) {
-//                LOGGER.info(user.toString());
-//            }
-//        }
-//    }
 
     public static void listUsers(Application sweetSystem) {
         List<User> users = sweetSystem.getUsers();
@@ -401,7 +386,6 @@ public class Application {
         LOGGER.info("User not found with email: " + email);
         return null;
     }
-
 
     public void addSupply(Supply supply) {
         if (supply != null) {
@@ -445,8 +429,8 @@ public class Application {
         return null;
     }
 
-    public List<SupplyRequest> getSupplyRequests() {
-        return supplyRequests;
+    public List<Supply> getSupplyRequests() {
+        return supplies;
     }
 
     public List<User> getUsers() {
@@ -490,7 +474,7 @@ public class Application {
         StringBuilder report = new StringBuilder();
         report.append("Sales Report\n");
         report.append("============\n");
-        for (Sale sale : sales) {
+        for (Supply sale : supplies) {
             report.append(sale.toString()).append("\n");
         }
         return report.toString();
@@ -501,7 +485,7 @@ public class Application {
         report.append("Product Rates Report\n");
         report.append("====================\n");
         for (Products product : availableProducts) {
-            report.append(product.getProductName()).append(": ").append(product.getProductRating()).append("\n");
+            report.append(product.getName()).append(": ").append(product.getProductRating()).append("\n");
         }
         return report.toString();
     }
@@ -513,7 +497,7 @@ public class Application {
         report.append("Category: Sweets\n");
         for (Products product : availableProducts) {
             if (product.getCategory().equals("Sweets")) {
-                report.append(product.getProductName()).append("\n");
+                report.append(product.getName()).append("\n");
             }
         }
         return report.toString();
@@ -524,7 +508,7 @@ public class Application {
         report.append("Rates and Reviews Report\n");
         report.append("========================\n");
         for (Feedback feedback : feedbackList) {
-            report.append("Product: ").append(feedback.getProduct().getProductName()).append("\n");
+            report.append("Product: ").append(feedback.getProduct().getName()).append("\n");
             report.append("Rating: ").append(feedback.getRating()).append("\n");
             report.append("Review: ").append(feedback.getFeedbackMessage()).append("\n\n");
         }

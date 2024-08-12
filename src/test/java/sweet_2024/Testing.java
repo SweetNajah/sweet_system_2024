@@ -40,14 +40,8 @@ public class Testing {
 
     private final Application application;
 
-//    public Testing(Application application) {
-//        this.application = application;
-//        u = new User("ali55@gmail.com","123456","Customer");
-//        o = new User("abd3@gmail.com","123","Admin");
-//    }
-
     public Testing() {
-        this.application = new Application();  // Or however you would initialize it
+        this.application = new Application();
         u = new User("ali55@gmail.com", "123456", "Customer");
         o = new User("abd3@gmail.com", "123", "Admin");
     }
@@ -78,10 +72,7 @@ public class Testing {
     public void userAddedFailed() {
         assertFalse(userAdded);
         Login login = new Login(new User("ali.d@example.org", "hiword"));
-
-        // Act and Assert
         assertFalse(login.addUser(new User("", "hiword")));
-
     }
 
     @When("i choose to add new user with with valid formatting")
@@ -131,7 +122,7 @@ public class Testing {
     public void userSuccessfullyDeleting() {
         assertTrue(isUserDeleting);
     }
-///////////////////////////////////////////////////////////////////////////////////////////////////feature login
+
 
 
 
@@ -152,16 +143,11 @@ public class Testing {
             }
         }
         assertTrue(loginSuccessful);
-
         Login login = new Login(new User("ali.d@example.org", "hiword"));
         User oldUser = new User("ali.d@example.org", "hiword");
-
         login.updateUser(oldUser, new User("ali.d@example.org", "hiword", "Type"));
 
-        // Act
         login.setRoles();
-
-        // Assert
         assertEquals(-1, login.getRoles());
 
         try (MockedStatic<Transport> mockTransport = mockStatic(Transport.class)) {
@@ -189,46 +175,31 @@ public class Testing {
             }
         }
         assertTrue(loginFailed);
-
         Login login = new Login(new User("ali.d@example.org", "hiword","admin"));
-
-        // Act
         login.setRoles();
-
-        // Assert
         assertEquals(0, login.getRoles());
         User u1 =new User("","");
         assertFalse ((new Login(u1)).login());
-
     }
 
 
     @When("verification code is {int}")
     public void verificationCodeIs(Integer int1) {
-
         boolean f=true;
         assertTrue(f);
-
     }
+
     @Then("user successfully log in")
     public void userSuccessfullyLogIn() {
-
         if(application.login.isLogged()){
             boolean loginSuccessful=true;
             assertTrue(loginSuccessful);
         }
-
         Login login = new Login(new User("ali.d@example.org", "hiword"));
         User oldUser = new User("ali.d@example.org", "hiword");
-
         login.updateUser(oldUser, new User("ali.d@example.org", "hiword", "Customer"));
-
-        // Act
         login.setRoles();
-
-        // Assert
         assertEquals(1, login.getRoles());
-
 
         try (MockedStatic<Transport> mockTransport = mockStatic(Transport.class)) {
             mockTransport.when(() -> Transport.send(Mockito.<Message>any())).thenThrow(new AddressException("hiword"));
@@ -254,9 +225,9 @@ public class Testing {
                 break;
             }
         }
-
         assertFalse(loginFailed);
     }
+
     @Then("user failed in log in")
     public void userFailedInLogIn() {
         if(!application.login.isLogged()){
@@ -276,22 +247,13 @@ public class Testing {
                 break;
             }
         }
-
         assertFalse(loginFailed);
-
-
         Login login = new Login(new User("ali.d@example.org", "hiword"));
         User oldUser = new User("ali.d@example.org", "hiword");
-
         login.updateUser(oldUser, new User("ali.d@example.org", "hiword", "Installer"));
-
-        // Act
         login.setRoles();
-        // Assert
         assertEquals(2, login.getRoles());
     }
-
-    //////////////////////////////////////////////////////////////signup  //signup
 
 
     @When("the information is exist email is {string}")
@@ -333,30 +295,20 @@ public class Testing {
         }
         assertTrue(f);
     }
+
     @Then("creating an account successfully")
     public void creatingAnAccountSuccessfully() {
         assertTrue(newAccount);
-
         User newUser = new User("ali.d@example.org", "hiword");
-
-        // Act and Assert
         assertFalse((new SignUp(newUser, new Login(new User("ali.d@example.org", "hiword")))).createAccount());
-
         User newUser1 = new User("WWW@gmail.com", "hiword");
-
         SignUp signUp = new SignUp(newUser1, new Login(new User("ali.d@example.org", "hiword")));
-
-        // Act and Assert
         assertEquals(4, signUp.l.users.size());
         assertTrue(signUp.createAccount());
-
         assertFalse(SignUp.emailValidator("ali.d@example.org"));
         assertFalse(SignUp.emailValidator(null));
         assertTrue(SignUp.emailValidator("WWW@gmail.com"));
-
         SignUp actualSignUp = new SignUp(newUser, new Login(new User("ali.d@example.org", "hiword")));
-
-        // Assert
         Login login = actualSignUp.l;
         User user = login.user;
         assertEquals("hiword", user.getPassword());
@@ -371,13 +323,14 @@ public class Testing {
         assertFalse(login.isLogged());
 
     }
-///////////////////////////////////////////////////////////////////Monitoring and Reporting
+
 
 
     @When("I choose to generate a financial report for the stores")
     public void iChooseToGenerateAFinancialReportForTheStores() {
         application.report.generateFinancialReport();
     }
+
     @Then("the system should calculate and display the total profits for each store")
     public void theSystemShouldCalculateAndDisplayTheTotalProfitsForEachStore() {
         Map<String, Double> profits = application.report.getStoreProfits();
@@ -387,21 +340,21 @@ public class Testing {
         }
         assertFalse(profits.isEmpty());
     }
+
     @Then("the report should be available separately for the two stores in Nablus and the two stores in Jenin")
     public void theReportShouldBeAvailableSeparatelyForTheTwoStoresInNablusAndTheTwoStoresInJenin() {
         Map<String, Double> profits = application.report.getStoreProfits();
         assertNotNull(profits);
         List<String> nablusStores = Arrays.asList("Nablus Store 1", "Nablus Store 2");
         List<String> jeninStores = Arrays.asList("Jenin Store 1", "Jenin Store 2");
-
         for (String store : nablusStores) {
             assertTrue(profits.containsKey(store));
         }
-
         for (String store : jeninStores) {
             assertTrue(profits.containsKey(store));
         }
     }
+
     @Then("the report should be downloadable in PDF format")
     public void theReportShouldBeDownloadableInPDFFormat() {
         boolean isPDFGenerated = application.report.downloadFinancialReportAsPDF();
@@ -413,37 +366,36 @@ public class Testing {
     public void iRequestAReportOnBestSellingProducts() {
         application.report.generateBestSellingProductsReport();
     }
+
     @Then("the system should display a list of best-selling products for each store")
     public void theSystemShouldDisplayAListOfBestSellingProductsForEachStore() {
-        Map<String, List<String>> bestSellingProducts = application.report.getBestSellingProducts(); // Assuming getBestSellingProducts returns a map of store names and their best-selling products
+        Map<String, List<String>> bestSellingProducts = application.report.getBestSellingProducts();
         assertNotNull(bestSellingProducts);
         for (Map.Entry<String, List<String>> entry : bestSellingProducts.entrySet()) {
             System.out.println("Store: " + entry.getKey() + " - Best Selling Products: " + String.join(", ", entry.getValue()));
         }
         assertFalse(bestSellingProducts.isEmpty());
     }
+
     @Then("the report should include a comparison of best-selling products between the stores in Nablus and the stores in Jenin")
     public void theReportShouldIncludeAComparisonOfBestSellingProductsBetweenTheStoresInNablusAndTheStoresInJenin() {
         Map<String, List<String>> bestSellingProducts = application.report.getBestSellingProducts();
         List<String> nablusStores = Arrays.asList("Nablus Store 1", "Nablus Store 2");
         List<String> jeninStores = Arrays.asList("Jenin Store 1", "Jenin Store 2");
-
         List<String> nablusProducts = new ArrayList<>();
         List<String> jeninProducts = new ArrayList<>();
-
         for (String store : nablusStores) {
             nablusProducts.addAll(bestSellingProducts.get(store));
         }
-
         for (String store : jeninStores) {
             jeninProducts.addAll(bestSellingProducts.get(store));
         }
-
         assertNotNull(nablusProducts);
         assertNotNull(jeninProducts);
         System.out.println("Nablus Products: " + String.join(", ", nablusProducts));
         System.out.println("Jenin Products: " + String.join(", ", jeninProducts));
     }
+
     @Then("the report should include total units sold and revenue generated for each product in each store")
     public void theReportShouldIncludeTotalUnitsSoldAndRevenueGeneratedForEachProductInEachStore() {
         Map<String, Map<String, Double>> productSales = application.report.getProductSales();
@@ -492,7 +444,6 @@ public class Testing {
         Map<String, Integer> userStatistics = application.report.getUserStatisticsBy();
         int totalNablusUsers = 0;
         int totalJeninUsers = 0;
-
         for (Map.Entry<String, Integer> entry : userStatistics.entrySet()) {
             if (entry.getKey().contains("Nablus")) {
                 totalNablusUsers += entry.getValue();
@@ -508,7 +459,6 @@ public class Testing {
         assertTrue(totalJeninUsers > 0);
     }
 
-/////////////////////////////////////////////////////////////
 
 
 
@@ -557,7 +507,6 @@ public class Testing {
     }
 
 
-////////////////////////Content
 
 
     @When("I access the content management section")

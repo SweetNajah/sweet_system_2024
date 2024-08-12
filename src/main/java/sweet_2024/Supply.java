@@ -4,11 +4,17 @@ public class Supply {
     private String name;
     private int quantity;
     private double price;
+    private String status;
 
     public Supply(String name, int quantity, double price) {
         this.name = name;
         this.quantity = quantity;
         this.price = price;
+    }
+    public Supply(String supplyName, int quantityRequested, String status) {
+        this.name = supplyName;
+        this.quantity = quantityRequested;
+        this.status = status;
     }
 
     public String getName() {
@@ -35,12 +41,14 @@ public class Supply {
         this.price = price;
     }
 
+
     @Override
     public String toString() {
-        return "Supply{" +
-                "name='" + name + '\'' +
-                ", quantity=" + quantity +
+        return "SupplyRequest{" +
+                "supplyName='" + name + '\'' +
+                ", quantityRequested=" + quantity +
                 ", price=" + price +
+                ", status='" + status + '\'' +
                 '}';
     }
 }
