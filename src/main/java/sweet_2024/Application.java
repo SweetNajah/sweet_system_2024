@@ -488,7 +488,7 @@ public class Application {
         report.append("Product Rates Report\n");
         report.append("====================\n");
         for (Products product : availableProducts) {
-            report.append(product.getProductName()).append(": ").append(product.getProductRating()).append("\n");
+            report.append(product.getName()).append(": ").append(product.getProductRating()).append("\n");
         }
         return report.toString();
     }
@@ -500,7 +500,7 @@ public class Application {
         report.append("Category: Sweets\n");
         for (Products product : availableProducts) {
             if (product.getCategory().equals("Sweets")) {
-                report.append(product.getProductName()).append("\n");
+                report.append(product.getName()).append("\n");
             }
         }
         return report.toString();
@@ -511,7 +511,7 @@ public class Application {
         report.append("Rates and Reviews Report\n");
         report.append("========================\n");
         for (Feedback feedback : feedbackList) {
-            report.append("Product: ").append(feedback.getProduct().getProductName()).append("\n");
+            report.append("Product: ").append(feedback.getProduct().getName()).append("\n");
             report.append("Rating: ").append(feedback.getRating()).append("\n");
             report.append("Review: ").append(feedback.getFeedbackMessage()).append("\n\n");
         }
