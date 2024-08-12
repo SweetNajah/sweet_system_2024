@@ -1,18 +1,31 @@
 package sweet_2024;
 
 public class Feedback {
+
+
+
+    private final int id; // Unique identifier for feedback
+
     private User user;
     private Products products;
     private String feedbackMessage;
+    private String response; // For storing responses to feedback
     private int rating;
+    private static int idCounter = 1; // Static counter to generate unique IDs
 
     public Feedback(User user, Products products, String feedbackMessage, int rating) {
+        this.id = idCounter++;
         this.user = user;
-        this.products = products;
         this.feedbackMessage = feedbackMessage;
         this.rating = rating;
-        addFeedbackToProduct();
+        this.response = ""; // Initialize with no response
+        this.products = products;
     }
+
+    public int getId() {
+        return id;
+    }
+
 
     public User getUser() {
         return user;
@@ -31,15 +44,25 @@ public class Feedback {
     }
 
     public String getFeedbackMessage() {
+
         return feedbackMessage;
     }
 
     public void setFeedbackMessage(String feedbackMessage) {
+
+
         this.feedbackMessage = feedbackMessage;
     }
 
     public int getRating() {
         return rating;
+    }
+    public String getResponse() {
+        return response;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
     }
 
     public void setRating(int rating) {
@@ -71,11 +94,19 @@ public class Feedback {
 
     @Override
     public String toString() {
+        String productName = (this.products != null) ? this.products.getName() : "No product";
+        String userName = (this.user != null) ? this.user.getUserName() : "No user";
         return "Feedback{" +
+
+                "productName='" + productName + '\'' +
+                ", userName='" + userName + '\'' +
                 "user=" + user.getEmail() +
                 ", product=" + products.getProductName() +
                 ", feedbackMessage='" + feedbackMessage + '\'' +
                 ", rating=" + rating +
+                ", feedbackMessage='" + feedbackMessage + '\'' +
                 '}';
     }
+
+
 }

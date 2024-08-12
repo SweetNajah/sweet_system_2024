@@ -1,113 +1,105 @@
 package sweet_2024;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+
 
 public class Order {
+    private static final Logger LOGGER = Logger.getLogger(Order.class.getName());
+    private final Products selectedProduct;
+    private List<Products> orderedProducts;
+    private double totalPrice;
 
-    public enum OrderState {
-        PROCESSING, SHIPPED, DELIVERED
+    private int orderId;
+    private String storeOwnerName;
+    private String productName;
+    private final int quantity;
+    private String status;
+    private static int idCounter = 0; // Used to generate unique IDs for each order
+
+    // Constructor
+    public Order(Products selectedProduct, String storeOwnerName, String productName, int quantity) {
+        this.selectedProduct = selectedProduct;
+        this.orderId = ++idCounter;
+        this.storeOwnerName = storeOwnerName;
+        this.productName = productName;
+        this.quantity = quantity;
+        this.status = "Pending";
+    }
+    public Order(Products selectedProduct, List<Products> orderedProducts, int quantity) {
+        this.selectedProduct = selectedProduct;
+        this.orderedProducts = orderedProducts;
+        this.quantity = quantity;
+        this.totalPrice = calculateTotalPrice();
     }
 
-    private int id;
-    private OrderState orderState; // Field to store the current state of the order
-    private static List<Order> orders = new ArrayList<>(); // Shared list of orders
+    public Order(Products selectedProduct, int quantity) {
+        this.selectedProduct = selectedProduct;
+        this.quantity=quantity;
 
-    public int getId() {
-        return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    private double calculateTotalPrice() {
+        double total = 0.0;
+        for (Products product : orderedProducts) {
+            total += product.getPrice();
+        }
+        return total;
     }
 
-    public OrderState getOrderState() {
-        return orderState;
+
+    public List<Products> getOrderedProducts() {
+        return orderedProducts;
     }
 
-    public void setOrderState(OrderState orderState) {
-        this.orderState = orderState;
+    // Getters
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public String getStoreOwnerName() {
+        return storeOwnerName;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    // Setters
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
     @Override
     public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", state=" + orderState +
-                '}';
+        return "Order ID: " + orderId +
+                "\nStore Owner: " + storeOwnerName +
+                "\nProduct: " + productName +
+                "\nQuantity: " + quantity +
+                "\nStatus: " + status + "\n";
     }
 
-    // Static block to initialize some orders
-    static {
-        Order order1 = new Order();
-        order1.setId(12345);
-        order1.setOrderState(OrderState.PROCESSING);
-        orders.add(order1);
-
-        Order order2 = new Order();
-        order2.setId(12346);
-        order2.setOrderState(OrderState.SHIPPED);
-        orders.add(order2);
-
-        Order order3 = new Order();
-        order3.setId(12347);
-        order3.setOrderState(OrderState.DELIVERED);
-        orders.add(order3);
-    }
-
-    public String view_list_of_orders() {
-        // StringBuilder to accumulate the order details
-        StringBuilder orderListString = new StringBuilder("List of Orders:\n");
-        for (Order order : orders) {
-            orderListString.append(order.toString()).append("\n");
+    public void processOrder(Order order) {
+        if (order == null) {
+            LOGGER.warning("Order is null, cannot process.");
+            return;
         }
-        return orderListString.toString();
+        order.setStatus("Processed");
+        LOGGER.info("Order processed successfully.");
     }
-
-    public Order select_order_number(int orderId) {
-        // Loop through the list to find the order with the matching ID
-        for (Order order : orders) {
-            if (order.getId() == orderId) {
-                return order; // Return the found order
-            }
-        }
-        return null; // Return null if no order with the given ID is found
-    }
-
-    public String see_current_state_order(int orderId) {
-        // Find the order by its ID
-        Order order = select_order_number(orderId);
-        if (order != null) {
-            return "Order ID " + orderId + " is currently in state: " + order.getOrderState();
-        } else {
-            return "Order not found.";
-        }
-    }
-
-    public String update_order_status(int orderId, OrderState newStatus) {
-        // Find the order by its ID
-        Order order = select_order_number(orderId);
-        if (order != null) {
-            // Update the order's status
-            order.setOrderState(newStatus);
-
-            // Notify the customer
-            notifyCustomer(orderId, newStatus);
-
-            // Return a message reflecting the updated status
-            return "Order ID " + orderId + " status updated to " + newStatus + ". The current status is now: " + order.getOrderState() + ".";
-        } else {
-            return "Order not found.";
-        }
-    }
-
-    // Method to notify the customer about the status change
-    private void notifyCustomer(int orderId, OrderState newStatus) {
-        // For demonstration purposes, we'll use a simple print statement
-        // In a real application, this could involve sending an email, SMS, or app notification
-        System.out.println("Notification: Your order ID " + orderId + " has been updated to " + newStatus + ".");
-    }
-
 
 
 

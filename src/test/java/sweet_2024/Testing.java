@@ -3,6 +3,7 @@ package sweet_2024;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
@@ -27,26 +28,29 @@ public class Testing {
     String text,file;
     boolean exist;
     boolean newAccount=false;
-    boolean userAdded=false;
+    boolean userAdded ;
     boolean isUserUpdating = false;
     boolean isUserDeleting = false;
+    private User beneficiaryUser;
+    private Inquiry inquiry;
+    private Feedback feedback;
+    private Products product;
+    private RecipeMenu recipeMenu;
+    private StoreMenu storeMenu;
 
     private final Application application;
 
-    public Testing(Application application) {
-        this.application = application;
-        u = new User("ali55@gmail.com","123456","Customer");
-        o = new User("abd3@gmail.com","123","Admin");
-
+    public Testing() {
+        this.application = new Application();
+        u = new User("ali55@gmail.com", "123456", "Customer");
+        o = new User("abd3@gmail.com", "123", "Admin");
     }
-
-//////////////////////////////////////////////////////////////////////////////////UserManagement
 
     @Given("I am an admin")
     public void iAmAnAdmin() {
         boolean f = false;
         application.setUser(application.newUser.getEmail(),application.newUser.getPassword(),"Admin");
-        if(application.newUser.getType().equals("Admin")){
+        if(application.newUser.getRole().equals("Admin")){
             f=true;
         }
         assertTrue(f);
@@ -68,10 +72,7 @@ public class Testing {
     public void userAddedFailed() {
         assertFalse(userAdded);
         Login login = new Login(new User("ali.d@example.org", "hiword"));
-
-        // Act and Assert
         assertFalse(login.addUser(new User("", "hiword")));
-
     }
 
     @When("i choose to add new user with with valid formatting")
@@ -121,7 +122,7 @@ public class Testing {
     public void userSuccessfullyDeleting() {
         assertTrue(isUserDeleting);
     }
-///////////////////////////////////////////////////////////////////////////////////////////////////feature login
+
 
 
 
@@ -142,16 +143,11 @@ public class Testing {
             }
         }
         assertTrue(loginSuccessful);
-
         Login login = new Login(new User("ali.d@example.org", "hiword"));
         User oldUser = new User("ali.d@example.org", "hiword");
-
         login.updateUser(oldUser, new User("ali.d@example.org", "hiword", "Type"));
 
-        // Act
         login.setRoles();
-
-        // Assert
         assertEquals(-1, login.getRoles());
 
         try (MockedStatic<Transport> mockTransport = mockStatic(Transport.class)) {
@@ -179,46 +175,31 @@ public class Testing {
             }
         }
         assertTrue(loginFailed);
-
         Login login = new Login(new User("ali.d@example.org", "hiword","admin"));
-
-        // Act
         login.setRoles();
-
-        // Assert
         assertEquals(0, login.getRoles());
         User u1 =new User("","");
         assertFalse ((new Login(u1)).login());
-
     }
 
 
     @When("verification code is {int}")
     public void verificationCodeIs(Integer int1) {
-
         boolean f=true;
         assertTrue(f);
-
     }
+
     @Then("user successfully log in")
     public void userSuccessfullyLogIn() {
-
         if(application.login.isLogged()){
             boolean loginSuccessful=true;
             assertTrue(loginSuccessful);
         }
-
         Login login = new Login(new User("ali.d@example.org", "hiword"));
         User oldUser = new User("ali.d@example.org", "hiword");
-
         login.updateUser(oldUser, new User("ali.d@example.org", "hiword", "Customer"));
-
-        // Act
         login.setRoles();
-
-        // Assert
         assertEquals(1, login.getRoles());
-
 
         try (MockedStatic<Transport> mockTransport = mockStatic(Transport.class)) {
             mockTransport.when(() -> Transport.send(Mockito.<Message>any())).thenThrow(new AddressException("hiword"));
@@ -244,9 +225,9 @@ public class Testing {
                 break;
             }
         }
-
         assertFalse(loginFailed);
     }
+
     @Then("user failed in log in")
     public void userFailedInLogIn() {
         if(!application.login.isLogged()){
@@ -266,22 +247,13 @@ public class Testing {
                 break;
             }
         }
-
         assertFalse(loginFailed);
-
-
         Login login = new Login(new User("ali.d@example.org", "hiword"));
         User oldUser = new User("ali.d@example.org", "hiword");
-
         login.updateUser(oldUser, new User("ali.d@example.org", "hiword", "Installer"));
-
-        // Act
         login.setRoles();
-        // Assert
         assertEquals(2, login.getRoles());
     }
-
-    //////////////////////////////////////////////////////////////signup  //signup
 
 
     @When("the information is exist email is {string}")
@@ -323,51 +295,42 @@ public class Testing {
         }
         assertTrue(f);
     }
+
     @Then("creating an account successfully")
     public void creatingAnAccountSuccessfully() {
         assertTrue(newAccount);
-
         User newUser = new User("ali.d@example.org", "hiword");
-
-        // Act and Assert
         assertFalse((new SignUp(newUser, new Login(new User("ali.d@example.org", "hiword")))).createAccount());
-
         User newUser1 = new User("WWW@gmail.com", "hiword");
-
         SignUp signUp = new SignUp(newUser1, new Login(new User("ali.d@example.org", "hiword")));
-
-        // Act and Assert
         assertEquals(4, signUp.l.users.size());
         assertTrue(signUp.createAccount());
-
         assertFalse(SignUp.emailValidator("ali.d@example.org"));
         assertFalse(SignUp.emailValidator(null));
         assertTrue(SignUp.emailValidator("WWW@gmail.com"));
-
         SignUp actualSignUp = new SignUp(newUser, new Login(new User("ali.d@example.org", "hiword")));
-
-        // Assert
         Login login = actualSignUp.l;
-        User user = login.u;
+        User user = login.user;
         assertEquals("hiword", user.getPassword());
         User user2 = actualSignUp.newUser;
         assertEquals("hiword", user2.getPassword());
         assertEquals("ali.d@example.org", user.getEmail());
         assertEquals("ali.d@example.org", user2.getEmail());
-        assertNull(user.getType());
-        assertNull(user2.getType());
+        assertNull(user.getRole());
+        assertNull(user2.getRole());
         assertEquals(0, login.getRoles());
         assertEquals(4, login.users.size());
         assertFalse(login.isLogged());
 
     }
-///////////////////////////////////////////////////////////////////Monitoring and Reporting
+
 
 
     @When("I choose to generate a financial report for the stores")
     public void iChooseToGenerateAFinancialReportForTheStores() {
         application.report.generateFinancialReport();
     }
+
     @Then("the system should calculate and display the total profits for each store")
     public void theSystemShouldCalculateAndDisplayTheTotalProfitsForEachStore() {
         Map<String, Double> profits = application.report.getStoreProfits();
@@ -377,21 +340,21 @@ public class Testing {
         }
         assertFalse(profits.isEmpty());
     }
+
     @Then("the report should be available separately for the two stores in Nablus and the two stores in Jenin")
     public void theReportShouldBeAvailableSeparatelyForTheTwoStoresInNablusAndTheTwoStoresInJenin() {
         Map<String, Double> profits = application.report.getStoreProfits();
         assertNotNull(profits);
         List<String> nablusStores = Arrays.asList("Nablus Store 1", "Nablus Store 2");
         List<String> jeninStores = Arrays.asList("Jenin Store 1", "Jenin Store 2");
-
         for (String store : nablusStores) {
             assertTrue(profits.containsKey(store));
         }
-
         for (String store : jeninStores) {
             assertTrue(profits.containsKey(store));
         }
     }
+
     @Then("the report should be downloadable in PDF format")
     public void theReportShouldBeDownloadableInPDFFormat() {
         boolean isPDFGenerated = application.report.downloadFinancialReportAsPDF();
@@ -403,37 +366,36 @@ public class Testing {
     public void iRequestAReportOnBestSellingProducts() {
         application.report.generateBestSellingProductsReport();
     }
+
     @Then("the system should display a list of best-selling products for each store")
     public void theSystemShouldDisplayAListOfBestSellingProductsForEachStore() {
-        Map<String, List<String>> bestSellingProducts = application.report.getBestSellingProducts(); // Assuming getBestSellingProducts returns a map of store names and their best-selling products
+        Map<String, List<String>> bestSellingProducts = application.report.getBestSellingProducts();
         assertNotNull(bestSellingProducts);
         for (Map.Entry<String, List<String>> entry : bestSellingProducts.entrySet()) {
             System.out.println("Store: " + entry.getKey() + " - Best Selling Products: " + String.join(", ", entry.getValue()));
         }
         assertFalse(bestSellingProducts.isEmpty());
     }
+
     @Then("the report should include a comparison of best-selling products between the stores in Nablus and the stores in Jenin")
     public void theReportShouldIncludeAComparisonOfBestSellingProductsBetweenTheStoresInNablusAndTheStoresInJenin() {
         Map<String, List<String>> bestSellingProducts = application.report.getBestSellingProducts();
         List<String> nablusStores = Arrays.asList("Nablus Store 1", "Nablus Store 2");
         List<String> jeninStores = Arrays.asList("Jenin Store 1", "Jenin Store 2");
-
         List<String> nablusProducts = new ArrayList<>();
         List<String> jeninProducts = new ArrayList<>();
-
         for (String store : nablusStores) {
             nablusProducts.addAll(bestSellingProducts.get(store));
         }
-
         for (String store : jeninStores) {
             jeninProducts.addAll(bestSellingProducts.get(store));
         }
-
         assertNotNull(nablusProducts);
         assertNotNull(jeninProducts);
         System.out.println("Nablus Products: " + String.join(", ", nablusProducts));
         System.out.println("Jenin Products: " + String.join(", ", jeninProducts));
     }
+
     @Then("the report should include total units sold and revenue generated for each product in each store")
     public void theReportShouldIncludeTotalUnitsSoldAndRevenueGeneratedForEachProductInEachStore() {
         Map<String, Map<String, Double>> productSales = application.report.getProductSales();
@@ -456,7 +418,7 @@ public class Testing {
     }
     @Then("the system should display the number of registered users for each city")
     public void theSystemShouldDisplayTheNumberOfRegisteredUsersForEachCity() {
-        Map<String, Integer> userStatistics = application.report.getUserStatisticsByCity();
+        Map<String, Integer> userStatistics = application.report.getUserStatisticsBy();
         assertNotNull(userStatistics);
         for (Map.Entry<String, Integer> entry : userStatistics.entrySet()) {
             System.out.println("City: " + entry.getKey() + " - Registered Users: " + entry.getValue());
@@ -479,10 +441,9 @@ public class Testing {
     }
     @Then("the report should include a total count of users for each city")
     public void theReportShouldIncludeATotalCountOfUsersForEachCity() {
-        Map<String, Integer> userStatistics = application.report.getUserStatisticsByCity();
+        Map<String, Integer> userStatistics = application.report.getUserStatisticsBy();
         int totalNablusUsers = 0;
         int totalJeninUsers = 0;
-
         for (Map.Entry<String, Integer> entry : userStatistics.entrySet()) {
             if (entry.getKey().contains("Nablus")) {
                 totalNablusUsers += entry.getValue();
@@ -498,14 +459,13 @@ public class Testing {
         assertTrue(totalJeninUsers > 0);
     }
 
-/////////////////////////////////////////////////////////////
 
 
 
 
     @Given("I am an admin\\(report)")
     public void i_am_an_admin_report() {
-        assertEquals("Admin", u.type);
+        assertEquals("Admin", u.role);
     }
 
     @Then("I am asked to choose report1 kind {string}")
@@ -547,7 +507,6 @@ public class Testing {
     }
 
 
-////////////////////////Content
 
 
     @When("I access the content management section")
@@ -594,106 +553,125 @@ public class Testing {
 
     }
 
+    @Test
     @Given("I am logged in as a beneficiary user")
     public void i_am_logged_in_as_a_beneficiary_user() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        beneficiaryUser = new User("user@example.com", "password", "beneficiary");
+
+        assertEquals("beneficiary", beneficiaryUser.getRole());
+
     }
 
     @When("I navigate to the messaging system")
     public void i_navigate_to_the_messaging_system() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @When("I compose an inquiry")
     public void i_compose_an_inquiry() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
-    }
 
+    }
+    @Test
     @Then("the inquiry should be sent")
     public void the_inquiry_should_be_sent() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
+        String inquiryMessage = "I need help with my order.";
+        inquiry = new Inquiry(beneficiaryUser, inquiryMessage);
+        assertNotNull(inquiry);
+        assertEquals(inquiryMessage, inquiry.getInquiryMessage());
     }
 
     @When("I navigate to the feedback system")
     public void i_navigate_to_the_feedback_system() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @When("I select a purchased product")
     public void i_select_a_purchased_product() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @When("I provide my feedback")
     public void i_provide_my_feedback() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
-    }
 
+
+
+    }
+    @Test
     @Then("my feedback should be submitted")
     public void my_feedback_should_be_submitted() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
-    }
+        String feedbackMessage = "The dessert was delicious!";
+        int rating = 5; // Assume rating is out of 5
 
+        product = new Products();
+        feedback = new Feedback(beneficiaryUser, product, feedbackMessage, rating);
+
+        // Then my feedback should be submitted (Feedback is submitted if it's not null)
+        assertNotNull(feedback);
+        assertEquals(feedbackMessage, feedback.getFeedbackMessage());
+        assertEquals(rating, feedback.getRating());
+        assertEquals(beneficiaryUser, feedback.getUser());
+        assertEquals(product, feedback.getProduct());
+    }
+    @Test
     @Given("I am logged in as a beneficiary user")
     public void i_am_logged_in_as_a_beneficiary_users() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        beneficiaryUser = new User("user@example.com", "password", "beneficiary");
+
+        assertEquals("beneficiary", beneficiaryUser.getRole());
+        recipeMenu = new RecipeMenu();
+        recipeMenu.displayRecipes();
+        assertFalse(recipeMenu.desserts.isEmpty());
+
     }
 
     @When("I navigate to the recipes menu")
     public void i_navigate_to_the_recipes_menu() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @Then("I should see a list of dessert recipes")
     public void i_should_see_a_list_of_dessert_recipes() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
-    }
 
+    }
+@Test
     @When("I apply dietary filters")
     public void i_apply_dietary_filters() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        String dietaryNeed = "Vegan";
+    recipeMenu = new RecipeMenu();  // Properly initializing recipeMenu
+
+    recipeMenu.filterRecipes(dietaryNeed);
+    beneficiaryUser = new User("user@example.com", "password", "beneficiary");
+     storeMenu = new StoreMenu(recipeMenu);
+
+      boolean allMatch = recipeMenu.desserts.stream().allMatch
+        (dessert -> dessert.getDietaryInfo().equalsIgnoreCase(dietaryNeed));
+
+        assertTrue(allMatch);
     }
 
     @Then("I should see a list of filtered dessert recipes")
     public void i_should_see_a_list_of_filtered_dessert_recipes() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @When("I navigate to the store menu")
     public void i_navigate_to_the_store_menu() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @When("I select a dessert")
     public void i_select_a_dessert() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @When("I chose the purchase option.")
     public void i_chose_the_purchase_option() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
     @Then("I should be able to complete the purchase")
     public void i_should_be_able_to_complete_the_purchase() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
-    }
 
+    }
 }

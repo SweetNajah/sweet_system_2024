@@ -1,24 +1,31 @@
 package sweet_2024;
 
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 import java.util.logging.*;
 
 public class Application {
     private static final String NO_INFORMATIONS = "There is no information";
     private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
     public boolean loggedIn;
-    public   Login login;
+    public Login login;
     public User newUser;
     public Report report;
     Scanner scanner = new Scanner(System.in);
     String carname;
-    static ArrayList<TypeProduct> categories;
-    static int[] indexes=new int[2];
 
-    private static void gf(){
-        categories=new ArrayList<>();
-    }
+    private List<User> users;
+    private List<Products> availableProducts;
+    private List<Order> customerOrders;
+    private List<InstallationRequest> installationRequests;
+    private List<RecipeMenu> recipes;
+    private List<Post> posts;
+    private List<Feedback> feedbackList;
+    private List<Supply> supplies;
+    private List<Products> products = new ArrayList<>();
+
+
 
     public Application() {
         this.loggedIn = false;
@@ -26,22 +33,74 @@ public class Application {
         this.login = new Login(newUser);
         this.report=new Report();
 
+        this.recipes = new ArrayList<>();
+        this.posts = new ArrayList<>();
+        this.feedbackList = new ArrayList<>();
+        this.supplies = new ArrayList<>();
+        this.supplies = new ArrayList<>();
+        this.installationRequests = new ArrayList<>();
+        this.availableProducts = new ArrayList<>();
+        this.customerOrders = new ArrayList<>();
+        this.users = new ArrayList<>();
+        this.products = new ArrayList<>();
+
+        this.availableProducts.add(new Products("Chocolate Bar", 50, 1.99));
+        this.availableProducts.add(new Products("Vanilla Cake", 30, 15.00));
+        this.availableProducts.add(new Products("Candy", 100, 0.10));
+
+        this.supplies.add(new Supply("Chocolate Cake", 20, 300.00));
+        this.supplies.add(new Supply("Candy Pack", 50, 100.00));
+
+        this.supplies.add(new Supply("Sugar", 100, "Pending"));
+        this.supplies.add(new Supply("Flour", 200, "Approved"));
+
+    }
+    public List<InstallationRequest> getInstallationRequests() {
+        return installationRequests;
     }
 
+    public void markAsInstalled(Order requestId) {
+        for (InstallationRequest request : installationRequests) {
+
+            if (request.getOrderId() == requestId.getOrderId()) {
+                request.setInstalled(true);
+                LOGGER.info("Installation request " + requestId + " marked as installed.");
+                return;
+            }
+        }
+        LOGGER.warning("Installation request not found.");
+    }
+
+    public boolean submitFeedback(String feedbackMessage, User user, Products product, int rating) {
+        Feedback feedback = new Feedback(user, product, feedbackMessage, rating);
+        feedbackList.add(feedback);
+        LOGGER.info("Feedback submitted successfully!");
+        return true;
+    }
+
+    public List<Products> getAvailableProducts() {
+        return availableProducts;
+    }
+    public void placeOrder(Order order) {
+        customerOrders.add(order);
+    }
+    public List<Order> getCustomerOrders() {
+        return customerOrders;
+    }
     public void setUser(String email, String password, String type) {
         newUser = new User(email, password, type);
         login.setUser(newUser);
     }
 
     private void handleLogin() {
-        System.out.print("Enter your email: ");
+        LOGGER.info("Enter your email: ");
         String email = scanner.nextLine();
-        System.out.print("Enter your password: ");
+        LOGGER.info("Enter your password: ");
         String password = scanner.nextLine();
 
         setUser(email, password, ""); // assuming type is not needed for login
         if (login.login()) {
-            System.out.println("Login successful!");
+            LOGGER.info("Login successful!");
             loggedIn = true;
             LOGGER.info("User logged in: " + email);
         } else {
@@ -51,25 +110,25 @@ public class Application {
     }
 
     private void handleSignUp() {
-        System.out.print("Enter your email: ");
+        LOGGER.info("Enter your email: ");
         String email = scanner.nextLine();
-        System.out.print("Enter your password: ");
+        LOGGER.info("Enter your password: ");
         String password = scanner.nextLine();
-        System.out.print("Enter your user type: ");
+        LOGGER.info("Enter your user type: ");
         String type = scanner.nextLine();
 
         if (isValidEmail(email)) {
             setUser(email, password, type);
             SignUp signUp = new SignUp(newUser, login);
             if (signUp.createAccount()) {
-                System.out.println("Account created successfully!");
+                LOGGER.info("Account created successfully!");
                 LOGGER.info("New account created for user: " + email);
             } else {
-                System.out.println("Account creation failed.");
+                LOGGER.info("Account creation failed.");
                 LOGGER.warning("Failed account creation attempt for user: " + email);
             }
         } else {
-            System.out.println("Invalid email format.");
+            LOGGER.warning("Invalid email format.");
         }
     }
 
@@ -78,13 +137,12 @@ public class Application {
     }
 
     public void startApplication() {
-        System.out.println("Welcome to Sweet Management System!");
-        System.out.println("Please choose an option:");
-        System.out.println("1. Log In");
-        System.out.println("2. Sign Up");
-
+        LOGGER.info("Welcome to Sweet Management System!");
+        LOGGER.info("Please choose an option:");
+        LOGGER.info("1. Log In");
+        LOGGER.info("2. Sign Up");
         int choice = scanner.nextInt();
-        scanner.nextLine(); // consume newline
+        scanner.nextLine();
 
         switch (choice) {
             case 1:
@@ -94,28 +152,367 @@ public class Application {
                 handleSignUp();
                 break;
             default:
-                System.out.println("Invalid choice.");
+                LOGGER.warning("Invalid choice.");
         }
     }
-    public boolean foundc(String name){
-        for(int i=0;i<categories.size();i++){
-            if(name.equals(categories.get(i).name)){
-                set(i,i);
+
+    private static void removeUser(Scanner scanner, Application sweetSystem) {
+        LOGGER.info("Enter email of user to remove:");
+        String email = scanner.nextLine();
+
+        boolean removed = sweetSystem.login.removeUser(email);
+        if (removed) {
+            LOGGER.info("User removed successfully.");
+        } else {
+            LOGGER.warning("User not found. Please try again.");
+        }
+    }
+
+    public double generateProfitReport() {
+        double totalProfits = 0.0;
+
+        for (Order order : customerOrders) {
+            totalProfits += order.getTotalPrice();
+        }
+
+        return totalProfits;
+    }
+
+    public List<Products> getBestSellingProducts() {
+        Map<Products, Integer> productSalesCount = new HashMap<>();
+
+        for (Order order : customerOrders) {
+            for (Products product : order.getOrderedProducts()) {
+                productSalesCount.put(product, productSalesCount.getOrDefault(product, 0) + 1);
+            }
+        }
+
+        List<Products> bestSellers = new ArrayList<>();
+        int maxSales = 0;
+        for (Map.Entry<Products, Integer> entry : productSalesCount.entrySet()) {
+            if (entry.getValue() > maxSales) {
+                bestSellers.clear();
+                bestSellers.add(entry.getKey());
+                maxSales = entry.getValue();
+            } else if (entry.getValue() == maxSales) {
+                bestSellers.add(entry.getKey());
+            }
+        }
+
+        return bestSellers;
+    }
+
+    public boolean addRecipe(RecipeMenu recipe) {
+        recipes.add(recipe);
+        return true;
+    }
+
+    public List<RecipeMenu> getRecipes() {
+        return recipes;
+    }
+
+    public boolean removeRecipe(String name) {
+        Iterator<RecipeMenu> iterator = recipes.iterator();
+        while (iterator.hasNext()) {
+            RecipeMenu recipe = iterator.next();
+            if (recipe.getName().equalsIgnoreCase(name)) {
+                iterator.remove();
                 return true;
             }
         }
         return false;
     }
-    private static void set(int x1,int x2){
-        indexes[0]=x1;
-        indexes[1]=x2;
+
+    public RecipeMenu findRecipeByName(String name) {
+        for (RecipeMenu recipe : recipes) {
+            if (recipe.getName().equalsIgnoreCase(name)) {
+                return recipe;
+            }
+        }
+        return null;
     }
-    public boolean report(String report, String filename) {
-        return switch (report) {
-
-            default -> false;
-
-
-        };
+    public void addPost(Post post) {
+        posts.add(post);
     }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public boolean removePost(String title) {
+        Iterator<Post> iterator = posts.iterator();
+        while (iterator.hasNext()) {
+            Post post = iterator.next();
+            if (post.getTitle().equalsIgnoreCase(title)) {
+                iterator.remove();
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public Post findPostByTitle(String title) {
+        for (Post post : posts) {
+            if (post.getTitle().equalsIgnoreCase(title)) {
+                return post;
+            }
+        }
+        return null;
+    }
+
+    public List<Feedback> getFeedback() {
+        return feedbackList;
+    }
+
+    // Method to add feedback to the list (you might already have this or similar)
+    public void addFeedback(Feedback feedback) {
+        feedbackList.add(feedback);
+    }
+
+    public Feedback findFeedbackById(int id) {
+        for (Feedback feedback : feedbackList) {
+            if (feedback.getId() == id) {
+                return feedback;
+            }
+        }
+        return null;
+    }
+
+    public void addInventoryItem(Products item) {
+        availableProducts.add(item);
+        LOGGER.info("Inventory item added: " + item.getName());
+    }
+
+    public List<Products> getInventory() {
+        return availableProducts;
+    }
+
+    public boolean removeInventoryItem(String itemName) {
+        for (Products item : availableProducts) {
+            if (item.getName().equalsIgnoreCase(itemName)) {
+                availableProducts.remove(item);
+                LOGGER.info("Inventory item removed: " + itemName);
+                return true;
+            }
+        }
+        LOGGER.warning("No inventory item found with the name: " + itemName);
+        return false; // No item found
+    }
+
+    public List<Products> getInventoryItems() {
+        return availableProducts;
+    }
+
+    public void listInventoryItems() {
+        if (availableProducts.isEmpty()) {
+            LOGGER.info("No inventory items available.");
+        } else {
+            LOGGER.info("Listing all inventory items:");
+            for (Products item : availableProducts) {
+                LOGGER.info(item.toString());
+            }
+        }
+    }
+
+    public Products findInventoryItemByName(String name) {
+        for (Products item : availableProducts) {
+            if (item.getName().equalsIgnoreCase(name)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public List<Supply> getSales() {
+        return new ArrayList<>(this.supplies);
+    }
+
+    public List<Order> getOrders() {
+        return customerOrders;
+    }
+
+    public void addOrder(Order order) {
+        if (order != null) {
+            customerOrders.add(order);
+            LOGGER.info("Order added successfully.");
+        } else {
+            LOGGER.warning("Failed to add order: Order is null.");
+        }
+    }
+
+    public Order findOrderById(int orderId) {
+        for (Order order : customerOrders) {
+            if (order.getOrderId() == orderId) {
+                return order;
+            }
+        }
+        LOGGER.warning("No order found with ID: " + orderId);
+        return null;
+    }
+    public void addUser(User user) {
+        if (user != null) {
+            users.add(user);
+            LOGGER.info("User added successfully.");
+        } else {
+            LOGGER.warning("Failed to add user: User is null.");
+        }
+    }
+
+    public static void listUsers(Application sweetSystem) {
+        List<User> users = sweetSystem.getUsers();
+        if (users == null || users.isEmpty()) {
+            LOGGER.info("No users available.");
+        } else {
+            LOGGER.info("Listing users:");
+            for (User user : users) {
+                LOGGER.info(user.toString());
+            }
+        }
+    }
+
+    public User findUserByEmail(String email) {
+        if (email == null || email.isEmpty()) {
+            LOGGER.warning("Invalid email input.");
+            return null;
+        }
+
+        for (User user : users) {
+            if (user.getEmail().equalsIgnoreCase(email)) {
+                return user;
+            }
+        }
+
+        LOGGER.info("User not found with email: " + email);
+        return null;
+    }
+
+    public void addSupply(Supply supply) {
+        if (supply != null) {
+            supplies.add(supply);
+            LOGGER.info("Supply added: " + supply.toString());
+        } else {
+            LOGGER.warning("Failed to add supply: Supply is null.");
+        }
+    }
+
+    public boolean removeSupply(String name) {
+        if (name == null || name.isEmpty()) {
+            LOGGER.warning("No supply name provided to remove.");
+            return false;
+        }
+
+        for (Supply supply : supplies) {
+            if (supply.getName().equalsIgnoreCase(name)) {
+                supplies.remove(supply);
+                LOGGER.info("Supply removed: " + supply.toString());
+                return true;
+            }
+        }
+        LOGGER.warning("Supply not found with name: " + name);
+        return false;
+    }
+
+    public Supply findSupplyByName(String name) {
+        if (name == null || name.isEmpty()) {
+            LOGGER.warning("No supply name provided to search.");
+            return null;
+        }
+
+        for (Supply supply : supplies) {
+            if (supply.getName().equalsIgnoreCase(name)) {
+                LOGGER.info("Supply found: " + supply.toString());
+                return supply;
+            }
+        }
+        LOGGER.warning("No supply found with name: " + name);
+        return null;
+    }
+
+    public List<Supply> getSupplyRequests() {
+        return supplies;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public static boolean printTextToFile(String fileName, String text) {
+        try(FileWriter writer = new FileWriter(fileName)) {
+            writer.write(text);
+            return true;
+        } catch (IOException ignored) {
+            return false;
+        }
+    }
+
+    public boolean report(String reportType, String filename) {
+        String reportContent = "";
+
+        switch (reportType) {
+            case "Sales":
+                reportContent = generateSalesReport();
+                break;
+            case "Product rates":
+                reportContent = generateProductRatesReport();
+                break;
+            case "Category products":
+                reportContent = generateCategoryProductsReport();
+                break;
+            case "Rates and reviews":
+                reportContent = generateRatesAndReviewsReport();
+                break;
+            default:
+                LOGGER.warning("Invalid report type: " + reportType);
+                return false;
+        }
+
+        return printTextToFile(filename, reportContent);
+    }
+
+    private String generateSalesReport() {
+        StringBuilder report = new StringBuilder();
+        report.append("Sales Report\n");
+        report.append("============\n");
+        for (Supply sale : supplies) {
+            report.append(sale.toString()).append("\n");
+        }
+        return report.toString();
+    }
+
+    private String generateProductRatesReport() {
+        StringBuilder report = new StringBuilder();
+        report.append("Product Rates Report\n");
+        report.append("====================\n");
+        for (Products product : availableProducts) {
+            report.append(product.getName()).append(": ").append(product.getProductRating()).append("\n");
+        }
+        return report.toString();
+    }
+
+    private String generateCategoryProductsReport() {
+        StringBuilder report = new StringBuilder();
+        report.append("Category Products Report\n");
+        report.append("========================\n");
+        report.append("Category: Sweets\n");
+        for (Products product : availableProducts) {
+            if (product.getCategory().equals("Sweets")) {
+                report.append(product.getName()).append("\n");
+            }
+        }
+        return report.toString();
+    }
+
+    private String generateRatesAndReviewsReport() {
+        StringBuilder report = new StringBuilder();
+        report.append("Rates and Reviews Report\n");
+        report.append("========================\n");
+        for (Feedback feedback : feedbackList) {
+            report.append("Product: ").append(feedback.getProduct().getName()).append("\n");
+            report.append("Rating: ").append(feedback.getRating()).append("\n");
+            report.append("Review: ").append(feedback.getFeedbackMessage()).append("\n\n");
+        }
+        return report.toString();
+    }
+
 }
