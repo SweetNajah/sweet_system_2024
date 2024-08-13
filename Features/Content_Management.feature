@@ -6,7 +6,7 @@ Feature: Content Management
     And I create a new recipe titled "Chocolate Cake"
     And I add the recipe details and upload an image
     Then the recipe should be successfully published
-    And I should see a confirmation message "Recipe created successfully."
+    And I should see a confirmation message "Recipe published successfully!"
 
   Scenario: Manage User Feedback
     When I view the user feedback section

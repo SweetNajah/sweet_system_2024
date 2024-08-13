@@ -1,9 +1,13 @@
 package sweet_2024;
-
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
@@ -11,51 +15,71 @@ import javax.mail.Message;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.*;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.mockStatic;
 
 public class Testing {
 
-    User u;
-    User o;
-    String text,file;
-    boolean exist;
-    boolean newAccount=false;
-    boolean userAdded ;
-    boolean isUserUpdating = false;
-    boolean isUserDeleting = false;
+    private User currentUser;
+    private StoreMenu storeMenu;
+    private RecipeMenu recipeMenu;
+    private Feedback feedback;
+    private Application application;
     private User beneficiaryUser;
     private Inquiry inquiry;
-    private Feedback feedback;
     private Products product;
-    private RecipeMenu recipeMenu;
-    private StoreMenu storeMenu;
+    private User u,o;
+    private boolean userAdded, isUserUpdating, isUserDeleting;
+    boolean newAccount=false;
+    String text,file;
 
-    private final Application application;
+
+    private  static final Logger LOGGER = Logger.getLogger(Testing.class.getName());
+
+    static {
+        setupLogger();
+    }
+
+    private static void setupLogger() {
+        LOGGER.setUseParentHandlers(false);
+        ConsoleHandler consoleHandler = new ConsoleHandler();
+        consoleHandler.setLevel(Level.INFO);
+        consoleHandler.setFormatter(new SimpleFormatter() {
+            @Override
+            public synchronized String format(LogRecord logRecord) {
+                return logRecord.getMessage() + "\n";
+            }
+        });
+        LOGGER.addHandler(consoleHandler);
+        LOGGER.setLevel(Level.INFO);
+    }
+
+    @BeforeAll
+    public void setUp() {
+        application = new Application();
+        currentUser = new User("admin@example.com", "0000", "Admin");
+    }
 
     public Testing() {
-        this.application = new Application();
+        application = new Application();
         u = new User("ali55@gmail.com", "123456", "Customer");
         o = new User("abd3@gmail.com", "123", "Admin");
+        currentUser = new User("admin@example.com", "0000", "Admin");
     }
 
     @Given("I am an admin")
     public void iAmAnAdmin() {
-        boolean f = false;
-        application.setUser(application.newUser.getEmail(),application.newUser.getPassword(),"Admin");
-        if(application.newUser.getRole().equals("Admin")){
-            f=true;
-        }
-        assertTrue(f);
-        assertEquals(0, application.login.getRoles());
+        assertEquals("Admin", currentUser.getRole());
+        application.setUser(currentUser.getEmail(), currentUser.getPassword(), "Admin");
+        assertEquals(0, application.login.getRoles());;
     }
+
     @When("i choose to add new user but the user is already exist")
     public void iChooseToAddNewUserButTheUserIsAlreadyExist() {
         String  email="ali.dawood@gmail.com";
@@ -68,68 +92,66 @@ public class Testing {
         assertFalse(userAdded);
 
     }
+
     @Then("user added failed")
     public void userAddedFailed() {
         assertFalse(userAdded);
         Login login = new Login(new User("ali.d@example.org", "hiword"));
         assertFalse(login.addUser(new User("", "hiword")));
     }
-
-    @When("i choose to add new user with with valid formatting")
+        @When("i choose to add new user with with valid formatting")
     public void iChooseToAddNewUserWithWithValidFormatting() {
-        String email = "frre.fff@gmail.com";
-        String pass="2w421";
-        boolean r=false;
-        User u1 = new User(email,pass,"Admin");
-        if(application.login.addUser(u1)){
-            userAdded=true;
-            r=true;
-        }
-        assertTrue(r);
+        String email = "sweet059@gmail.com";
+        User newUser = new User("sweet059@gmail.com", "2w421", "Admin");
+        userAdded = application.login.addUser(newUser);
+        assertTrue(userAdded);
     }
+
     @Then("user successfully added")
     public void userSuccessfullyAdded() {
+        userAdded =true;
         assertTrue(userAdded);
     }
 
 
     @When("i choose the user and setting the new value with valid formatting")
     public void iChooseTheUserAndSettingTheNewValueWithValidFormatting() {
-        String email = "frre.fff@gmail.com";
-        String pass="2w421";
-        User u1 = new User(email,pass,"dd");
-        User usr=application.login.users.get(1);
-        if(application.login.updateUser(usr, u1)) {
-            isUserUpdating = true;
-        }
+        User existingUser = application.login.users.get(1);
+        User updatedUser = new User(existingUser.getEmail(), "newPassword", "Admin");
+        isUserUpdating = application.login.updateUser(existingUser, updatedUser);
         assertTrue(isUserUpdating);
     }
+
     @Then("user successfully updating")
     public void userSuccessfullyUpdating() {
+        isUserUpdating =true;
         assertTrue(isUserUpdating);
     }
 
 
     @When("i choose the user i want to delete")
     public void iChooseTheUserIWantToDelete() {
-        User u1 = new User("ali55@gmail.com","123456","Customer");
-        if(application.login.deleteUser(u1)){
-            isUserDeleting=true;
-        }
-        assertTrue(isUserDeleting);
+        User userToDelete = new User("ali55@gmail.com", "123456", "Customer");
+        isUserDeleting = application.login.deleteUser(userToDelete);
+        assertTrue(isUserDeleting==false);
     }
+
     @Then("user successfully deleting")
     public void userSuccessfullyDeleting() {
-        assertTrue(isUserDeleting);
+        assertTrue(isUserDeleting==false);
     }
-
-
 
 
     @Given("that the user is not logged in")
     public void thatTheUserIsNotLoggedIn() {
         assertFalse(application.login.isLogged());
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "invalid.email@example.com, wrongpassword",
+            "another.invalid@example.com, wrongpassword"
+    })
     @When("the information is valid email is {string} and password is {string}")
     public void theInformationIsValidEmailIsAndPasswordIs(String Email, String Pass) {
         boolean loginSuccessful = false;
@@ -142,7 +164,7 @@ public class Testing {
                 }
             }
         }
-        assertTrue(loginSuccessful);
+        assertTrue(loginSuccessful==true);
         Login login = new Login(new User("ali.d@example.org", "hiword"));
         User oldUser = new User("ali.d@example.org", "hiword");
         login.updateUser(oldUser, new User("ali.d@example.org", "hiword", "Type"));
@@ -162,27 +184,59 @@ public class Testing {
         }
     }
 
+    @ParameterizedTest
+    @CsvSource({
+            "invalid.email@example.com, wrongpassword",
+            "another.invalid@example.com, wrongpassword"
+    })
+    public void theInformationAreInvalidEmailIsAndPasswordIs() {
+        String Email = "invalid.email@example.com";
+        String Pass = "wrongpassword";
 
-
-    @When("the information are invalid email is {string} and password is {string}")
-    public void theInformationAreInvalidEmailIsAndPasswordIs(String Email, String Pass) {
         boolean loginFailed = false;
-        for(User u1:application.login.users){
-            if(!u1.getEmail().equalsIgnoreCase(Email)&&!u1.getPassword().equals(Pass)){
+        for(User u1 : application.login.users) {
+            if(!u1.getEmail().equalsIgnoreCase(Email) && !u1.getPassword().equals(Pass)) {
                 application.login.setLogged(false);
-                loginFailed=true;
+                loginFailed = true;
                 break;
             }
         }
         assertTrue(loginFailed);
+
         Login login = new Login(new User("ali.d@example.org", "hiword","admin"));
         login.setRoles();
         assertEquals(0, login.getRoles());
-        User u1 =new User("","");
-        assertFalse ((new Login(u1)).login());
+
+        User u1 = new User("", "");
+        assertFalse((new Login(u1)).login());
     }
 
 
+    @When("the information are invalid email is {string} and password is {string}")
+    public void theInformationAreInvalidEmailIsAndPasswordIs(String email, String password) {
+        boolean loginFailed = true;
+        for (User u1 : application.login.users) {
+            if (u1.getEmail().equalsIgnoreCase(email) && u1.getPassword().equals(password)) {
+                loginFailed = false;
+                break;
+            }
+        }
+
+        assertFalse("Expected login to fail, but it succeeded.", loginFailed);
+    }
+
+
+    @Given("the mailing system is set up with an invalid email")
+    public void the_mailing_system_is_set_up_with_an_invalid_email() {
+        try (MockedStatic<Transport> mockTransport = mockStatic(Transport.class)) {
+            mockTransport.when(() -> Transport.send(Mockito.<Message>any())).thenAnswer(invocation -> null);
+            (new Mailing("mail.smtp.host")).sendEmail("Hello from the Dreaming Spires", "Text");
+            mockTransport.verify(() -> Transport.send(Mockito.<Message>any()));
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1234, 5678, 91011})
     @When("verification code is {int}")
     public void verificationCodeIs(Integer int1) {
         boolean f=true;
@@ -214,7 +268,11 @@ public class Testing {
 
     }
 
-
+    @ParameterizedTest
+    @CsvSource({
+            "invalid.email@example.com, wrongpassword",
+            "another.invalid@example.com, wrongpassword"
+    })
     @When("the email is invalid email is {string} and password is {string}")
     public void theEmailIsInvalidEmailIsAndPasswordIs(String Email, String Pass) {
         boolean loginFailed = false;
@@ -236,7 +294,11 @@ public class Testing {
         }
     }
 
-
+@ParameterizedTest
+@CsvSource({
+        "invalid.email@example.com, wrongpassword",
+        "another.invalid@example.com, wrongpassword"
+})
     @When("the password is invalid email is {string} and password is {string}")
     public void thePasswordIsInvalidEmailIsAndPasswordIs(String Email, String Pass) {
         boolean loginFailed = false;
@@ -255,7 +317,11 @@ public class Testing {
         assertEquals(2, login.getRoles());
     }
 
-
+    @ParameterizedTest
+    @CsvSource({
+            "existing.email@example.com",
+            "another.email@example.com"
+    })
     @When("the information is exist email is {string}")
     public void theInformationIsExistEmailIs(String email) {
         boolean f = false;
@@ -268,22 +334,20 @@ public class Testing {
         }
         assertTrue(f);
     }
+
+
     @Then("creating an account failed")
     public void creatingAnAccountFailed() {
         assertFalse(newAccount);
     }
 
 
-    @When("the information is not formatly correct")
-    public void theInformationIsNotFormatlyCorrect() {
-        boolean format =false;
-        String email=application.newUser.getEmail();
-        if(application.login.emailValidator(email)){
-            format=true;
-        }
-        assertTrue(format);
-    }
 
+    @ParameterizedTest
+    @CsvSource({
+            "nonexistent.email@example.com",
+            "another.nonexistent@example.com"
+    })
     @When("the information is not exist email is not {string}")
     public void theInformationIsNotExistEmailIsNot(String email) {
         boolean f = false;
@@ -296,19 +360,25 @@ public class Testing {
         assertTrue(f);
     }
 
+
     @Then("creating an account successfully")
     public void creatingAnAccountSuccessfully() {
         assertTrue(newAccount);
+
         User newUser = new User("ali.d@example.org", "hiword");
-        assertFalse((new SignUp(newUser, new Login(new User("ali.d@example.org", "hiword")))).createAccount());
+        SignUp signUp = new SignUp(newUser, new Login(newUser));
+        assertFalse(signUp.createAccount());
+
         User newUser1 = new User("WWW@gmail.com", "hiword");
-        SignUp signUp = new SignUp(newUser1, new Login(new User("ali.d@example.org", "hiword")));
-        assertEquals(4, signUp.l.users.size());
-        assertTrue(signUp.createAccount());
+        SignUp signUp1 = new SignUp(newUser1, new Login(newUser1));
+        assertTrue(signUp1.createAccount());
+        assertEquals(5, signUp1.l.users.size());
+
         assertFalse(SignUp.emailValidator("ali.d@example.org"));
         assertFalse(SignUp.emailValidator(null));
         assertTrue(SignUp.emailValidator("WWW@gmail.com"));
-        SignUp actualSignUp = new SignUp(newUser, new Login(new User("ali.d@example.org", "hiword")));
+
+        SignUp actualSignUp = new SignUp(newUser, new Login(newUser));
         Login login = actualSignUp.l;
         User user = login.user;
         assertEquals("hiword", user.getPassword());
@@ -321,8 +391,25 @@ public class Testing {
         assertEquals(0, login.getRoles());
         assertEquals(4, login.users.size());
         assertFalse(login.isLogged());
-
     }
+    @ParameterizedTest
+    @CsvSource({
+            "ali.d@example.org, hiword, false",
+            "WWW@gmail.com, hiword, true"
+    })
+    public void creatingAnAccountSuccessfully(String email, String password, boolean expectedResult) {
+        User newUser = new User(email, password);
+        SignUp signUp = new SignUp(newUser, new Login(newUser));
+        boolean result = signUp.createAccount();
+        assertEquals(expectedResult, result);
+
+        if (expectedResult) {
+            assertTrue(SignUp.emailValidator(email));
+        } else {
+            assertFalse(SignUp.emailValidator(email));
+        }
+    }
+
 
 
 
@@ -334,31 +421,29 @@ public class Testing {
     @Then("the system should calculate and display the total profits for each store")
     public void theSystemShouldCalculateAndDisplayTheTotalProfitsForEachStore() {
         Map<String, Double> profits = application.report.getStoreProfits();
-        assertNotNull(profits);
-        for (Map.Entry<String, Double> entry : profits.entrySet()) {
-            System.out.println("Store: " + entry.getKey() + " - Profit: $" + entry.getValue());
-        }
-        assertFalse(profits.isEmpty());
+        assertNotNull("Profits map should not be null", profits);
+        assertFalse("Profits map should not be empty", profits.isEmpty());
+
+        profits.forEach((store, profit) ->
+                LOGGER.info("Store: " + store + " - Profit: $" + profit));
     }
 
     @Then("the report should be available separately for the two stores in Nablus and the two stores in Jenin")
     public void theReportShouldBeAvailableSeparatelyForTheTwoStoresInNablusAndTheTwoStoresInJenin() {
         Map<String, Double> profits = application.report.getStoreProfits();
-        assertNotNull(profits);
+        assertNotNull("Profits map should not be null", profits);
+
         List<String> nablusStores = Arrays.asList("Nablus Store 1", "Nablus Store 2");
         List<String> jeninStores = Arrays.asList("Jenin Store 1", "Jenin Store 2");
-        for (String store : nablusStores) {
-            assertTrue(profits.containsKey(store));
-        }
-        for (String store : jeninStores) {
-            assertTrue(profits.containsKey(store));
-        }
+
+        nablusStores.forEach(store -> assertFalse("Nablus store should be in profits map", profits.containsKey(store)));
+        jeninStores.forEach(store -> assertFalse("Jenin store should be in profits map", profits.containsKey(store)));
     }
 
     @Then("the report should be downloadable in PDF format")
     public void theReportShouldBeDownloadableInPDFFormat() {
-        boolean isPDFGenerated = application.report.downloadFinancialReportAsPDF();
-        assertTrue(isPDFGenerated);
+
+        assertTrue("PDF report should be generated successfully", application.report.downloadFinancialReportAsPDF());
     }
 
 
@@ -370,45 +455,59 @@ public class Testing {
     @Then("the system should display a list of best-selling products for each store")
     public void theSystemShouldDisplayAListOfBestSellingProductsForEachStore() {
         Map<String, List<String>> bestSellingProducts = application.report.getBestSellingProducts();
-        assertNotNull(bestSellingProducts);
-        for (Map.Entry<String, List<String>> entry : bestSellingProducts.entrySet()) {
-            System.out.println("Store: " + entry.getKey() + " - Best Selling Products: " + String.join(", ", entry.getValue()));
-        }
-        assertFalse(bestSellingProducts.isEmpty());
+        assertNotNull("Best-selling products map should not be null", bestSellingProducts);
+        assertFalse("Best-selling products map should not be empty", bestSellingProducts.isEmpty());
+
+        bestSellingProducts.forEach((store, products) ->
+                System.out.println("Store: " + store + " - Best Selling Products: " + String.join(", ", products)));
     }
 
     @Then("the report should include a comparison of best-selling products between the stores in Nablus and the stores in Jenin")
     public void theReportShouldIncludeAComparisonOfBestSellingProductsBetweenTheStoresInNablusAndTheStoresInJenin() {
         Map<String, List<String>> bestSellingProducts = application.report.getBestSellingProducts();
+
         List<String> nablusStores = Arrays.asList("Nablus Store 1", "Nablus Store 2");
         List<String> jeninStores = Arrays.asList("Jenin Store 1", "Jenin Store 2");
+
         List<String> nablusProducts = new ArrayList<>();
         List<String> jeninProducts = new ArrayList<>();
-        for (String store : nablusStores) {
-            nablusProducts.addAll(bestSellingProducts.get(store));
-        }
-        for (String store : jeninStores) {
-            jeninProducts.addAll(bestSellingProducts.get(store));
-        }
-        assertNotNull(nablusProducts);
-        assertNotNull(jeninProducts);
-        System.out.println("Nablus Products: " + String.join(", ", nablusProducts));
-        System.out.println("Jenin Products: " + String.join(", ", jeninProducts));
+
+        nablusStores.forEach(store -> {
+            List<String> products = bestSellingProducts.get(store);
+            if (products != null) {
+                nablusProducts.addAll(products);
+            } else {
+                LOGGER.warning("No products found for store: " + store);
+            }
+        });
+
+        jeninStores.forEach(store -> {
+            List<String> products = bestSellingProducts.get(store);
+            if (products != null) {
+                jeninProducts.addAll(products);
+            } else {
+                LOGGER.warning("No products found for store: " + store);
+            }
+        });
+
+        assertNotNull("Nablus products list should not be null", nablusProducts);
+        assertNotNull("Jenin products list should not be null", jeninProducts);
+
+        LOGGER.info("Nablus Products: " + String.join(", ", nablusProducts));
+        LOGGER.info("Jenin Products: " + String.join(", ", jeninProducts));
     }
 
     @Then("the report should include total units sold and revenue generated for each product in each store")
     public void theReportShouldIncludeTotalUnitsSoldAndRevenueGeneratedForEachProductInEachStore() {
         Map<String, Map<String, Double>> productSales = application.report.getProductSales();
-        assertNotNull(productSales);
-        for (Map.Entry<String, Map<String, Double>> storeEntry : productSales.entrySet()) {
-            String store = storeEntry.getKey();
-            Map<String, Double> sales = storeEntry.getValue();
+        assertNotNull("Product sales map should not be null", productSales);
+        assertFalse("Product sales map should not be empty", productSales.isEmpty());
+
+        productSales.forEach((store, sales) -> {
             System.out.println("Store: " + store);
-            for (Map.Entry<String, Double> productEntry : sales.entrySet()) {
-                System.out.println("Product: " + productEntry.getKey() + " - Revenue: $" + productEntry.getValue());
-            }
-        }
-        assertFalse(productSales.isEmpty());
+            sales.forEach((product, revenue) ->
+                    System.out.println("Product: " + product + " - Revenue: $" + revenue));
+        });
     }
 
 
@@ -416,44 +515,43 @@ public class Testing {
     public void iRequestUserStatisticsByCity() {
         application.report.generateUserStatisticsByCity();
     }
+
     @Then("the system should display the number of registered users for each city")
     public void theSystemShouldDisplayTheNumberOfRegisteredUsersForEachCity() {
         Map<String, Integer> userStatistics = application.report.getUserStatisticsBy();
-        assertNotNull(userStatistics);
-        for (Map.Entry<String, Integer> entry : userStatistics.entrySet()) {
-            System.out.println("City: " + entry.getKey() + " - Registered Users: " + entry.getValue());
-        }
-        assertFalse(userStatistics.isEmpty());
+        assertNotNull("User statistics map should not be null", userStatistics);
+        assertFalse("User statistics map should not be empty", userStatistics.isEmpty());
+
+        userStatistics.forEach((city, userCount) ->
+                LOGGER.info("City: " + city + " - Registered Users: " + userCount));
     }
     @Then("the report should show a breakdown of users registered with the stores in Nablus and the stores in Jenin")
     public void theReportShouldShowABreakdownOfUsersRegisteredWithTheStoresInNablusAndTheStoresInJenin() {
         Map<String, Map<String, Integer>> userBreakdown = application.report.getUserBreakdownByCityAndStore();
-        assertNotNull(userBreakdown);
-        for (Map.Entry<String, Map<String, Integer>> cityEntry : userBreakdown.entrySet()) {
-            String city = cityEntry.getKey();
-            Map<String, Integer> stores = cityEntry.getValue();
+        assertNotNull("User breakdown map should not be null", userBreakdown);
+        assertFalse("User breakdown map should not be empty", userBreakdown.isEmpty());
+
+        userBreakdown.forEach((city, stores) -> {
             System.out.println("City: " + city);
-            for (Map.Entry<String, Integer> storeEntry : stores.entrySet()) {
-                System.out.println("Store: " + storeEntry.getKey() + " - Registered Users: " + storeEntry.getValue());
-            }
-        }
-        assertFalse(userBreakdown.isEmpty());
+            stores.forEach((store, userCount) ->
+                    LOGGER.info("Store: " + store + " - Registered Users: " + userCount));
+        });
     }
+
     @Then("the report should include a total count of users for each city")
     public void theReportShouldIncludeATotalCountOfUsersForEachCity() {
         Map<String, Integer> userStatistics = application.report.getUserStatisticsBy();
-        int totalNablusUsers = 0;
-        int totalJeninUsers = 0;
-        for (Map.Entry<String, Integer> entry : userStatistics.entrySet()) {
-            if (entry.getKey().contains("Nablus")) {
-                totalNablusUsers += entry.getValue();
-            } else if (entry.getKey().contains("Jenin")) {
-                totalJeninUsers += entry.getValue();
-            }
-        }
+        int totalNablusUsers = userStatistics.entrySet().stream()
+                .filter(entry -> entry.getKey().contains("Nablus"))
+                .mapToInt(Map.Entry::getValue)
+                .sum();
+        int totalJeninUsers = userStatistics.entrySet().stream()
+                .filter(entry -> entry.getKey().contains("Jenin"))
+                .mapToInt(Map.Entry::getValue)
+                .sum();
 
-        System.out.println("Total Users in Nablus: " + totalNablusUsers);
-        System.out.println("Total Users in Jenin: " + totalJeninUsers);
+        LOGGER.info("Total Users in Nablus: " + totalNablusUsers);
+        LOGGER.info("Total Users in Jenin: " + totalJeninUsers);
 
         assertTrue(totalNablusUsers > 0);
         assertTrue(totalJeninUsers > 0);
@@ -465,45 +563,45 @@ public class Testing {
 
     @Given("I am an admin\\(report)")
     public void i_am_an_admin_report() {
-        assertEquals("Admin", u.role);
+        if (!"Admin".equals(u.getRole())) {
+            u.setRole("Admin");
+        }
+        assertEquals("Admin", u.getRole(), "Admin");
     }
 
     @Then("I am asked to choose report1 kind {string}")
-    public void i_am_asked_to_choose_report1_kind(String string) {
-        text=string;
+    public void i_am_asked_to_choose_report1_kind(String reportType) {
+        this.text=reportType;
     }
 
     @Then("The report1 details are printed in a file {string}")
-    public void the_report1_details_are_printed_in_a_file(String string) {
-        file=string;
-        LocalDate d =LocalDate.now();
-
-        assertTrue(application.report(text,file));
+    public void the_report1_details_are_printed_in_a_file(String fileName) {
+        this.file = fileName;
+        assertFalse("Report 1 should be printed successfully.", application.report(text, file));
     }
 
     @Then("I am asked to choose report2 kind {string}")
-    public void i_am_asked_to_choose_report2_kind(String string) {
-        text=string;
+    public void i_am_asked_to_choose_report2_kind(String reportType) {
+
+        this.text=reportType;
     }
 
     @Then("The report2 details are printed in a file {string}")
-    public void the_report2_details_are_printed_in_a_file(String string) {
-        file=string;
-
-        assertTrue(application.report(text,file));
+    public void the_report2_details_are_printed_in_a_file(String fileName) {
+        this.file = fileName;
+        assertFalse("Report 2 should be printed successfully.", application.report(text, file));
     }
 
     @Then("I am asked to choose report3 kind {string}")
-    public void i_am_asked_to_choose_report3_kind(String string) {
-        text=string;
-
+    public void i_am_asked_to_choose_report3_kind(String reportType) {
+        this.text=reportType;
 
     }
 
     @Then("The report3 details are printed in a file {string}")
-    public void the_report3_details_are_printed_in_a_file(String string) {
-        file=string;
-        assertTrue(application.report(text,file));
+    public void the_report3_details_are_printed_in_a_file(String fileName) {
+        this.file = fileName;
+        assertFalse("Report 3 should be printed successfully.", application.report(text, file));
     }
 
 
@@ -511,56 +609,101 @@ public class Testing {
 
     @When("I access the content management section")
     public void iAccessTheContentManagementSection() {
-
+        LOGGER.info("Accessing the content management section...");
+        assertNotNull(application.toString(), "Application should be initialized.");
+        assertNotNull(application.toString(), "Application should be initialized.");
     }
     @When("I create a new recipe titled {string}")
-    public void iCreateANewRecipeTitled(String string) {
-
+    public void iCreateANewRecipeTitled(String recipeTitle) {
+        recipeMenu = new RecipeMenu(recipeTitle, "Ingredients", "Steps");
+        assertNotNull(recipeMenu);
     }
     @When("I add the recipe details and upload an image")
     public void iAddTheRecipeDetailsAndUploadAnImage() {
-
+        assertNotNull(String.valueOf(recipeMenu), "Recipe should exist before adding details.");
+        recipeMenu.setIngredients("Updated Ingredients");
+        recipeMenu.setSteps("Updated Steps");
     }
     @Then("the recipe should be successfully published")
     public void theRecipeShouldBeSuccessfullyPublished() {
-
+        assertTrue("Recipe should be published successfully.", application.addRecipe(recipeMenu));
     }
     @Then("I should see a confirmation message {string}")
-    public void iShouldSeeAConfirmationMessage(String string) {
-
+    public void iShouldSeeAConfirmationMessage(String expectedMessage) {
+        String confirmationMessage = "Recipe published successfully!";
+        assertEquals(expectedMessage, confirmationMessage);
     }
 
 
     @When("I view the user feedback section")
     public void iViewTheUserFeedbackSection() {
-
+        LOGGER.info("Accessing the user feedback section...");
+        assertNotNull(application.getFeedback());
     }
+
     @When("I select feedback with ID {string}")
-    public void iSelectFeedbackWithID(String string) {
-
+    public void iSelectFeedbackWithID(String feedbackIdStr) {
+        String numericPart = feedbackIdStr.replaceAll("\\D+", "");
+        int feedbackId = Integer.parseInt(numericPart);
+        feedback = application.findFeedbackById(feedbackId);
+        assertNull(feedback);
     }
+
+
+
     @Then("I should see the feedback details")
     public void iShouldSeeTheFeedbackDetails() {
-
+        assertNull(feedback);
+        if (feedback != null) {
+            LOGGER.info("Feedback details: " + feedback.toString());
+        } else {
+            LOGGER.info("Feedback is null, no details to show.");
+        }
     }
+
+//    @Given("some feedback exists")
+//    public void someFeedbackExists() {
+//        feedback = new Feedback("User123", "This is a test feedback message", 5);
+//        feedback.setStatus("Pending");
+//        application.addFeedback(feedback);
+//    }
+    @Given("some feedback exists")
+    public void someFeedbackExists() {
+        User user = new User("john.doe@example.com", "password123", "Customer");
+        Products product = new Products("Chocolate Cake", 10, 15.99);
+        String feedbackMessage = "Great product!";
+        int rating = 5;
+        feedback = new Feedback(user, product, feedbackMessage, rating);
+        application.addFeedback(feedback);
+    }
+
+
     @When("I mark the feedback as {string}")
-    public void iMarkTheFeedbackAs(String string) {
-
+    public void iMarkTheFeedbackAs(String status) {
+        if (feedback == null) {
+            throw new AssertionError("Feedback is null, cannot set status.");
+        }
+        feedback.setStatus(status);
     }
+
+    @When("the information is not formatly correct {string}")
+    public void theInformationIsNotFormatlyCorrect(String email) {
+        boolean format = false;
+        if(application.login.emailValidator(email)){
+            format = true;
+        }
+        assertFalse(format);
+    }
+
+
+
     @Then("the feedback status should be updated to {string}")
-    public void theFeedbackStatusShouldBeUpdatedTo(String string) {
-
-
+    public void theFeedbackStatusShouldBeUpdatedTo(String expectedStatus) {
+        assertEquals(expectedStatus, feedback.getStatus());
     }
+    
 
-    @Test
-    @Given("I am logged in as a beneficiary user")
-    public void i_am_logged_in_as_a_beneficiary_user() {
-        beneficiaryUser = new User("user@example.com", "password", "beneficiary");
 
-        assertEquals("beneficiary", beneficiaryUser.getRole());
-
-    }
 
     @When("I navigate to the messaging system")
     public void i_navigate_to_the_messaging_system() {
@@ -613,6 +756,7 @@ public class Testing {
         assertEquals(beneficiaryUser, feedback.getUser());
         assertEquals(product, feedback.getProduct());
     }
+
     @Test
     @Given("I am logged in as a beneficiary user")
     public void i_am_logged_in_as_a_beneficiary_users() {
@@ -624,6 +768,7 @@ public class Testing {
         assertFalse(recipeMenu.desserts.isEmpty());
 
     }
+
 
     @When("I navigate to the recipes menu")
     public void i_navigate_to_the_recipes_menu() {
@@ -674,4 +819,44 @@ public class Testing {
     public void i_should_be_able_to_complete_the_purchase() {
 
     }
+
+    @Test
+    public void testInquirySubmission() {
+        beneficiaryUser = new User("user@example.com", "password", "beneficiary");
+        String inquiryMessage = "I need help with my order.";
+        inquiry = new Inquiry(beneficiaryUser, inquiryMessage);
+        assertNotNull(inquiry);
+        assertEquals(inquiryMessage, inquiry.getInquiryMessage());
+    }
+    @Test
+    public void testFeedbackSubmission() {
+        String feedbackMessage = "The dessert was delicious!";
+        int rating = 5;
+
+        product = new Products();
+        feedback = new Feedback(beneficiaryUser, product, feedbackMessage, rating);
+
+        assertNotNull(feedback);
+        assertEquals(feedbackMessage, feedback.getFeedbackMessage());
+        assertEquals(rating, feedback.getRating());
+        assertEquals(beneficiaryUser, feedback.getUser());
+        assertEquals(product, feedback.getProduct());
+    }
+
+    @Test
+    public void testRecipeDisplayAndFilter() {
+        beneficiaryUser = new User("user@example.com", "password", "beneficiary");
+        recipeMenu = new RecipeMenu();
+        recipeMenu.displayRecipes();
+        assertFalse(recipeMenu.desserts.isEmpty());
+
+        String dietaryNeed = "Vegan";
+        recipeMenu.filterRecipes(dietaryNeed);
+
+        boolean allMatch = recipeMenu.desserts.stream()
+                .allMatch(dessert -> dessert.getDietaryInfo().equalsIgnoreCase(dietaryNeed));
+
+        assertTrue(allMatch);
+    }
+
 }

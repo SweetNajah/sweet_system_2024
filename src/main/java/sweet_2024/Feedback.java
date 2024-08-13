@@ -4,7 +4,8 @@ public class Feedback {
 
 
     private final int id; // Unique identifier for feedback
-
+    private String user123;
+    private String status;
     private User user;
     private Products products;
     private String feedbackMessage;
@@ -19,8 +20,21 @@ public class Feedback {
         this.rating = rating;
         this.response = ""; // Initialize with no response
         this.products = products;
+        this.status = "Pending";
     }
 
+    public Feedback(String user123, String thisIsATestFeedback, int i) {
+        this.user123=user123;
+        this.id=i;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
     public int getId() {
         return id;
     }
@@ -100,6 +114,7 @@ public class Feedback {
                 ", userName='" + userName + '\'' +
                 ", rating=" + rating +
                 ", feedbackMessage='" + feedbackMessage + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 

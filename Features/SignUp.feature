@@ -14,7 +14,7 @@ Feature:Sign up
 
   Scenario:trying to signing up with incorrect email format
     Given that the user is not logged in
-    When the information is not formatly correct
+    When the information is not formatly correct "invalid.email"
     Then creating an account failed
 
 
