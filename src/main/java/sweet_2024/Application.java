@@ -358,17 +358,6 @@ public class Application {
         }
     }
 
-    public static void listUsers(Application sweetSystem) {
-        List<User> users = sweetSystem.getUsers();
-        if (users == null || users.isEmpty()) {
-            LOGGER.info("No users available.");
-        } else {
-            LOGGER.info("Listing users:");
-            for (User user : users) {
-                LOGGER.info(user.toString());
-            }
-        }
-    }
 
     public User findUserByEmail(String email) {
         if (email == null || email.isEmpty()) {
