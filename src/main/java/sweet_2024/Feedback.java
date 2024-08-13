@@ -28,12 +28,18 @@ public class Feedback {
         this.id=i;
     }
 
+    public Feedback(int i, String feedbackMessage, String open) {
+        this.id=i;
+        this.feedbackMessage=feedbackMessage;
+        this.user123=open;
+    }
+
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
-        this.status = status;
+     this.status=status;
     }
     public int getId() {
         return id;

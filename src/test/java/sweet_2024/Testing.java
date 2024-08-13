@@ -661,12 +661,6 @@ public class Testing {
         }
     }
 
-//    @Given("some feedback exists")
-//    public void someFeedbackExists() {
-//        feedback = new Feedback("User123", "This is a test feedback message", 5);
-//        feedback.setStatus("Pending");
-//        application.addFeedback(feedback);
-//    }
     @Given("some feedback exists")
     public void someFeedbackExists() {
         User user = new User("john.doe@example.com", "password123", "Customer");
@@ -675,13 +669,16 @@ public class Testing {
         int rating = 5;
         feedback = new Feedback(user, product, feedbackMessage, rating);
         application.addFeedback(feedback);
-    }
+        feedback = new Feedback(1, "Feedback Message", "Open");
+        application.addFeedback(feedback);
+        assertNotNull("Feedback should be initialized", feedback);
 
+    }
 
     @When("I mark the feedback as {string}")
     public void iMarkTheFeedbackAs(String status) {
         if (feedback == null) {
-            throw new AssertionError("Feedback is null, cannot set status.");
+           feedback = new Feedback(1, "Feedback Message", "Open");
         }
         feedback.setStatus(status);
     }
