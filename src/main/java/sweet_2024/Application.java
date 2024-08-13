@@ -265,7 +265,6 @@ public class Application {
         return feedbackList;
     }
 
-    // Method to add feedback to the list (you might already have this or similar)
     public void addFeedback(Feedback feedback) {
         feedbackList.add(feedback);
     }
