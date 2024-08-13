@@ -31,6 +31,10 @@ public class Products {
     private boolean isDiscountActive;
     static public ArrayList<String> Sweets = new ArrayList<>();
 
+    public Products(String chocolateCake) {
+        this.productName=chocolateCake;
+    }
+
 
     public double getRevenue() {
         return revenue;
