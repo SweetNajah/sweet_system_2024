@@ -6,9 +6,11 @@ import java.util.Scanner;
 import java.util.logging.*;
 
 public class MainClass {
+    private static boolean adminExists = false;
     private static final String ADMIN_STRING = "Admin";
     private static final String STORE_OWNER_STRING = "Store Owner";
     private static final String SUPPLIER_STRING = "Supplier";
+    private static final String CUSTOMER_STRING = "Customer";
     private static final String INVALID_INPUT_MESSAGE = "Invalid Input";
     private static final String INVALID_INFORMATION_PLEASE_TRY_AGAIN = "Invalid information! Please try again.";
     private static final String STRING = "*********************************************************************";
@@ -71,17 +73,31 @@ public class MainClass {
         }
     }
 
+
     private static void signUp(Scanner scanner, Application sweetSystem) {
         LOGGER.info("Enter your email: ");
         String email = scanner.nextLine();
         LOGGER.info("Enter your password: ");
         String password = scanner.nextLine();
-        LOGGER.info("Enter your role (Admin/Store Owner/Supplier): ");
+        LOGGER.info("Enter your role (Admin/Store Owner/Supplier/Customer): ");
         String role = scanner.nextLine();
+        if (ADMIN_STRING.equalsIgnoreCase(role) && adminExists) {
+            LOGGER.warning("Admin account already exists! Cannot create another Admin account.");
+            return;
+        }
         if (sweetSystem.login.emailValidator(email)) {
             User newUser = new User(email, password, role);
             sweetSystem.addUser(newUser);
             LOGGER.info("User Created Successfully");
+
+            Mailing mailing = new Mailing(email);
+            String subject = "Welcome to Sweet Management System";
+            String text = "Dear " + role + ",\n\nThank you for signing up with us! We are excited to have you on board.";
+            mailing.sendEmail(subject, text);
+
+            if (ADMIN_STRING.equalsIgnoreCase(role)) {
+                adminExists = true;
+            }
             sendEmailToUser(email);
         } else {
             LOGGER.info(INVALID_INFORMATION_PLEASE_TRY_AGAIN);
@@ -96,14 +112,27 @@ public class MainClass {
         User user = sweetSystem.findUserByEmail(signInEmail);
         if (user != null && user.getPassword().equals(signInPassword)) {
             sweetSystem.login.setUser(user);
+
             Mailing mailing = new Mailing(signInEmail);
             mailing.sendVerificationCode();
             LOGGER.info("Verification code sent to " + signInEmail);
-            handleRoles(scanner, sweetSystem, signInEmail, signInPassword);
+            LOGGER.info("The verification code is: " + mailing.verificationCode);//show Verification
+
+            LOGGER.info("Enter the verification code sent to your email: ");
+            int enteredCode = scanner.nextInt();
+            scanner.nextLine();
+
+            if (enteredCode == mailing.verificationCode) {
+                LOGGER.info("Verification successful! You are now logged in.");
+                handleRoles(scanner, sweetSystem, signInEmail, signInPassword);
+            } else {
+                LOGGER.warning("Invalid verification code! Please try again.");
+            }
         } else {
             LOGGER.info(INVALID_INFORMATION_PLEASE_TRY_AGAIN);
         }
     }
+
 
     private static void sendEmailToUser(String email) {
         Mailing mailing = new Mailing(email);
@@ -393,7 +422,7 @@ public class MainClass {
                 continue;
             }
             switch (choice) {
-                case 1 -> Application.listUsers(sweetSystem);
+                case 1 -> listUsers(scanner, sweetSystem);
                 case 2 -> addUser(scanner, sweetSystem);
                 case 3 -> removeUser(scanner, sweetSystem);
                 case 4 -> updateUser(scanner, sweetSystem);
@@ -401,6 +430,21 @@ public class MainClass {
                 default -> LOGGER.warning(INVALID_INPUT_MESSAGE);
             }
         } while (choice != 5);
+    }
+
+    private static void listUsers(Scanner scanner, Application sweetSystem) {
+        List<User> users = sweetSystem.getUsers();
+        if (users == null || users.isEmpty()) {
+            LOGGER.info("No users available.");
+            return;
+        }
+        LOGGER.info("Listing users:");
+        for (int i = 0; i < users.size(); i++) {
+            User user = users.get(i);
+            LOGGER.info((i + 1) + ". Email: " + user.getEmail() + ", Role: " + user.getRole());
+        }
+        LOGGER.info("Enter any key to return to the previous menu:");
+        scanner.nextLine();
     }
 
 
