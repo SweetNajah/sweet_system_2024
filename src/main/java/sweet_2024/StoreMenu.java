@@ -3,8 +3,8 @@ package sweet_2024;
 import java.util.Scanner;
 
 public class StoreMenu {
-    private final RecipeMenu recipeMenu;
-
+    private RecipeMenu recipeMenu;
+    private String selectedDessert;
     public StoreMenu(RecipeMenu recipeMenu) {
         this.recipeMenu = recipeMenu;
     }
@@ -12,7 +12,30 @@ public class StoreMenu {
     public void displayStore() {
         recipeMenu.displayRecipes();
     }
+    public String navigateToStoreMenu() {
+        return "Navigated to the store menu.";
+    }
 
+    public void selectDessert(String dessert) {
+        this.selectedDessert = dessert;
+    }
+    public StoreMenu(){
+
+    }
+    public String getSelectedDessert() {
+        return selectedDessert;
+    }
+
+    public boolean choosePurchaseOption() {
+        return selectedDessert != null;
+    }
+    public boolean completePurchase() {
+        if (selectedDessert != null) {
+            System.out.println("Purchase completed for: " + selectedDessert);
+            return true;
+        }
+        return false;
+    }
     public void purchaseDessert(User user) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the name of the dessert you wish to purchase:");

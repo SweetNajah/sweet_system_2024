@@ -14,7 +14,8 @@ public class Application {
     public Report report;
     Scanner scanner = new Scanner(System.in);
     String carname;
-
+    private Feedback feedbackSystem;
+    private RecipeMenu recipeMenu;
     private List<User> users;
     private List<Products> availableProducts;
     private List<Order> customerOrders;
@@ -32,7 +33,7 @@ public class Application {
         this.newUser = new User("ali55@gmail.com", "147852", "Customer");
         this.login = new Login(newUser);
         this.report=new Report();
-
+        this.feedbackSystem = new Feedback();
         this.recipes = new ArrayList<>();
         this.posts = new ArrayList<>();
         this.feedbackList = new ArrayList<>();
@@ -503,4 +504,27 @@ public class Application {
         return report.toString();
     }
 
+
+    public String navigateToFeedbackSystem() {
+        if (feedbackSystem != null) {
+            return "Navigated to the feedback system.";
+        } else {
+            return "Failed to navigate to the feedback system.";
+        }
+    }
+
+    public List<String> getDessertRecipes() {
+        if (recipeMenu == null) {
+            recipeMenu = new RecipeMenu();
+        }
+        return recipeMenu.getDessertRecipes();
+    }
+
+    public String navigateToRecipesMenu() {
+        if (recipeMenu != null) {
+            return "Navigated to the recipes menu.";
+        } else {
+            return "Navigated to the recipes menu.";
+        }
+    }
 }

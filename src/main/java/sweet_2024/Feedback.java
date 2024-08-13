@@ -34,6 +34,11 @@ public class Feedback {
         this.user123=open;
     }
 
+    public Feedback() {
+        this.id = idCounter++;
+        this.status = "Pending";
+    }
+
     public String getStatus() {
         return status;
     }

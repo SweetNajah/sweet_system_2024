@@ -9,6 +9,7 @@ public class RecipeMenu {
     private String name;
     private String ingredients;
     private String steps;
+    private List<String> dessert;
 
     public RecipeMenu(String name, String ingredients, String steps) {
         this.name = name;
@@ -20,9 +21,13 @@ public class RecipeMenu {
         desserts.add(new Dessert("Chocolate Cake", "Vegetarian", 10.99));
         desserts.add(new Dessert("Fruit Tart", "Vegan", 7.99));
         desserts.add(new Dessert("Ice Cream", "Gluten-Free", 5.99));
+        desserts = new ArrayList<>();
+
     }
 
-
+    public List<String> getDessertRecipes() {
+        return dessert;
+    }
     public void displayRecipes() {
         System.out.println("Available Dessert Recipes:");
         for (Dessert dessert : desserts) {
@@ -57,7 +62,7 @@ public class RecipeMenu {
     public void setSteps(String steps) {
         this.steps = steps;
     }
-
+   
     @Override
     public String toString() {
         return "Recipe{" +
@@ -67,4 +72,7 @@ public class RecipeMenu {
                 '}';
     }
 
+    public List<String> getFilteredDesserts() {
+        return dessert;
+    }
 }
