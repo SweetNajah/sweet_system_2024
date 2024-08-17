@@ -1,35 +1,132 @@
 package sweet_2024;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Products {
-
     private double revenue;
+    int quantity;
+    int price;
+    float rateAvg;
+    LocalDate manufactureDate;
+    LocalDate expirationDate;
+    protected List<Integer> rates = new ArrayList<>();
+    protected List<String> reviews = new ArrayList<>();
+    private static final Logger LOGGER = Logger.getLogger(Products.class.getName());
+
+
+
+    static public ArrayList<String> Sweetes = new ArrayList<>();
+
+    private String productName;
+    private double productPrice;
+    private String productDescription;
+    private String sku;
+    private int quantityInStock;
+    private int unitsSold;
+    private double totalRevenue;
+    public boolean is_logged_in = true;
+
+    // Discount-related attributes
+    private double discountPercentage;
+    private String discountDuration;
+    private boolean isDiscountActive;
+
+
+
     private double productRating;
     private String category;
-    float rateAvg;
-    protected List<Integer> rates= new ArrayList<>();
-    protected List<String> reviews= new ArrayList<>();
     private Products products;
 
 
 
-    private String productName;
-    private String productDescription;
-    private String sku;
-    private String discountDuration;
 
-    private int quantity;
-    private int unitsSold;
-
-    private double totalRevenue;
-    private double discountPercentage;
-    private double productPrice;
-    public boolean is_logged_in = true;
-    private boolean isDiscountActive;
+   
     static public ArrayList<String> Sweets = new ArrayList<>();
+
+
+
+    
+
+    
+
+   
+
+    public String getProductName() {
+        return productName;
+    }
+
+
+    public int getQuantityInStock() {
+        return quantityInStock;
+    }
+
+    public void setQuantityInStock(int quantityInStock) {
+        this.quantityInStock = quantityInStock;
+    }
+
+
+
+    // Save a new sweet to the Sweetes list
+    public void saveSweet(String sweet) {
+        navigateToPage("Product Management");
+
+        if (is_logged_in) {
+            Sweetes.add(sweet);
+            LOGGER.info(sweet + " has been added to the list." + "\n");
+        } else {
+            LOGGER.info("You need to be logged in to add a sweet." + "\n");
+        }
+    }
+
+    // Hypothetical method to simulate navigating to a specific page
+    private void navigateToPage(String pageName) {
+        if (pageName.equals("Product Management")) {
+            LOGGER.info("Navigated to " + pageName + " page." + "\n");
+        } else {
+            LOGGER.info("Unknown page: " + pageName + "\n");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+    public void setDiscountParameters(double discountPercentage, String discountDuration) {
+        this.discountPercentage = discountPercentage;
+        this.discountDuration = discountDuration;
+        System.out.printf("Discount parameters set: %.2f%% discount for %s.\n", discountPercentage, discountDuration);
+    }
+
+    public String getDiscountDetails() {
+        if (isDiscountActive) {
+            return String.format("Discount: %.2f%% off for %s!", discountPercentage, discountDuration);
+        } else {
+            return "No discount available. Regular price: $" + productPrice;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public Products(String chocolateCake) {
         this.productName=chocolateCake;
@@ -54,6 +151,8 @@ public class Products {
         this.totalRevenue = 0.0;
         this.isDiscountActive = false;
     }
+
+    
 
     public double getPrice() {
         if (isDiscountActive) {
@@ -103,25 +202,18 @@ public class Products {
         return isDiscountActive;
     }
 
-    public void saveSweet(String sweet) {
-        if (is_logged_in) {
-            Sweets.add(sweet);
-            System.out.println(sweet + " has been added to the list.");
-        } else {
-            System.out.println("You need to be logged in to add a sweet.");
-        }
-    }
+
 
     public void deleteSweet(Products sweet) {
         if (is_logged_in) {
             if (Sweets.contains(sweet)) {
                 Sweets.remove(sweet);
-                System.out.println(sweet + " has been removed from the list.");
+                LOGGER.info(sweet + " has been removed from the list."+ "\n");
             } else {
-                System.out.println(sweet + " is not in the list.");
+                LOGGER.info(sweet + " is not in the list."+ "\n");
             }
         } else {
-            System.out.println("You need to be logged in to delete a sweet.");
+            LOGGER.info("You need to be logged in to delete a sweet."+ "\n");
         }
     }
 
@@ -130,23 +222,23 @@ public class Products {
             int index = Sweets.indexOf(oldSweet);
             if (index != -1) {
                 Sweets.set(index, newSweet);
-                System.out.println(oldSweet + " has been updated to " + newSweet + ".");
+                LOGGER.info(oldSweet + " has been updated to " + newSweet + "."+ "\n");
             } else {
-                System.out.println(oldSweet + " is not in the list.");
+                LOGGER.info(oldSweet + " is not in the list."+ "\n");
             }
         } else {
-            System.out.println("You need to be logged in to update a sweet.");
+            LOGGER.info("You need to be logged in to update a sweet."+ "\n");
         }
     }
 
     public void listSweets() {
         if (is_logged_in) {
-            System.out.println("Current sweets in the list:");
+            LOGGER.info("Current sweets in the list:"+ "\n");
             for (String sweet : Sweets) {
-                System.out.println("- " + sweet);
+                LOGGER.info("- " + sweet);
             }
         } else {
-            System.out.println("You need to be logged in to view the sweets.");
+            LOGGER.info("You need to be logged in to view the sweets."+ "\n");
         }
     }
 
@@ -168,7 +260,7 @@ public class Products {
             unitsSold += quantity;
             totalRevenue += quantity * getPrice();
         } else {
-            System.out.println("Not enough stock to complete the sale.");
+            LOGGER.info("Not enough stock to complete the sale."+ "\n");
         }
     }
 
@@ -177,8 +269,8 @@ public class Products {
     }
 
     public void displaySalesDashboard(List<Products> productsList) {
-        System.out.println("Sales Dashboard:");
-        System.out.println("----------------------------------------------------");
+        LOGGER.info("Sales Dashboard:"+ "\n");
+        LOGGER.info("----------------------------------------------------"+ "\n");
 
         double totalProfits = 0.0;
 
@@ -187,30 +279,30 @@ public class Products {
                     product.getName(), product.getUnitsSold(), product.getTotalRevenue());
             totalProfits += product.calculateProfit(5.0);
         }
-        System.out.println("----------------------------------------------------");
+        LOGGER.info("----------------------------------------------------"+ "\n");
         System.out.printf("Total Profits: $%.2f\n", totalProfits);
-        System.out.println("----------------------------------------------------");
-        System.out.println("Sales Trends:");
+        LOGGER.info("----------------------------------------------------"+ "\n");
+        LOGGER.info("Sales Trends:");
         for (Products product : productsList) {
             System.out.printf("Product: %s | Sales: %s\n", product.getName(), "*".repeat(product.getUnitsSold()));
         }
     }
 
     public void displayBestSellingProducts(List<Products> productsList) {
-        System.out.println("Best-Selling Products:");
-        System.out.println("----------------------------------------------------");
+        LOGGER.info("Best-Selling Products:"+ "\n");
+        LOGGER.info("----------------------------------------------------"+ "\n");
         productsList.sort(Comparator.comparingInt(Products::getUnitsSold).reversed());
         for (Products product : productsList) {
             System.out.printf("Product: %s | Units Sold: %d | Revenue: $%.2f\n",
                     product.getName(), product.getUnitsSold(), product.getTotalRevenue());
             if (product == productsList.get(0)) {
-                System.out.println("-> Best-Selling Product!");
+                LOGGER.info("-> Best-Selling Product!"+ "\n");
             }
             if (product.getQuantity() < 10) {
                 System.out.printf("-> Recommend Restocking: Only %d units left in stock!\n", product.getQuantity());
             }
         }
-        System.out.println("----------------------------------------------------");
+        LOGGER.info("----------------------------------------------------");
     }
 
     @Override
@@ -230,6 +322,9 @@ public class Products {
                 productName, productDescription, productPrice, sku, quantity
         );
     }
+
+
+
 
 
     public Products(String name, int quantity, double price) {
@@ -268,5 +363,84 @@ public class Products {
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
