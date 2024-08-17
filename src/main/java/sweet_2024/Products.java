@@ -203,7 +203,7 @@ public class Products {
         for (Products product : productsList) {
             System.out.printf("Product: %s | Units Sold: %d | Revenue: $%.2f\n",
                     product.getName(), product.getUnitsSold(), product.getTotalRevenue());
-            if (product == productsList.getFirst()) {
+            if (product == productsList.get(0)) {
                 System.out.println("-> Best-Selling Product!");
             }
             if (product.getQuantity() < 10) {
