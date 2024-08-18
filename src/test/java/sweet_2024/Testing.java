@@ -10,17 +10,14 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-
 import javax.mail.Message;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.*;
-
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mockStatic;
 
