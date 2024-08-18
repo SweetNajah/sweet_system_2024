@@ -65,7 +65,7 @@ public class Application {
 
             if (request.getOrderId() == requestId.getOrderId()) {
                 request.setInstalled(true);
-                LOGGER.info("Installation request " + requestId + " marked as installed.");
+                LOGGER.info(String.format("Installation request %s marked as installed.", requestId.getOrderId()));
                 return;
             }
         }
