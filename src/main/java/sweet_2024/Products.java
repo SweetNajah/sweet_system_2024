@@ -117,7 +117,6 @@ public class Products {
     }
 
 
-
     public double getPrice() {
         if (isDiscountActive) {
             return Double.parseDouble(String.valueOf(productPrice)) * (1 - discountPercentage / 100);

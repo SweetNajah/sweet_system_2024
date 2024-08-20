@@ -969,7 +969,6 @@ public class Testing {
     }
 
 
-
     @Test
     @When("I navigate to the sales dashboard")
     public void i_navigate_to_the_sales_dashboard() {
