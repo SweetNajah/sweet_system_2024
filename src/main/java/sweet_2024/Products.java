@@ -70,27 +70,36 @@ public class Products {
 
 
 
-    // Save a new sweet to the Sweetes list
-    public void saveSweet(String sweet) {
-        navigateToPage("Product Management");
-
-        if (is_logged_in) {
-            Sweetes.add(sweet);
-            LOGGER.info(sweet + " has been added to the list." + "\n");
+   
+    public void saveSweet(String sweet, String pageName) {
+        if (navigateToPage(pageName)) {
+            if (is_logged_in) {
+                Sweetes.add(sweet);
+                 LOGGER.info(sweet + " has been added to the list."+ "\n");
+            } else {
+                LOGGER.info("You need to be logged in to add a sweet."+ "\n");
+            }
         } else {
-            LOGGER.info("You need to be logged in to add a sweet." + "\n");
+            LOGGER.info("Failed to navigate to the " + pageName + " page. Sweet not saved."+ "\n");
         }
     }
 
-    // Hypothetical method to simulate navigating to a specific page
-    private void navigateToPage(String pageName) {
-        if (pageName.equals("Product Management")) {
-            LOGGER.info("Navigated to " + pageName + " page." + "\n");
+
+    public boolean navigateToPage(String pageName) {
+        if (pageName != null && !pageName.isEmpty()) {
+            System.out.println("Navigated to " + pageName + " page.");
+            return true; // Indicate successful navigation
         } else {
-            LOGGER.info("Unknown page: " + pageName + "\n");
+            System.out.println("Invalid page name provided.");
+            return false; // Indicate unsuccessful navigation
         }
     }
 
+
+
+
+
+    
 
 
 
@@ -204,7 +213,7 @@ public class Products {
 
 
 
-    public void deleteSweet(Products sweet) {
+    public void deleteSweet(String sweet) {
         if (is_logged_in) {
             if (Sweets.contains(sweet)) {
                 Sweets.remove(sweet);
@@ -288,22 +297,32 @@ public class Products {
         }
     }
 
-    public void displayBestSellingProducts(List<Products> productsList) {
-        LOGGER.info("Best-Selling Products:"+ "\n");
-        LOGGER.info("----------------------------------------------------"+ "\n");
+   public void displayBestSellingProducts(List<Products> productsList) {
+    if (navigateToPage("Product Analytics")) {
+        LOGGER.info("Navigated to Product Analytics page.\n");
+
+        LOGGER.info("Best-Selling Products:\n");
+        LOGGER.info("----------------------------------------------------\n");
         productsList.sort(Comparator.comparingInt(Products::getUnitsSold).reversed());
+        
         for (Products product : productsList) {
             System.out.printf("Product: %s | Units Sold: %d | Revenue: $%.2f\n",
                     product.getName(), product.getUnitsSold(), product.getTotalRevenue());
+            
             if (product == productsList.get(0)) {
-                LOGGER.info("-> Best-Selling Product!"+ "\n");
+                LOGGER.info("-> Best-Selling Product!\n");
             }
             if (product.getQuantity() < 10) {
                 System.out.printf("-> Recommend Restocking: Only %d units left in stock!\n", product.getQuantity());
             }
         }
-        LOGGER.info("----------------------------------------------------");
+        
+        LOGGER.info("----------------------------------------------------\n");
+    } else {
+        LOGGER.warning("Failed to navigate to the Product Analytics page.\n");
     }
+}
+
 
     @Override
     public String toString() {
