@@ -7,53 +7,36 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class Products {
-    private double revenue;
-    int quantity;
-    int price;
+
+
     float rateAvg;
-    LocalDate manufactureDate;
-    LocalDate expirationDate;
+
+    int quantity;
+    private int quantityInStock;
+    private int unitsSold;
+    private double productPrice;
+    private double totalRevenue;
+    private double productRating;
+    private double discountPercentage;
+    private double revenue;
+
+    private String category;
+    private String discountDuration;
+    private String productName;
+    private String productDescription;
+    private String sku;
+
+    public boolean is_logged_in = true;
+    private boolean isDiscountActive;
+
+    private Products products;
     protected List<Integer> rates = new ArrayList<>();
     protected List<String> reviews = new ArrayList<>();
+    static public ArrayList<String> Sweets = new ArrayList<>();
+    static public ArrayList<String> Sweetes = new ArrayList<>();
     private static final Logger LOGGER = Logger.getLogger(Products.class.getName());
 
 
-
-    static public ArrayList<String> Sweetes = new ArrayList<>();
-
-    private String productName;
-    private double productPrice;
-    private String productDescription;
-    private String sku;
-    private int quantityInStock;
-    private int unitsSold;
-    private double totalRevenue;
-    public boolean is_logged_in = true;
-
-    // Discount-related attributes
-    private double discountPercentage;
-    private String discountDuration;
-    private boolean isDiscountActive;
-
-
-
-    private double productRating;
-    private String category;
-    private Products products;
-
-
-
-
-   
-    static public ArrayList<String> Sweets = new ArrayList<>();
-
-
-
-    
-
-    
-
-   
 
     public String getProductName() {
         return productName;
@@ -69,13 +52,11 @@ public class Products {
     }
 
 
-
-   
     public void saveSweet(String sweet, String pageName) {
         if (navigateToPage(pageName)) {
             if (is_logged_in) {
                 Sweetes.add(sweet);
-                 LOGGER.info(sweet + " has been added to the list."+ "\n");
+                LOGGER.info(sweet + " has been added to the list."+ "\n");
             } else {
                 LOGGER.info("You need to be logged in to add a sweet."+ "\n");
             }
@@ -96,19 +77,6 @@ public class Products {
     }
 
 
-
-
-
-    
-
-
-
-
-
-
-
-
-
     public void setDiscountParameters(double discountPercentage, String discountDuration) {
         this.discountPercentage = discountPercentage;
         this.discountDuration = discountDuration;
@@ -122,19 +90,6 @@ public class Products {
             return "No discount available. Regular price: $" + productPrice;
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public Products(String chocolateCake) {
@@ -161,7 +116,7 @@ public class Products {
         this.isDiscountActive = false;
     }
 
-    
+
 
     public double getPrice() {
         if (isDiscountActive) {
@@ -280,7 +235,6 @@ public class Products {
     public void displaySalesDashboard(List<Products> productsList) {
         LOGGER.info("Sales Dashboard:"+ "\n");
         LOGGER.info("----------------------------------------------------"+ "\n");
-
         double totalProfits = 0.0;
 
         for (Products product : productsList) {
@@ -297,32 +251,28 @@ public class Products {
         }
     }
 
-   public void displayBestSellingProducts(List<Products> productsList) {
-    if (navigateToPage("Product Analytics")) {
-        LOGGER.info("Navigated to Product Analytics page.\n");
+    public void displayBestSellingProducts(List<Products> productsList) {
+        if (navigateToPage("Product Analytics")) {
+            LOGGER.info("Navigated to Product Analytics page.\n");
+            LOGGER.info("Best-Selling Products:\n");
+            LOGGER.info("----------------------------------------------------\n");
+            productsList.sort(Comparator.comparingInt(Products::getUnitsSold).reversed());
 
-        LOGGER.info("Best-Selling Products:\n");
-        LOGGER.info("----------------------------------------------------\n");
-        productsList.sort(Comparator.comparingInt(Products::getUnitsSold).reversed());
-        
-        for (Products product : productsList) {
-            System.out.printf("Product: %s | Units Sold: %d | Revenue: $%.2f\n",
-                    product.getName(), product.getUnitsSold(), product.getTotalRevenue());
-            
-            if (product == productsList.get(0)) {
-                LOGGER.info("-> Best-Selling Product!\n");
+            for (Products product : productsList) {
+                System.out.printf("Product: %s | Units Sold: %d | Revenue: $%.2f\n",
+                        product.getName(), product.getUnitsSold(), product.getTotalRevenue());
+                if (product == productsList.get(0)) {
+                    LOGGER.info("-> Best-Selling Product!\n");
+                }
+                if (product.getQuantity() < 10) {
+                    System.out.printf("-> Recommend Restocking: Only %d units left in stock!\n", product.getQuantity());
+                }
             }
-            if (product.getQuantity() < 10) {
-                System.out.printf("-> Recommend Restocking: Only %d units left in stock!\n", product.getQuantity());
-            }
+            LOGGER.info("----------------------------------------------------\n");
+        } else {
+            LOGGER.warning("Failed to navigate to the Product Analytics page.\n");
         }
-        
-        LOGGER.info("----------------------------------------------------\n");
-    } else {
-        LOGGER.warning("Failed to navigate to the Product Analytics page.\n");
     }
-}
-
 
     @Override
     public String toString() {
@@ -341,10 +291,6 @@ public class Products {
                 productName, productDescription, productPrice, sku, quantity
         );
     }
-
-
-
-
 
     public Products(String name, int quantity, double price) {
         this.productName = name;
@@ -382,84 +328,4 @@ public class Products {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

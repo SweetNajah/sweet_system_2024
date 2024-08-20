@@ -35,8 +35,6 @@ public class Testing {
     private boolean userAdded, isUserUpdating, isUserDeleting;
     boolean newAccount=false;
     String text,file;
-    
-    private Products product;
     private List<Products> productsList;
     public boolean is_logged_in = true;
 
@@ -66,7 +64,7 @@ public class Testing {
         currentUser = new User("admin@example.com", "0000", "Admin");
         
          // Set up a product instance for testing
-        product = new Products("Chocolate", "10.00", "Delicious dark chocolate", "SKU123", 100);
+        product = new Products("Chocolate", 10.00, "Delicious dark chocolate", "SKU123", 100);
         productsList = new ArrayList<>();
         productsList.add(product);
     }
@@ -1000,7 +998,7 @@ public class Testing {
     @Test
     @Then("the best-selling products should be highlighted")
     public void the_best_selling_products_should_be_highlighted() {
-        Products product2 = new Products("Candy", "5.00", "Sweet candy", "SKU124", 200);
+        Products product2 = new Products("Candy", 5.00, "Sweet candy", "SKU124", 200);
         product2.registerSale(50);
         productsList.add(product2);
         product.displayBestSellingProducts(productsList);
@@ -1013,7 +1011,7 @@ public class Testing {
         product.applyDiscount(20.0, "1 Week");
         assertTrue(product.isDiscountActive());
         assertEquals(20.0, product.getDiscountPercentage(), 0.01);
-        assertEquals("8.00", product.getProductPrice());
+        assertEquals("8.00", product.getPrice());
     }
     @Test
     @When("I set the discount parameters (e.g., percentage, duration)")
