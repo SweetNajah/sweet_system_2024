@@ -23,19 +23,19 @@ import static org.mockito.Mockito.mockStatic;
 
 public class Testing {
 
-    private User currentUser;
+    private static User currentUser;
     private StoreMenu storeMenu;
     private RecipeMenu recipeMenu;
     private Feedback feedback;
-    private Application application;
+    private static Application application;
     private User beneficiaryUser;
     private Inquiry inquiry;
-    private Products product;
+    private static Products product;
     private User u,o;
     private boolean userAdded, isUserUpdating, isUserDeleting;
     boolean newAccount=false;
     String text,file;
-    private List<Products> productsList;
+    private static List<Products> productsList;
     public boolean is_logged_in = true;
 
     private  static final Logger LOGGER = Logger.getLogger(Testing.class.getName());
@@ -59,7 +59,7 @@ public class Testing {
     }
 
     @BeforeAll
-    public void setUp() {
+    public static void setUp() {
         application = new Application();
         currentUser = new User("admin@example.com", "0000", "Admin");
         
