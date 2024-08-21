@@ -71,7 +71,7 @@ Before you begin, ensure you have the following installed:
     java -cp bin sweet_2024.MainClass
     ```
 
-## Usage
+## Usage:
 
 ### Admin Operations
 - Access the **Admin Dashboard** after signing in.

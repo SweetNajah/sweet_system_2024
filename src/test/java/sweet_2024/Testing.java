@@ -10,35 +10,33 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-
 import javax.mail.Message;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.*;
-
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mockStatic;
 
 public class Testing {
 
-    private User currentUser;
+    private static User currentUser;
     private StoreMenu storeMenu;
     private RecipeMenu recipeMenu;
     private Feedback feedback;
-    private Application application;
+    private static Application application;
     private User beneficiaryUser;
     private Inquiry inquiry;
-    private Products product;
+    private static Products product;
     private User u,o;
     private boolean userAdded, isUserUpdating, isUserDeleting;
     boolean newAccount=false;
     String text,file;
-
+    private static List<Products> productsList;
+    public boolean is_logged_in = true;
 
     private  static final Logger LOGGER = Logger.getLogger(Testing.class.getName());
 
@@ -61,9 +59,14 @@ public class Testing {
     }
 
     @BeforeAll
-    public void setUp() {
+    public static void setUp() {
         application = new Application();
         currentUser = new User("admin@example.com", "0000", "Admin");
+        
+         // Set up a product instance for testing
+        product = new Products("Chocolate", 10.00, "Delicious dark chocolate", "SKU123", 100);
+        productsList = new ArrayList<>();
+        productsList.add(product);
     }
 
     public Testing() {
@@ -892,6 +895,166 @@ public class Testing {
 
         assertTrue(allMatch);
     }
+    @Test
+    @Given("the store owner is logged in")
+    public void the_store_owner_is_logged_in() {
+   assertTrue(product.is_logged_in);
+    }
+
+
+
+    @Test
+    @When("fills in the product details")
+    public void fills_in_the_product_details() {
+        String expectedDetails = "Product Name: Chocolate\nDescription: Delicious dark chocolate\nPrice: 10.00\nSKU: SKU123\nQuantity in Stock: 100";
+        assertEquals(expectedDetails, product.fillProductDetails());
+    }
+
+    @Test
+    @Then("the new product should be added to the store's product list")
+    public void the_new_product_should_be_added_to_the_store_s_product_list() {
+        String sweet = "Chocolate";
+        String pageName = "Product Management";
+
+        product.saveSweet(sweet, pageName);
+
+        assertTrue(product.Sweetes.contains(sweet));
+
+        assertEquals("Chocolate has been added to the list.", sweet + " has been added to the list.");
+    }
+
+
+    @Test
+    @When("makes changes to the product details")
+    public void makes_changes_to_the_product_details() {
+        product.is_logged_in = true;
+        String oldSweet = "Chocolate";
+        String newSweet = "Vanilla";
+
+        product.Sweetes.add(oldSweet);
+
+        product.updateSweet(oldSweet, newSweet);
+
+        assertFalse(product.Sweetes.contains(oldSweet));
+        assertTrue(product.Sweetes.contains(newSweet));
+
+        oldSweet = "Strawberry";
+        newSweet = "Mango";
+
+        product.updateSweet(oldSweet, newSweet);
+
+        assertFalse(product.Sweetes.contains(newSweet));
+        assertTrue(product.Sweetes.contains("Vanilla")); 
+
+        product.is_logged_in = false;
+        oldSweet = "Vanilla";
+        newSweet = "Strawberry";
+
+        product.updateSweet(oldSweet, newSweet);
+
+        assertTrue(product.Sweetes.contains(oldSweet));
+        assertFalse(product.Sweetes.contains(newSweet));
+    }
+
+    @Test
+    @When("the store owner selects a product to remove")
+    public void the_store_owner_selects_a_product_to_remove() {
+
+        product.saveSweet("Candy", "Product Management");
+
+
+        product.deleteSweet("Candy");
+
+        assertFalse(product.Sweetes.contains("Candy"));
+    }
+
+
+    @Test
+    @When("I navigate to the sales dashboard")
+    public void i_navigate_to_the_sales_dashboard() {
+        product.registerSale(10);
+        product.displaySalesDashboard(productsList);
+        assertEquals(10, product.getUnitsSold());
+    }
+
+    @Test
+    @Then("I should see total profits calculated")
+    public void i_should_see_total_profits_calculated() {
+        product.registerSale(10);
+        double profit = product.calculateProfit(5.0);
+        assertEquals(50.00, profit, 0.01); // Assuming cos
+    }
+
+    @Test
+    @When("I navigate to the product analytics page")
+    public void i_navigate_to_the_product_analytics_page() {
+        // Simulate navigation to the Product Analytics page
+        boolean isNavigated = product.navigateToPage("Product Analytics");
+
+        assertTrue("Failed to navigate to the Product Analytics page.", isNavigated);
+    }
+
+    @Test
+    @Then("the best-selling products should be highlighted")
+    public void the_best_selling_products_should_be_highlighted() {
+        Products product2 = new Products("Candy", 5.00, "Sweet candy", "SKU124", 200);
+        product2.registerSale(50);
+        productsList.add(product2);
+        product.displayBestSellingProducts(productsList);
+        assertEquals(50, product2.getUnitsSold());
+    }
+
+    @Test
+    @When("I select a product to apply a discount")
+    public void i_select_a_product_to_apply_a_discount() {
+        product.applyDiscount(20.0, "1 Week");
+        assertTrue(product.isDiscountActive());
+        assertEquals(20.0, product.getDiscountPercentage(), 0.01);
+        assertEquals(8.00, product.getPrice());
+    }
+    @Test
+    @When("I set the discount parameters (e.g., percentage, duration)")
+    public void i_set_the_discount_parameters_e_g_percentage_duration() {
+        product.setDiscountParameters(20.0, "1 Week");
+
+        assertEquals(20.0, product.getDiscountPercentage(), 0.01); // Using delta for floating-point comparison
+        assertEquals("1 Week", product.getDiscountDuration());
+    }
+
+    @Test
+    @Then("the discount details should be visible to customers")
+    public void the_discount_details_should_be_visible_to_customers() {
+        // Test when no discount is active
+        String discountDetails = product.getDiscountDetails();
+        assertEquals("No discount available. Regular price: $10.00", discountDetails);
+
+        product.applyDiscount(20.0, "1 Week");
+
+        // Test when a discount is active
+        discountDetails = product.getDiscountDetails();
+        assertEquals("Discount: 20.00% off for 1 Week!", discountDetails);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
 
 
