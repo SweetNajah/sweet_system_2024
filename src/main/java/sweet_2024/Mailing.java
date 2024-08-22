@@ -26,7 +26,6 @@ public class Mailing {
             properties.put("mail.smtp.port", "587");
             properties.put("mail.smtp.auth", "true");
             properties.put("mail.smtp.starttls.enable", "true");
-
             Session session = Session.getDefaultInstance(properties,new javax.mail.Authenticator(){
                 @Override
                 protected  PasswordAuthentication getPasswordAuthentication(){
@@ -44,7 +43,6 @@ public class Mailing {
         catch (MessagingException ppp) {
             MainClass.kop();
         }
-
     }
 
     public void sendVerificationCode(){

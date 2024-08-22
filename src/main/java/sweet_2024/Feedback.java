@@ -73,8 +73,6 @@ public class Feedback {
     }
 
     public void setFeedbackMessage(String feedbackMessage) {
-
-
         this.feedbackMessage = feedbackMessage;
     }
 
@@ -92,14 +90,12 @@ public class Feedback {
     public void setRating(int rating) {
         if(rating >= 0 && rating <= 5){
             this.rating = rating;
-
         }
         else if (rating > 5){
             this.rating = 5;
         }
         else
             this.rating = 0;
-
     }
 
     private void addFeedbackToProduct() {

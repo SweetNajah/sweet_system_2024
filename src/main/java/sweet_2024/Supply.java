@@ -28,7 +28,6 @@ public class Supply {
     public int getQuantity() {
         return quantity;
     }
-
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
@@ -40,7 +39,6 @@ public class Supply {
     public void setPrice(double price) {
         this.price = price;
     }
-
 
     @Override
     public String toString() {

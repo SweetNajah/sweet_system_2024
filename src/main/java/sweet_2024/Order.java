@@ -49,7 +49,6 @@ public class Order {
         this.isInstalled = false;
     }
 
-
     private double calculateTotalPrice() {
         double total = 0.0;
         if (orderedProducts != null) {
@@ -79,7 +78,6 @@ public class Order {
     public int getQuantity() {
         return quantity;
     }
-
     public String getStatus() {
         return status;
     }

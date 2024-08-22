@@ -26,8 +26,6 @@ public class Application {
     private List<Supply> supplies;
     private List<Products> products = new ArrayList<>();
 
-
-
     public Application() {
         this.loggedIn = false;
         this.newUser = new User("ali55@gmail.com", "147852", "Customer");
@@ -48,10 +46,8 @@ public class Application {
         this.availableProducts.add(new Products("Chocolate Bar", 50, 1.99));
         this.availableProducts.add(new Products("Vanilla Cake", 30, 15.00));
         this.availableProducts.add(new Products("Candy", 100, 0.10));
-
         this.supplies.add(new Supply("Chocolate Cake", 20, 300.00));
         this.supplies.add(new Supply("Candy Pack", 50, 100.00));
-
         this.supplies.add(new Supply("Sugar", 100, "Pending"));
         this.supplies.add(new Supply("Flour", 200, "Approved"));
 
