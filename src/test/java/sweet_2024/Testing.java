@@ -432,7 +432,6 @@ public class Testing {
     public void theReportShouldBeAvailableSeparatelyForTheTwoStoresInNablusAndTheTwoStoresInJenin() {
         Map<String, Double> profits = application.report.getStoreProfits();
         assertNotNull("Profits map should not be null", profits);
-
         List<String> nablusStores = Arrays.asList("Nablus Store 1", "Nablus Store 2");
         List<String> jeninStores = Arrays.asList("Jenin Store 1", "Jenin Store 2");
 
