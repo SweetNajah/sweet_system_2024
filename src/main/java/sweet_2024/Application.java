@@ -26,6 +26,7 @@ public class Application {
     private List<Supply> supplies;
     private List<Products> products = new ArrayList<>();
 
+
     public Application() {
         this.loggedIn = false;
         this.newUser = new User("ali55@gmail.com", "147852", "Customer");

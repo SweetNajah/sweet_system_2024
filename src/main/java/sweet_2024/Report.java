@@ -107,7 +107,6 @@ public class Report {
         salesForProduct1.put("January", 500.0);
         salesForProduct1.put("February", 300.0);
         productSales.put("Product 1", salesForProduct1);
-
         Map<String, Double> salesForProduct2 = new HashMap<>();
         salesForProduct2.put("January", 700.0);
         salesForProduct2.put("February", 250.0);
@@ -119,14 +118,12 @@ public class Report {
     public String generateUserStatisticsByCity() {
         StringBuilder report = new StringBuilder();
         report.append("Generating user statistics by city...\n");
-
         Map<String, Integer> userStatistics = new HashMap<>();
         userStatistics.put("Jenin", 120);
         userStatistics.put("Nablus", 85);
         userStatistics.put("Ramallah", 95);
         userStatistics.put("Hebron", 75);
         userStatistics.put("Gaza", 100);
-
         report.append(String.format("%-15s %-10s%n", "City", "Number of Users"));
         report.append("---------------------------------\n");
 

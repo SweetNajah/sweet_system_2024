@@ -131,7 +131,6 @@ public class MainClass {
         }
     }
 
-
     private static void sendEmailToUser(String email) {
         Mailing mailing = new Mailing(email);
         mailing.sendEmail("Welcome to Sweet Management System", "Thank you for signing up!");

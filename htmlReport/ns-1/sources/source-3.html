@@ -1,0 +1,249 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > Feedback</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">sweet_2024</a>
+</div>
+
+<h1>Coverage Summary for Class: Feedback (sweet_2024)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Feedback</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    9.5%
+  </span>
+  <span class="absValue">
+    (2/21)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    8.7%
+  </span>
+  <span class="absValue">
+    (4/46)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package sweet_2024;
+&nbsp;
+&nbsp;public class Feedback {
+&nbsp;
+&nbsp;
+&nbsp;    private final int id; // Unique identifier for feedback
+&nbsp;    private String user123;
+&nbsp;    private String status;
+&nbsp;    private User user;
+&nbsp;    private Products products;
+&nbsp;    private String feedbackMessage;
+&nbsp;    private String response; // For storing responses to feedback
+&nbsp;    private int rating;
+<b class="fc">&nbsp;    private static int idCounter = 1; // Static counter to generate unique IDs</b>
+&nbsp;
+<b class="nc">&nbsp;    public Feedback(User user, Products products, String feedbackMessage, int rating) {</b>
+<b class="nc">&nbsp;        this.id = idCounter++;</b>
+<b class="nc">&nbsp;        this.user = user;</b>
+<b class="nc">&nbsp;        this.feedbackMessage = feedbackMessage;</b>
+<b class="nc">&nbsp;        this.rating = rating;</b>
+<b class="nc">&nbsp;        this.response = &quot;&quot;; // Initialize with no response</b>
+<b class="nc">&nbsp;        this.products = products;</b>
+<b class="nc">&nbsp;        this.status = &quot;Pending&quot;;</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public Feedback(String user123, String thisIsATestFeedback, int i) {</b>
+<b class="nc">&nbsp;        this.user123=user123;</b>
+<b class="nc">&nbsp;        this.id=i;</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public Feedback(int i, String feedbackMessage, String open) {</b>
+<b class="nc">&nbsp;        this.id=i;</b>
+<b class="nc">&nbsp;        this.feedbackMessage=feedbackMessage;</b>
+<b class="nc">&nbsp;        this.user123=open;</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public Feedback() {</b>
+<b class="fc">&nbsp;        this.id = idCounter++;</b>
+<b class="fc">&nbsp;        this.status = &quot;Pending&quot;;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getStatus() {
+<b class="nc">&nbsp;        return status;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setStatus(String status) {
+<b class="nc">&nbsp;     this.status=status;</b>
+&nbsp;    }
+&nbsp;    public int getId() {
+<b class="nc">&nbsp;        return id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public User getUser() {
+<b class="nc">&nbsp;        return user;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setUser(User user) {
+<b class="nc">&nbsp;        this.user = user;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Products getProduct() {
+<b class="nc">&nbsp;        return products;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setProduct(Products products) {
+<b class="nc">&nbsp;        this.products = products;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getFeedbackMessage() {
+&nbsp;
+<b class="nc">&nbsp;        return feedbackMessage;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setFeedbackMessage(String feedbackMessage) {
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;        this.feedbackMessage = feedbackMessage;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getRating() {
+<b class="nc">&nbsp;        return rating;</b>
+&nbsp;    }
+&nbsp;    public String getResponse() {
+<b class="nc">&nbsp;        return response;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setResponse(String response) {
+<b class="nc">&nbsp;        this.response = response;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setRating(int rating) {
+<b class="nc">&nbsp;        if(rating &gt;= 0 &amp;&amp; rating &lt;= 5){</b>
+<b class="nc">&nbsp;            this.rating = rating;</b>
+&nbsp;
+&nbsp;        }
+<b class="nc">&nbsp;        else if (rating &gt; 5){</b>
+<b class="nc">&nbsp;            this.rating = 5;</b>
+&nbsp;        }
+&nbsp;        else
+<b class="nc">&nbsp;            this.rating = 0;</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    private void addFeedbackToProduct() {
+<b class="nc">&nbsp;        products.reviews.add(feedbackMessage);</b>
+<b class="nc">&nbsp;        products.rates.add(rating);</b>
+<b class="nc">&nbsp;        updateProductRating();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void updateProductRating() {
+<b class="nc">&nbsp;        int sum = 0;</b>
+<b class="nc">&nbsp;        for (int rate : products.rates) {</b>
+<b class="nc">&nbsp;            sum += rate;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        products.rateAvg = sum / (float) products.rates.size();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="nc">&nbsp;        String productName = (this.products != null) ? this.products.getName() : &quot;No product&quot;;</b>
+<b class="nc">&nbsp;        String userName = (this.user != null) ? this.user.getUserName() : &quot;No user&quot;;</b>
+<b class="nc">&nbsp;        return &quot;Feedback{&quot; +</b>
+&nbsp;                &quot;productName=&#39;&quot; + productName + &#39;\&#39;&#39; +
+&nbsp;                &quot;, userName=&#39;&quot; + userName + &#39;\&#39;&#39; +
+&nbsp;                &quot;, rating=&quot; + rating +
+&nbsp;                &quot;, feedbackMessage=&#39;&quot; + feedbackMessage + &#39;\&#39;&#39; +
+&nbsp;                &quot;, status=&#39;&quot; + status + &#39;\&#39;&#39; +
+&nbsp;                &#39;}&#39;;
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-08-21 11:17</div>
+</div>
+</body>
+</html>
