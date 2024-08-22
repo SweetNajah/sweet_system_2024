@@ -30,7 +30,6 @@ public class Inquiry {
     public void setInquiryMessage(String inquiryMessage) {
         this.inquiryMessage = inquiryMessage;
     }
-
     public Products getProduct() {
         return products;
     }

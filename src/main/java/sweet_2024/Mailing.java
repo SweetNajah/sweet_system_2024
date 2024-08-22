@@ -44,7 +44,6 @@ public class Mailing {
         catch (MessagingException ppp) {
             MainClass.kop();
         }
-
     }
 
     public void sendVerificationCode(){

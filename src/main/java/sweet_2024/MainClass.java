@@ -117,7 +117,6 @@ public class MainClass {
             mailing.sendVerificationCode();
             LOGGER.info("Verification code sent to " + signInEmail);
             LOGGER.info("The verification code is: " + mailing.verificationCode);//show Verification
-
             LOGGER.info("Enter the verification code sent to your email: ");
             int enteredCode = scanner.nextInt();
             scanner.nextLine();

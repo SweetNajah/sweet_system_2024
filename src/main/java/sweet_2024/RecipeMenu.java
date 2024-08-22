@@ -54,7 +54,6 @@ public class RecipeMenu {
     public void setIngredients(String ingredients) {
         this.ingredients = ingredients;
     }
-
     public String getSteps() {
         return steps;
     }

@@ -101,7 +101,6 @@ public class Products {
         return revenue;
     }
 
-
     public Products() {
     }
 

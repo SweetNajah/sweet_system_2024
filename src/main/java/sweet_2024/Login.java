@@ -113,7 +113,6 @@ public class Login {
     public int getRoles() {
         return roles;
     }
-
     public void setLogged(boolean logged) {
         isLogged = logged;
     }

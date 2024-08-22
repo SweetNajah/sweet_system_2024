@@ -51,7 +51,6 @@ public class Application {
 
         this.supplies.add(new Supply("Chocolate Cake", 20, 300.00));
         this.supplies.add(new Supply("Candy Pack", 50, 100.00));
-
         this.supplies.add(new Supply("Sugar", 100, "Pending"));
         this.supplies.add(new Supply("Flour", 200, "Approved"));
 

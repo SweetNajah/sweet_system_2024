@@ -49,7 +49,6 @@ public class Order {
         this.isInstalled = false;
     }
 
-
     private double calculateTotalPrice() {
         double total = 0.0;
         if (orderedProducts != null) {
