@@ -1007,7 +1007,6 @@ public class Testing {
         assertEquals(8.00, product.getPrice());
         assertEquals(8.00, product.getPrice(), 0.01);
 
-
     }
     @Test
     @When("I set the discount parameters (e.g., percentage, duration)")

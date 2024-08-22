@@ -308,6 +308,7 @@ public class MainClass {
             LOGGER.info("No installation requests available.");
             return;
         }
+
         LOGGER.info("Installation Requests:");
         for (int i = 0; i < installationRequests.size(); i++) {
             LOGGER.info((i + 1) + "- " + installationRequests.get(i).toString());
