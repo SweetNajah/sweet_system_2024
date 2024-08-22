@@ -62,8 +62,8 @@ public class Testing {
     public static void setUp() {
         application = new Application();
         currentUser = new User("admin@example.com", "0000", "Admin");
-        
-         // Set up a product instance for testing
+
+        // Set up a product instance for testing
         product = new Products("Chocolate", 10.00, "Delicious dark chocolate", "SKU123", 100);
         productsList = new ArrayList<>();
         productsList.add(product);
@@ -102,7 +102,7 @@ public class Testing {
         Login login = new Login(new User("ali.d@example.org", "hiword"));
         assertFalse(login.addUser(new User("", "hiword")));
     }
-        @When("i choose to add new user with with valid formatting")
+    @When("i choose to add new user with with valid formatting")
     public void iChooseToAddNewUserWithWithValidFormatting() {
         String email = "sweet059@gmail.com";
         User newUser = new User("sweet059@gmail.com", "2w421", "Admin");
@@ -297,11 +297,11 @@ public class Testing {
         }
     }
 
-@ParameterizedTest
-@CsvSource({
-        "invalid.email@example.com, wrongpassword",
-        "another.invalid@example.com, wrongpassword"
-})
+    @ParameterizedTest
+    @CsvSource({
+            "invalid.email@example.com, wrongpassword",
+            "another.invalid@example.com, wrongpassword"
+    })
     @When("the password is invalid email is {string} and password is {string}")
     public void thePasswordIsInvalidEmailIsAndPasswordIs(String Email, String Pass) {
         boolean loginFailed = false;
@@ -312,6 +312,7 @@ public class Testing {
                 break;
             }
         }
+
         assertFalse(loginFailed);
         Login login = new Login(new User("ali.d@example.org", "hiword"));
         User oldUser = new User("ali.d@example.org", "hiword");
@@ -681,7 +682,7 @@ public class Testing {
     @When("I mark the feedback as {string}")
     public void iMarkTheFeedbackAs(String status) {
         if (feedback == null) {
-           feedback = new Feedback(1, "Feedback Message", "Open");
+            feedback = new Feedback(1, "Feedback Message", "Open");
         }
         feedback.setStatus(status);
     }
@@ -701,7 +702,7 @@ public class Testing {
     public void theFeedbackStatusShouldBeUpdatedTo(String expectedStatus) {
         assertEquals(expectedStatus, feedback.getStatus());
     }
-    
+
 
     @When("I navigate to the messaging system")
     public void i_navigate_to_the_messaging_system() {
@@ -802,18 +803,18 @@ public class Testing {
             LOGGER.info(recipe);
         }
     }
-@Test
+    @Test
     @When("I apply dietary filters")
     public void i_apply_dietary_filters() {
         String dietaryNeed = "Vegan";
-    recipeMenu = new RecipeMenu();
+        recipeMenu = new RecipeMenu();
 
-    recipeMenu.filterRecipes(dietaryNeed);
-    beneficiaryUser = new User("user@example.com", "password", "beneficiary");
-     storeMenu = new StoreMenu(recipeMenu);
+        recipeMenu.filterRecipes(dietaryNeed);
+        beneficiaryUser = new User("user@example.com", "password", "beneficiary");
+        storeMenu = new StoreMenu(recipeMenu);
 
-      boolean allMatch = recipeMenu.desserts.stream().allMatch
-        (dessert -> dessert.getDietaryInfo().equalsIgnoreCase(dietaryNeed));
+        boolean allMatch = recipeMenu.desserts.stream().allMatch
+                (dessert -> dessert.getDietaryInfo().equalsIgnoreCase(dietaryNeed));
 
         assertTrue(allMatch);
     }
@@ -898,7 +899,7 @@ public class Testing {
     @Test
     @Given("the store owner is logged in")
     public void the_store_owner_is_logged_in() {
-   assertTrue(product.is_logged_in);
+        assertTrue(product.is_logged_in);
     }
 
 
@@ -944,7 +945,7 @@ public class Testing {
         product.updateSweet(oldSweet, newSweet);
 
         assertFalse(product.Sweetes.contains(newSweet));
-        assertTrue(product.Sweetes.contains("Vanilla")); 
+        assertTrue(product.Sweetes.contains("Vanilla"));
 
         product.is_logged_in = false;
         oldSweet = "Vanilla";
@@ -1054,7 +1055,7 @@ public class Testing {
 
 
 
-    
+
 
 
 
