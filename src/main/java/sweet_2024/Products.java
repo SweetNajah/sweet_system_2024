@@ -66,7 +66,6 @@ public class Products {
         this.quantityInStock = quantityInStock;
     }
 
-
     public void saveSweet(String sweet, String pageName) {
         if (navigateToPage(pageName)) {
             if (is_logged_in) {
@@ -79,7 +78,6 @@ public class Products {
             LOGGER.info("Failed to navigate to the " + pageName + " page. Sweet not saved."+ "\n");
         }
     }
-
 
     public boolean navigateToPage(String pageName) {
         if (pageName != null && !pageName.isEmpty()) {
@@ -310,7 +308,6 @@ public class Products {
         this.quantity = quantity;
     }
 
-
     public char[] getProductRating() {
         String ratingStr = String.valueOf(productRating);
         return ratingStr.toCharArray();
@@ -319,7 +316,6 @@ public class Products {
     public Object getCategory() {
         return category;
     }
-
 
     public void setName(String productName) {
         this.productName = productName;

@@ -152,4 +152,5 @@ public class Order {
         this.status = newStatus;
         LOGGER.info("Order status updated to: " + newStatus);
     }
+
 }

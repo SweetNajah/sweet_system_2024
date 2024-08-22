@@ -55,4 +55,5 @@ public class Mailing {
     public void sendEmail(String subject,String text) {
         sending(subject,text);
     }
+
 }

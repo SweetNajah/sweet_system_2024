@@ -1136,4 +1136,5 @@ public class Testing {
     void testAuthenticate() {
         assertTrue(login.authenticate("testUser", "password123"));
     }
+
 }

@@ -138,8 +138,6 @@ public class Feedback {
                 '}';
     }
 
-
-
     public void setComment(String feedbackMessage) {
         this.feedbackMessage = feedbackMessage;
     }

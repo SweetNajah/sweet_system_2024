@@ -254,7 +254,6 @@ public class Application {
         return false;
     }
 
-
     public Post findPostByTitle(String title) {
         for (Post post : posts) {
             if (post.getTitle().equalsIgnoreCase(title)) {
@@ -526,8 +525,6 @@ public class Application {
             return "Navigated to the recipes menu.";
         }
     }
-
-
 
 
 }
