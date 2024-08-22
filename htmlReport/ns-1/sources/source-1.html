@@ -1,0 +1,646 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > Application</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">sweet_2024</a>
+</div>
+
+<h1>Coverage Summary for Class: Application (sweet_2024)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Application</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    3.8%
+  </span>
+  <span class="absValue">
+    (2/53)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/114)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    10.2%
+  </span>
+  <span class="absValue">
+    (26/254)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package sweet_2024;
+&nbsp;
+&nbsp;import java.io.FileWriter;
+&nbsp;import java.io.IOException;
+&nbsp;import java.util.*;
+&nbsp;import java.util.logging.*;
+&nbsp;
+&nbsp;public class Application {
+&nbsp;    private static final String NO_INFORMATIONS = &quot;There is no information&quot;;
+<b class="fc">&nbsp;    private static final Logger LOGGER = Logger.getLogger(Application.class.getName());</b>
+&nbsp;    public boolean loggedIn;
+&nbsp;    public Login login;
+&nbsp;    public User newUser;
+&nbsp;    public Report report;
+<b class="fc">&nbsp;    Scanner scanner = new Scanner(System.in);</b>
+&nbsp;    String carname;
+&nbsp;    private Feedback feedbackSystem;
+&nbsp;    private RecipeMenu recipeMenu;
+&nbsp;    private List&lt;User&gt; users;
+&nbsp;    private List&lt;Products&gt; availableProducts;
+&nbsp;    private List&lt;Order&gt; customerOrders;
+&nbsp;    private List&lt;Order&gt; installationRequests;
+&nbsp;    private List&lt;RecipeMenu&gt; recipes;
+&nbsp;    private List&lt;Post&gt; posts;
+&nbsp;    private List&lt;Feedback&gt; feedbackList;
+&nbsp;    private List&lt;Supply&gt; supplies;
+<b class="fc">&nbsp;    private List&lt;Products&gt; products = new ArrayList&lt;&gt;();</b>
+&nbsp;
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;    public Application() {</b>
+<b class="fc">&nbsp;        this.loggedIn = false;</b>
+<b class="fc">&nbsp;        this.newUser = new User(&quot;ali55@gmail.com&quot;, &quot;147852&quot;, &quot;Customer&quot;);</b>
+<b class="fc">&nbsp;        this.login = new Login(newUser);</b>
+<b class="fc">&nbsp;        this.report=new Report();</b>
+<b class="fc">&nbsp;        this.feedbackSystem = new Feedback();</b>
+<b class="fc">&nbsp;        this.recipes = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.posts = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.feedbackList = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.supplies = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.supplies = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.installationRequests = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.availableProducts = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.customerOrders = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.users = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.products = new ArrayList&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;        this.availableProducts.add(new Products(&quot;Chocolate Bar&quot;, 50, 1.99));</b>
+<b class="fc">&nbsp;        this.availableProducts.add(new Products(&quot;Vanilla Cake&quot;, 30, 15.00));</b>
+<b class="fc">&nbsp;        this.availableProducts.add(new Products(&quot;Candy&quot;, 100, 0.10));</b>
+&nbsp;
+<b class="fc">&nbsp;        this.supplies.add(new Supply(&quot;Chocolate Cake&quot;, 20, 300.00));</b>
+<b class="fc">&nbsp;        this.supplies.add(new Supply(&quot;Candy Pack&quot;, 50, 100.00));</b>
+&nbsp;
+<b class="fc">&nbsp;        this.supplies.add(new Supply(&quot;Sugar&quot;, 100, &quot;Pending&quot;));</b>
+<b class="fc">&nbsp;        this.supplies.add(new Supply(&quot;Flour&quot;, 200, &quot;Approved&quot;));</b>
+&nbsp;
+&nbsp;    }
+&nbsp;    public List&lt;Order&gt; getInstallationRequests() {
+<b class="nc">&nbsp;        return installationRequests;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void markAsInstalled(Order requestId) {
+<b class="nc">&nbsp;        for (Order request : installationRequests) {</b>
+&nbsp;
+<b class="nc">&nbsp;            if (request.getOrderId() == requestId.getOrderId()) {</b>
+<b class="nc">&nbsp;                request.setInstalled(true);</b>
+<b class="nc">&nbsp;                LOGGER.info(&quot;Installation request &quot; + requestId + &quot; marked as installed.&quot;);</b>
+&nbsp;                return;
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        LOGGER.warning(&quot;Installation request not found.&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean submitFeedback(String feedbackMessage, User user, Products product, int rating) {
+<b class="nc">&nbsp;        Feedback feedback = new Feedback(user, product, feedbackMessage, rating);</b>
+<b class="nc">&nbsp;        feedbackList.add(feedback);</b>
+<b class="nc">&nbsp;        LOGGER.info(&quot;Feedback submitted successfully!&quot;);</b>
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Products&gt; getAvailableProducts() {
+<b class="nc">&nbsp;        return availableProducts;</b>
+&nbsp;    }
+&nbsp;    public void placeOrder(Order order) {
+<b class="nc">&nbsp;        customerOrders.add(order);</b>
+&nbsp;    }
+&nbsp;    public List&lt;Order&gt; getCustomerOrders() {
+<b class="nc">&nbsp;        return customerOrders;</b>
+&nbsp;    }
+&nbsp;    public void setUser(String email, String password, String type) {
+<b class="nc">&nbsp;        newUser = new User(email, password, type);</b>
+<b class="nc">&nbsp;        login.setUser(newUser);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void handleLogin() {
+<b class="nc">&nbsp;        LOGGER.info(&quot;Enter your email: &quot;);</b>
+<b class="nc">&nbsp;        String email = scanner.nextLine();</b>
+<b class="nc">&nbsp;        LOGGER.info(&quot;Enter your password: &quot;);</b>
+<b class="nc">&nbsp;        String password = scanner.nextLine();</b>
+&nbsp;
+<b class="nc">&nbsp;        setUser(email, password, &quot;&quot;); // assuming type is not needed for login</b>
+<b class="nc">&nbsp;        if (login.login()) {</b>
+<b class="nc">&nbsp;            LOGGER.info(&quot;Login successful!&quot;);</b>
+<b class="nc">&nbsp;            loggedIn = true;</b>
+<b class="nc">&nbsp;            LOGGER.info(&quot;User logged in: &quot; + email);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            System.out.println(&quot;Login failed.&quot;);</b>
+<b class="nc">&nbsp;            LOGGER.warning(&quot;Failed login attempt for user: &quot; + email);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void handleSignUp() {
+<b class="nc">&nbsp;        LOGGER.info(&quot;Enter your email: &quot;);</b>
+<b class="nc">&nbsp;        String email = scanner.nextLine();</b>
+<b class="nc">&nbsp;        LOGGER.info(&quot;Enter your password: &quot;);</b>
+<b class="nc">&nbsp;        String password = scanner.nextLine();</b>
+<b class="nc">&nbsp;        LOGGER.info(&quot;Enter your user type: &quot;);</b>
+<b class="nc">&nbsp;        String type = scanner.nextLine();</b>
+&nbsp;
+<b class="nc">&nbsp;        if (isValidEmail(email)) {</b>
+<b class="nc">&nbsp;            setUser(email, password, type);</b>
+<b class="nc">&nbsp;            SignUp signUp = new SignUp(newUser, login);</b>
+<b class="nc">&nbsp;            if (signUp.createAccount()) {</b>
+<b class="nc">&nbsp;                LOGGER.info(&quot;Account created successfully!&quot;);</b>
+<b class="nc">&nbsp;                LOGGER.info(&quot;New account created for user: &quot; + email);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                LOGGER.info(&quot;Account creation failed.&quot;);</b>
+<b class="nc">&nbsp;                LOGGER.warning(&quot;Failed account creation attempt for user: &quot; + email);</b>
+&nbsp;            }
+&nbsp;        } else {
+<b class="nc">&nbsp;            LOGGER.warning(&quot;Invalid email format.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean isValidEmail(String email) {
+<b class="nc">&nbsp;        return email.contains(&quot;@&quot;) &amp;&amp; email.contains(&quot;.&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void startApplication() {
+<b class="nc">&nbsp;        LOGGER.info(&quot;Welcome to Sweet Management System!&quot;);</b>
+<b class="nc">&nbsp;        LOGGER.info(&quot;Please choose an option:&quot;);</b>
+<b class="nc">&nbsp;        LOGGER.info(&quot;1. Log In&quot;);</b>
+<b class="nc">&nbsp;        LOGGER.info(&quot;2. Sign Up&quot;);</b>
+<b class="nc">&nbsp;        int choice = scanner.nextInt();</b>
+<b class="nc">&nbsp;        scanner.nextLine();</b>
+&nbsp;
+<b class="nc">&nbsp;        switch (choice) {</b>
+&nbsp;            case 1:
+<b class="nc">&nbsp;                handleLogin();</b>
+&nbsp;                break;
+&nbsp;            case 2:
+<b class="nc">&nbsp;                handleSignUp();</b>
+&nbsp;                break;
+&nbsp;            default:
+<b class="nc">&nbsp;                LOGGER.warning(&quot;Invalid choice.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private static void removeUser(Scanner scanner, Application sweetSystem) {
+<b class="nc">&nbsp;        LOGGER.info(&quot;Enter email of user to remove:&quot;);</b>
+<b class="nc">&nbsp;        String email = scanner.nextLine();</b>
+&nbsp;
+<b class="nc">&nbsp;        boolean removed = sweetSystem.login.removeUser(email);</b>
+<b class="nc">&nbsp;        if (removed) {</b>
+<b class="nc">&nbsp;            LOGGER.info(&quot;User removed successfully.&quot;);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            LOGGER.warning(&quot;User not found. Please try again.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public double generateProfitReport() {
+<b class="nc">&nbsp;        double totalProfits = 0.0;</b>
+&nbsp;
+<b class="nc">&nbsp;        for (Order order : customerOrders) {</b>
+<b class="nc">&nbsp;            totalProfits += order.getTotalPrice();</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return totalProfits;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Products&gt; getBestSellingProducts() {
+<b class="nc">&nbsp;        Map&lt;Products, Integer&gt; productSalesCount = new HashMap&lt;&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;        for (Order order : customerOrders) {</b>
+<b class="nc">&nbsp;            for (Products product : order.getOrderedProducts()) {</b>
+<b class="nc">&nbsp;                productSalesCount.put(product, productSalesCount.getOrDefault(product, 0) + 1);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        List&lt;Products&gt; bestSellers = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        int maxSales = 0;</b>
+<b class="nc">&nbsp;        for (Map.Entry&lt;Products, Integer&gt; entry : productSalesCount.entrySet()) {</b>
+<b class="nc">&nbsp;            if (entry.getValue() &gt; maxSales) {</b>
+<b class="nc">&nbsp;                bestSellers.clear();</b>
+<b class="nc">&nbsp;                bestSellers.add(entry.getKey());</b>
+<b class="nc">&nbsp;                maxSales = entry.getValue();</b>
+<b class="nc">&nbsp;            } else if (entry.getValue() == maxSales) {</b>
+<b class="nc">&nbsp;                bestSellers.add(entry.getKey());</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return bestSellers;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean addRecipe(RecipeMenu recipe) {
+<b class="nc">&nbsp;        recipes.add(recipe);</b>
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;RecipeMenu&gt; getRecipes() {
+<b class="nc">&nbsp;        return recipes;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean removeRecipe(String name) {
+<b class="nc">&nbsp;        Iterator&lt;RecipeMenu&gt; iterator = recipes.iterator();</b>
+<b class="nc">&nbsp;        while (iterator.hasNext()) {</b>
+<b class="nc">&nbsp;            RecipeMenu recipe = iterator.next();</b>
+<b class="nc">&nbsp;            if (recipe.getName().equalsIgnoreCase(name)) {</b>
+<b class="nc">&nbsp;                iterator.remove();</b>
+<b class="nc">&nbsp;                return true;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public RecipeMenu findRecipeByName(String name) {
+<b class="nc">&nbsp;        for (RecipeMenu recipe : recipes) {</b>
+<b class="nc">&nbsp;            if (recipe.getName().equalsIgnoreCase(name)) {</b>
+<b class="nc">&nbsp;                return recipe;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;    public void addPost(Post post) {
+<b class="nc">&nbsp;        posts.add(post);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Post&gt; getPosts() {
+<b class="nc">&nbsp;        return posts;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean removePost(String title) {
+<b class="nc">&nbsp;        Iterator&lt;Post&gt; iterator = posts.iterator();</b>
+<b class="nc">&nbsp;        while (iterator.hasNext()) {</b>
+<b class="nc">&nbsp;            Post post = iterator.next();</b>
+<b class="nc">&nbsp;            if (post.getTitle().equalsIgnoreCase(title)) {</b>
+<b class="nc">&nbsp;                iterator.remove();</b>
+<b class="nc">&nbsp;                return true;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public Post findPostByTitle(String title) {
+<b class="nc">&nbsp;        for (Post post : posts) {</b>
+<b class="nc">&nbsp;            if (post.getTitle().equalsIgnoreCase(title)) {</b>
+<b class="nc">&nbsp;                return post;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Feedback&gt; getFeedback() {
+<b class="nc">&nbsp;        return feedbackList;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void addFeedback(Feedback feedback) {
+<b class="nc">&nbsp;        feedbackList.add(feedback);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Feedback findFeedbackById(int id) {
+<b class="nc">&nbsp;        for (Feedback feedback : feedbackList) {</b>
+<b class="nc">&nbsp;            if (feedback.getId() == id) {</b>
+<b class="nc">&nbsp;                return feedback;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void addInventoryItem(Products item) {
+<b class="nc">&nbsp;        availableProducts.add(item);</b>
+<b class="nc">&nbsp;        LOGGER.info(&quot;Inventory item added: &quot; + item.getName());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Products&gt; getInventory() {
+<b class="nc">&nbsp;        return availableProducts;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean removeInventoryItem(String itemName) {
+<b class="nc">&nbsp;        for (Products item : availableProducts) {</b>
+<b class="nc">&nbsp;            if (item.getName().equalsIgnoreCase(itemName)) {</b>
+<b class="nc">&nbsp;                availableProducts.remove(item);</b>
+<b class="nc">&nbsp;                LOGGER.info(&quot;Inventory item removed: &quot; + itemName);</b>
+<b class="nc">&nbsp;                return true;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        LOGGER.warning(&quot;No inventory item found with the name: &quot; + itemName);</b>
+<b class="nc">&nbsp;        return false; // No item found</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Products&gt; getInventoryItems() {
+<b class="nc">&nbsp;        return availableProducts;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void listInventoryItems() {
+<b class="nc">&nbsp;        if (availableProducts.isEmpty()) {</b>
+<b class="nc">&nbsp;            LOGGER.info(&quot;No inventory items available.&quot;);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            LOGGER.info(&quot;Listing all inventory items:&quot;);</b>
+<b class="nc">&nbsp;            for (Products item : availableProducts) {</b>
+<b class="nc">&nbsp;                LOGGER.info(item.toString());</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public Products findInventoryItemByName(String name) {
+<b class="nc">&nbsp;        for (Products item : availableProducts) {</b>
+<b class="nc">&nbsp;            if (item.getName().equalsIgnoreCase(name)) {</b>
+<b class="nc">&nbsp;                return item;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Supply&gt; getSales() {
+<b class="nc">&nbsp;        return new ArrayList&lt;&gt;(this.supplies);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Order&gt; getOrders() {
+<b class="nc">&nbsp;        return customerOrders;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void addOrder(Order order) {
+<b class="nc">&nbsp;        if (order != null) {</b>
+<b class="nc">&nbsp;            customerOrders.add(order);</b>
+<b class="nc">&nbsp;            LOGGER.info(&quot;Order added successfully.&quot;);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            LOGGER.warning(&quot;Failed to add order: Order is null.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public Order findOrderById(int orderId) {
+<b class="nc">&nbsp;        for (Order order : customerOrders) {</b>
+<b class="nc">&nbsp;            if (order.getOrderId() == orderId) {</b>
+<b class="nc">&nbsp;                return order;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        LOGGER.warning(&quot;No order found with ID: &quot; + orderId);</b>
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;    public void addUser(User user) {
+<b class="nc">&nbsp;        if (user != null) {</b>
+<b class="nc">&nbsp;            users.add(user);</b>
+<b class="nc">&nbsp;            LOGGER.info(&quot;User added successfully.&quot;);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            LOGGER.warning(&quot;Failed to add user: User is null.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public User findUserByEmail(String email) {
+<b class="nc">&nbsp;        if (email == null || email.isEmpty()) {</b>
+<b class="nc">&nbsp;            LOGGER.warning(&quot;Invalid email input.&quot;);</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        for (User user : users) {</b>
+<b class="nc">&nbsp;            if (user.getEmail().equalsIgnoreCase(email)) {</b>
+<b class="nc">&nbsp;                return user;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        LOGGER.info(&quot;User not found with email: &quot; + email);</b>
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void addSupply(Supply supply) {
+<b class="nc">&nbsp;        if (supply != null) {</b>
+<b class="nc">&nbsp;            supplies.add(supply);</b>
+<b class="nc">&nbsp;            LOGGER.info(&quot;Supply added: &quot; + supply.toString());</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            LOGGER.warning(&quot;Failed to add supply: Supply is null.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean removeSupply(String name) {
+<b class="nc">&nbsp;        if (name == null || name.isEmpty()) {</b>
+<b class="nc">&nbsp;            LOGGER.warning(&quot;No supply name provided to remove.&quot;);</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        for (Supply supply : supplies) {</b>
+<b class="nc">&nbsp;            if (supply.getName().equalsIgnoreCase(name)) {</b>
+<b class="nc">&nbsp;                supplies.remove(supply);</b>
+<b class="nc">&nbsp;                LOGGER.info(&quot;Supply removed: &quot; + supply.toString());</b>
+<b class="nc">&nbsp;                return true;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        LOGGER.warning(&quot;Supply not found with name: &quot; + name);</b>
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Supply findSupplyByName(String name) {
+<b class="nc">&nbsp;        if (name == null || name.isEmpty()) {</b>
+<b class="nc">&nbsp;            LOGGER.warning(&quot;No supply name provided to search.&quot;);</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        for (Supply supply : supplies) {</b>
+<b class="nc">&nbsp;            if (supply.getName().equalsIgnoreCase(name)) {</b>
+<b class="nc">&nbsp;                LOGGER.info(&quot;Supply found: &quot; + supply.toString());</b>
+<b class="nc">&nbsp;                return supply;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        LOGGER.warning(&quot;No supply found with name: &quot; + name);</b>
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Supply&gt; getSupplyRequests() {
+<b class="nc">&nbsp;        return supplies;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;User&gt; getUsers() {
+<b class="nc">&nbsp;        return users;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static boolean printTextToFile(String fileName, String text) {
+<b class="nc">&nbsp;        try(FileWriter writer = new FileWriter(fileName)) {</b>
+<b class="nc">&nbsp;            writer.write(text);</b>
+<b class="nc">&nbsp;            return true;</b>
+<b class="nc">&nbsp;        } catch (IOException ignored) {</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean report(String reportType, String filename) {
+<b class="nc">&nbsp;        String reportContent = &quot;&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        switch (reportType) {</b>
+&nbsp;            case &quot;Sales&quot;:
+<b class="nc">&nbsp;                reportContent = generateSalesReport();</b>
+&nbsp;                break;
+&nbsp;            case &quot;Product rates&quot;:
+<b class="nc">&nbsp;                reportContent = generateProductRatesReport();</b>
+&nbsp;                break;
+&nbsp;            case &quot;Category products&quot;:
+<b class="nc">&nbsp;                reportContent = generateCategoryProductsReport();</b>
+&nbsp;                break;
+&nbsp;            case &quot;Rates and reviews&quot;:
+<b class="nc">&nbsp;                reportContent = generateRatesAndReviewsReport();</b>
+&nbsp;                break;
+&nbsp;            default:
+<b class="nc">&nbsp;                LOGGER.warning(&quot;Invalid report type: &quot; + reportType);</b>
+<b class="nc">&nbsp;                return false;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return printTextToFile(filename, reportContent);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private String generateSalesReport() {
+<b class="nc">&nbsp;        StringBuilder report = new StringBuilder();</b>
+<b class="nc">&nbsp;        report.append(&quot;Sales Report\n&quot;);</b>
+<b class="nc">&nbsp;        report.append(&quot;============\n&quot;);</b>
+<b class="nc">&nbsp;        for (Supply sale : supplies) {</b>
+<b class="nc">&nbsp;            report.append(sale.toString()).append(&quot;\n&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return report.toString();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private String generateProductRatesReport() {
+<b class="nc">&nbsp;        StringBuilder report = new StringBuilder();</b>
+<b class="nc">&nbsp;        report.append(&quot;Product Rates Report\n&quot;);</b>
+<b class="nc">&nbsp;        report.append(&quot;====================\n&quot;);</b>
+<b class="nc">&nbsp;        for (Products product : availableProducts) {</b>
+<b class="nc">&nbsp;            report.append(product.getName()).append(&quot;: &quot;).append(product.getProductRating()).append(&quot;\n&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return report.toString();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private String generateCategoryProductsReport() {
+<b class="nc">&nbsp;        StringBuilder report = new StringBuilder();</b>
+<b class="nc">&nbsp;        report.append(&quot;Category Products Report\n&quot;);</b>
+<b class="nc">&nbsp;        report.append(&quot;========================\n&quot;);</b>
+<b class="nc">&nbsp;        report.append(&quot;Category: Sweets\n&quot;);</b>
+<b class="nc">&nbsp;        for (Products product : availableProducts) {</b>
+<b class="nc">&nbsp;            if (product.getCategory().equals(&quot;Sweets&quot;)) {</b>
+<b class="nc">&nbsp;                report.append(product.getName()).append(&quot;\n&quot;);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return report.toString();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private String generateRatesAndReviewsReport() {
+<b class="nc">&nbsp;        StringBuilder report = new StringBuilder();</b>
+<b class="nc">&nbsp;        report.append(&quot;Rates and Reviews Report\n&quot;);</b>
+<b class="nc">&nbsp;        report.append(&quot;========================\n&quot;);</b>
+<b class="nc">&nbsp;        for (Feedback feedback : feedbackList) {</b>
+<b class="nc">&nbsp;            report.append(&quot;Product: &quot;).append(feedback.getProduct().getName()).append(&quot;\n&quot;);</b>
+<b class="nc">&nbsp;            report.append(&quot;Rating: &quot;).append(feedback.getRating()).append(&quot;\n&quot;);</b>
+<b class="nc">&nbsp;            report.append(&quot;Review: &quot;).append(feedback.getFeedbackMessage()).append(&quot;\n\n&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return report.toString();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public String navigateToFeedbackSystem() {
+<b class="nc">&nbsp;        if (feedbackSystem != null) {</b>
+<b class="nc">&nbsp;            return &quot;Navigated to the feedback system.&quot;;</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            return &quot;Failed to navigate to the feedback system.&quot;;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;String&gt; getDessertRecipes() {
+<b class="nc">&nbsp;        if (recipeMenu == null) {</b>
+<b class="nc">&nbsp;            recipeMenu = new RecipeMenu();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return recipeMenu.getDessertRecipes();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String navigateToRecipesMenu() {
+<b class="nc">&nbsp;        if (recipeMenu != null) {</b>
+<b class="nc">&nbsp;            return &quot;Navigated to the recipes menu.&quot;;</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            return &quot;Navigated to the recipes menu.&quot;;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-08-21 11:17</div>
+</div>
+</body>
+</html>
