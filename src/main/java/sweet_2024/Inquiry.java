@@ -19,6 +19,7 @@ public class Inquiry {
     public User getUser() {
         return user;
     }
+
     public void setUser(User user) {
         this.user = user;
     }
@@ -30,7 +31,6 @@ public class Inquiry {
     public void setInquiryMessage(String inquiryMessage) {
         this.inquiryMessage = inquiryMessage;
     }
-
     public Products getProduct() {
         return products;
     }

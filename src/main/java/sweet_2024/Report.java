@@ -94,12 +94,10 @@ public class Report {
         bestForCategoryA.add("product 1");
         bestForCategoryA.add("product 2");
         bestSellingProducts.put("Category A", bestForCategoryA);
-
         List<String> bestForCategoryB = new ArrayList<>();
         bestForCategoryB.add("Product 3");
         bestForCategoryB.add("Product 4");
         bestSellingProducts.put("Category B", bestForCategoryB);
-
         return bestSellingProducts;
     }
 

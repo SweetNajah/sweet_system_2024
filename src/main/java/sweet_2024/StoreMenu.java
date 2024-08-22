@@ -48,7 +48,6 @@ public class StoreMenu {
                 return;
             }
         }
-
         System.out.println("Dessert not found. Please try again.");
     }
 }
