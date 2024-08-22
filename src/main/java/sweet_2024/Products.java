@@ -91,7 +91,6 @@ public class Products {
         }
     }
 
-
     public Products(String chocolateCake) {
         this.productName=chocolateCake;
     }
@@ -100,7 +99,6 @@ public class Products {
     public double getRevenue() {
         return revenue;
     }
-
 
     public Products() {
     }
