@@ -25,7 +25,7 @@ public class Application {
     private List<Feedback> feedbackList;
     private List<Supply> supplies;
     private List<Products> products = new ArrayList<>();
-    private List<String> dessertRecipes;
+
 
     public Application() {
         this.loggedIn = false;
@@ -51,11 +51,6 @@ public class Application {
         this.supplies.add(new Supply("Candy Pack", 50, 100.00));
         this.supplies.add(new Supply("Sugar", 100, "Pending"));
         this.supplies.add(new Supply("Flour", 200, "Approved"));
-
-        this.dessertRecipes = new ArrayList<>();
-        this.dessertRecipes.add("Chocolate Cake");
-        this.dessertRecipes.add("Vanilla Pudding");
-        this.dessertRecipes.add("Strawberry Shortcake");
 
     }
     public List<Order> getInstallationRequests() {
@@ -253,6 +248,7 @@ public class Application {
         }
         return false;
     }
+
 
     public Post findPostByTitle(String title) {
         for (Post post : posts) {
@@ -515,7 +511,10 @@ public class Application {
     }
 
     public List<String> getDessertRecipes() {
-        return dessertRecipes != null ? dessertRecipes : new ArrayList<>();
+        if (recipeMenu == null) {
+            recipeMenu = new RecipeMenu();
+        }
+        return recipeMenu.getDessertRecipes();
     }
 
     public String navigateToRecipesMenu() {
@@ -525,6 +524,4 @@ public class Application {
             return "Navigated to the recipes menu.";
         }
     }
-
-
 }
