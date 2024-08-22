@@ -148,6 +148,9 @@ public class Products {
     public int getUnitsSold() {
         return unitsSold;
     }
+    public void setUnitsSold(int unitsSold) {
+        this.unitsSold=unitsSold;
+    }
 
     public double getTotalRevenue() {
         return totalRevenue;
