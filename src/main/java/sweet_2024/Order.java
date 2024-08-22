@@ -6,18 +6,20 @@ import java.time.LocalDate;
 
 public class Order {
     private static final Logger LOGGER = Logger.getLogger(Order.class.getName());
-    private final Products selectedProduct;
+    private Products selectedProduct;
     private List<Products> orderedProducts;
     private double totalPrice;
-    private final int orderId;
+    private int orderId;
     private String storeOwnerName;
     private String productName;
-    private final int quantity;
+    private int quantity;
     private String status;
-    private static int idCounter = 0; // Used to generate unique IDs for each order
-    private final LocalDate requestDate;
+    private static int idCounter = 0;
+    private LocalDate requestDate;
     private boolean isInstalled;
     private Order order;
+
+
     public Order(Products selectedProduct, String storeOwnerName, String productName, int quantity) {
         this.selectedProduct = selectedProduct;
         this.orderId = ++idCounter;
@@ -43,6 +45,13 @@ public class Order {
     public Order(Products selectedProduct, int quantity) {
         this.selectedProduct = selectedProduct;
         this.quantity = quantity;
+        this.orderId = ++idCounter;
+        this.status = "Pending";
+        this.requestDate = LocalDate.now();
+        this.isInstalled = false;
+    }
+
+    public Order() {
         this.orderId = ++idCounter;
         this.status = "Pending";
         this.requestDate = LocalDate.now();
@@ -78,6 +87,7 @@ public class Order {
     public int getQuantity() {
         return quantity;
     }
+
     public String getStatus() {
         return status;
     }
@@ -126,7 +136,20 @@ public class Order {
         LOGGER.info("Order processed successfully.");
     }
 
-    public void setInstalled(boolean b) {
+    public void setInstalled(boolean isInstalled) {
+        this.isInstalled = isInstalled;
+    }
 
+    public void setOrderId(String orderId) {
+        try {
+            this.orderId = Integer.parseInt(orderId);
+        } catch (NumberFormatException e) {
+            LOGGER.warning("Invalid order ID format: " + orderId);
+        }
+    }
+
+    public void updateStatus(String newStatus) {
+        this.status = newStatus;
+        LOGGER.info("Order status updated to: " + newStatus);
     }
 }

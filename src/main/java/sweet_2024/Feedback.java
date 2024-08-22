@@ -3,15 +3,14 @@ package sweet_2024;
 public class Feedback {
 
 
-    private final int id; // Unique identifier for feedback
-    private String user123;
-    private String status;
+    private final int id;
+    private String userId;    private String status;
     private User user;
     private Products products;
     private String feedbackMessage;
-    private String response; // For storing responses to feedback
+    private String response;
     private int rating;
-    private static int idCounter = 1; // Static counter to generate unique IDs
+    private static int idCounter = 1;
 
     public Feedback(User user, Products products, String feedbackMessage, int rating) {
         this.id = idCounter++;
@@ -21,22 +20,33 @@ public class Feedback {
         this.response = ""; // Initialize with no response
         this.products = products;
         this.status = "Pending";
+        this.userId = (user != null) ? user.getUserName() : "Anonymous";
     }
 
-    public Feedback(String user123, String thisIsATestFeedback, int i) {
-        this.user123=user123;
-        this.id=i;
+    public Feedback(String userId, String feedbackMessage, int id) {
+        this.userId = userId;
+        this.id = id;
+        this.feedbackMessage = feedbackMessage;
+        this.rating = 0;
+        this.status = "Pending";
     }
 
     public Feedback(int i, String feedbackMessage, String open) {
         this.id=i;
         this.feedbackMessage=feedbackMessage;
-        this.user123=open;
+        this.userId=open;
     }
 
     public Feedback() {
         this.id = idCounter++;
         this.status = "Pending";
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     public String getStatus() {
@@ -57,6 +67,9 @@ public class Feedback {
 
     public void setUser(User user) {
         this.user = user;
+        if (user != null) {
+            this.userId = user.getUserName();
+        }
     }
 
     public Products getProduct() {
@@ -126,4 +139,12 @@ public class Feedback {
     }
 
 
+
+    public void setComment(String feedbackMessage) {
+        this.feedbackMessage = feedbackMessage;
+    }
+
+    public String getComment() {
+        return feedbackMessage;
+    }
 }
