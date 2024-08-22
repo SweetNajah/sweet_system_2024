@@ -98,7 +98,6 @@ public class Report {
         bestForCategoryB.add("Product 3");
         bestForCategoryB.add("Product 4");
         bestSellingProducts.put("Category B", bestForCategoryB);
-
         return bestSellingProducts;
     }
 

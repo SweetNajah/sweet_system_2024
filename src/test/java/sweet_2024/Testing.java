@@ -405,14 +405,12 @@ public class Testing {
         SignUp signUp = new SignUp(newUser, new Login(newUser));
         boolean result = signUp.createAccount();
         assertEquals(expectedResult, result);
-
         if (expectedResult) {
             assertTrue(SignUp.emailValidator(email));
         } else {
             assertFalse(SignUp.emailValidator(email));
         }
     }
-
     @When("I choose to generate a financial report for the stores")
     public void iChooseToGenerateAFinancialReportForTheStores() {
         application.report.generateFinancialReport();

@@ -78,7 +78,6 @@ public class Order {
     public int getQuantity() {
         return quantity;
     }
-
     public String getStatus() {
         return status;
     }

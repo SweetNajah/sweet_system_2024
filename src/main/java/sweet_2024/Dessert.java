@@ -14,6 +14,7 @@ public class Dessert {
     public String getName() {
         return name;
     }
+
     public String getDietaryInfo() {
         return dietaryInfo;
     }

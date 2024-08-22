@@ -112,7 +112,6 @@ public class MainClass {
         User user = sweetSystem.findUserByEmail(signInEmail);
         if (user != null && user.getPassword().equals(signInPassword)) {
             sweetSystem.login.setUser(user);
-
             Mailing mailing = new Mailing(signInEmail);
             mailing.sendVerificationCode();
             LOGGER.info("Verification code sent to " + signInEmail);

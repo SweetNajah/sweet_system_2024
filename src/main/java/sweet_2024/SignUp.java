@@ -10,6 +10,7 @@ public class SignUp {
         this.newUser = newUser;
         this.l=l;
     }
+
     public boolean createAccount(){
         if(emailValidator(newUser.getEmail())) {
             l.users.add(newUser);

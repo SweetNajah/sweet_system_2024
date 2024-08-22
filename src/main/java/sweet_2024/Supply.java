@@ -40,7 +40,6 @@ public class Supply {
         this.price = price;
     }
 
-
     @Override
     public String toString() {
         return "SupplyRequest{" +

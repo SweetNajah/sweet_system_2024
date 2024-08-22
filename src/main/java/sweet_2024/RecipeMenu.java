@@ -22,7 +22,6 @@ public class RecipeMenu {
         desserts.add(new Dessert("Fruit Tart", "Vegan", 7.99));
         desserts.add(new Dessert("Ice Cream", "Gluten-Free", 5.99));
         desserts = new ArrayList<>();
-
     }
 
     public List<String> getDessertRecipes() {
