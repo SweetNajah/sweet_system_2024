@@ -86,6 +86,9 @@ public class Testing {
         login = new Login();
         login.setUsername("testUser");
         login.setPassword("password123");
+
+        application.login.users.add(new User("existing.email@example.com", "password", "role"));
+        application.login.users.add(new User("another.email@example.com", "password", "role"));
     }
 
     public Testing() {
@@ -356,19 +359,6 @@ public class Testing {
         }
         assertTrue(f);
     }
-//    @ParameterizedTest
-//    @CsvSource({
-//            "existing.email@gmail.com",
-//            "another.email@gmail.com"
-//    })
-//    @When("the information is exist email is {string}")
-//    public void theInformationIsExistEmailIs(String email) {
-//        boolean emailExists = application.login.users.stream()
-//                .anyMatch(u -> u.getEmail().equalsIgnoreCase(email));
-//
-//        assertTrue("Email should exist in the user list", emailExists);
-//    }
-
 
 
     @Then("creating an account failed")
@@ -1053,6 +1043,7 @@ public class Testing {
       //assertEquals(8.00, product.getPrice(), 0.01);
         double expectedPriceAfterDiscount = 8.00;
         assertEquals(expectedPriceAfterDiscount, product.getPrice(), 0.01);
+
 
     }
     @Test
