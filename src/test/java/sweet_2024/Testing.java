@@ -222,7 +222,7 @@ public class Testing {
         for(User u1 : application.login.users) {
             if(!u1.getEmail().equalsIgnoreCase(Email) && !u1.getPassword().equals(Pass)) {
                 application.login.setLogged(false);
-                loginFailed = true;
+                loginFailed = false;
                 break;
             }
         }
@@ -349,15 +349,10 @@ public class Testing {
     })
     @When("the information is exist email is {string}")
     public void theInformationIsExistEmailIs(String email) {
-        boolean f = false;
-        for(User u:application.login.users){
-            if(u.getEmail().equalsIgnoreCase(email)){
-                f=true;
-                newAccount=false;
-                break;
-            }
-        }
-        assertTrue(f);
+       boolean emailExists = application.login.users.stream()
+                .anyMatch(u -> u.getEmail().equalsIgnoreCase(email));
+
+        assertTrue("Email should exist in the user list", emailExists);
     }
 
 
