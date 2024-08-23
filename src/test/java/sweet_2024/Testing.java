@@ -1061,24 +1061,24 @@ public class Testing {
 
 
     @Test
-    void testProductName() {
+    public void testProductName() {
         assertEquals("Test Product", product.getName());
     }
 
     @Test
-    void testProductPrice() {
+    public void testProductPrice() {
         assertEquals(100.0, product.getPrice());
     }
 
     @Test
-    void testApplyDiscount() {
+    public void testApplyDiscount() {
         product.applyDiscount(10.0, "1 Week");
         assertEquals(90.0, product.getPrice());
         assertTrue(product.isDiscountActive());
     }
 
     @Test
-    void testRemoveDiscount() {
+    public void testRemoveDiscount() {
         product.applyDiscount(10.0, "1 Week");
         product.removeDiscount();
         assertEquals(100.0, product.getPrice());
@@ -1086,62 +1086,62 @@ public class Testing {
     }
 
     @Test
-    void testOrderId() {
+    public void testOrderId() {
         assertEquals("12345", order.getOrderId());
     }
 
     @Test
-    void testOrderStatus() {
+    public void testOrderStatus() {
         assertEquals("Pending", order.getStatus());
     }
 
     @Test
-    void testUpdateStatus() {
+    public void testUpdateStatus() {
         order.updateStatus("Shipped");
         assertEquals("Shipped", order.getStatus());
     }
     @Test
-    void testUserId() {
+    public void testUserId() {
         assertEquals("user123", feedback.getUserId());
     }
 
     @Test
-    void testComment() {
+    public void testComment() {
         assertEquals("Good product", feedback.getComment());
     }
 
     @Test
-    void testSetRating() {
+    public void testSetRating() {
         feedback.setRating(4);
         assertEquals(4, feedback.getRating());
     }
     @Test
-    void testInquiryId() {
+    public void testInquiryId() {
         assertEquals("inq123", inquiry.getInquiryId());
     }
 
     @Test
-    void testQuestion() {
+    public void testQuestion() {
         assertEquals("What is the product warranty?", inquiry.getQuestion());
     }
 
     @Test
-    void testSetAnswer() {
+    public void testSetAnswer() {
         inquiry.setAnswer("One year warranty");
         assertEquals("One year warranty", inquiry.getAnswer());
     }
     @Test
-    void testUsername() {
+    public void testUsername() {
         assertEquals("testUser", login.getUsername());
     }
 
     @Test
-    void testPassword() {
+    public void testPassword() {
         assertEquals("password123", login.getPassword());
     }
 
     @Test
-    void testAuthenticate() {
+    public void testAuthenticate() {
         assertTrue(login.authenticate("testUser", "password123"));
     }
 
