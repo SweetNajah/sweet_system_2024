@@ -1,0 +1,194 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > RecipeMenu</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">sweet_2024</a>
+</div>
+
+<h1>Coverage Summary for Class: RecipeMenu (sweet_2024)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RecipeMenu</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/23)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package sweet_2024;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;public class RecipeMenu {
+&nbsp;    List&lt;Dessert&gt; desserts;
+&nbsp;    private String name;
+&nbsp;    private String ingredients;
+&nbsp;    private String steps;
+&nbsp;    private List&lt;String&gt; dessert;
+&nbsp;
+<b class="nc">&nbsp;    public RecipeMenu(String name, String ingredients, String steps) {</b>
+<b class="nc">&nbsp;        this.name = name;</b>
+<b class="nc">&nbsp;        this.ingredients = ingredients;</b>
+<b class="nc">&nbsp;        this.steps = steps;</b>
+&nbsp;    }
+<b class="nc">&nbsp;    public RecipeMenu() {</b>
+<b class="nc">&nbsp;        this.desserts = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        desserts.add(new Dessert(&quot;Chocolate Cake&quot;, &quot;Vegetarian&quot;, 10.99));</b>
+<b class="nc">&nbsp;        desserts.add(new Dessert(&quot;Fruit Tart&quot;, &quot;Vegan&quot;, 7.99));</b>
+<b class="nc">&nbsp;        desserts.add(new Dessert(&quot;Ice Cream&quot;, &quot;Gluten-Free&quot;, 5.99));</b>
+<b class="nc">&nbsp;        desserts = new ArrayList&lt;&gt;();</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;String&gt; getDessertRecipes() {
+<b class="nc">&nbsp;        return dessert;</b>
+&nbsp;    }
+&nbsp;    public void displayRecipes() {
+<b class="nc">&nbsp;        System.out.println(&quot;Available Dessert Recipes:&quot;);</b>
+<b class="nc">&nbsp;        for (Dessert dessert : desserts) {</b>
+<b class="nc">&nbsp;            System.out.println(dessert);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public void filterRecipes(String dietaryNeed) {
+<b class="nc">&nbsp;        desserts.removeIf(dessert -&gt; !dessert.getDietaryInfo().equalsIgnoreCase(dietaryNeed));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getName() {
+<b class="nc">&nbsp;        return name;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setName(String name) {
+<b class="nc">&nbsp;        this.name = name;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getIngredients() {
+<b class="nc">&nbsp;        return ingredients;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setIngredients(String ingredients) {
+<b class="nc">&nbsp;        this.ingredients = ingredients;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getSteps() {
+<b class="nc">&nbsp;        return steps;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setSteps(String steps) {
+<b class="nc">&nbsp;        this.steps = steps;</b>
+&nbsp;    }
+&nbsp;   
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="nc">&nbsp;        return &quot;Recipe{&quot; +</b>
+&nbsp;                &quot;name=&#39;&quot; + name + &#39;\&#39;&#39; +
+&nbsp;                &quot;, ingredients=&#39;&quot; + ingredients + &#39;\&#39;&#39; +
+&nbsp;                &quot;, steps=&#39;&quot; + steps + &#39;\&#39;&#39; +
+&nbsp;                &#39;}&#39;;
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;String&gt; getFilteredDesserts() {
+<b class="nc">&nbsp;        return dessert;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-08-21 11:17</div>
+</div>
+</body>
+</html>

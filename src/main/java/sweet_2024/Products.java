@@ -8,9 +8,7 @@ import java.util.logging.Logger;
 
 public class Products {
 
-
     float rateAvg;
-
     int quantity;
     private int quantityInStock;
     private int unitsSold;
@@ -19,16 +17,13 @@ public class Products {
     private double productRating;
     private double discountPercentage;
     private double revenue;
-
     private String category;
     private String discountDuration;
     private String productName;
     private String productDescription;
     private String sku;
-
     public boolean is_logged_in = true;
     private boolean isDiscountActive;
-
     private Products products;
     protected List<Integer> rates = new ArrayList<>();
     protected List<String> reviews = new ArrayList<>();
@@ -36,6 +31,26 @@ public class Products {
     static public ArrayList<String> Sweetes = new ArrayList<>();
     private static final Logger LOGGER = Logger.getLogger(Products.class.getName());
 
+
+    public Products() {
+    }
+
+    public Products(String name, int quantity, double price) {
+        this.productName = name;
+        this.quantity = quantity;
+        this.productPrice = price;
+    }
+
+    public Products(String productName, double productPrice, String productDescription, String sku, int quantity) {
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.productDescription = productDescription;
+        this.sku = sku;
+        this.quantity = quantity;
+        this.unitsSold = 0;
+        this.totalRevenue = 0.0;
+        this.isDiscountActive = false;
+    }
 
 
     public String getProductName() {
@@ -51,7 +66,6 @@ public class Products {
         this.quantityInStock = quantityInStock;
     }
 
-
     public void saveSweet(String sweet, String pageName) {
         if (navigateToPage(pageName)) {
             if (is_logged_in) {
@@ -64,7 +78,6 @@ public class Products {
             LOGGER.info("Failed to navigate to the " + pageName + " page. Sweet not saved."+ "\n");
         }
     }
-
 
     public boolean navigateToPage(String pageName) {
         if (pageName != null && !pageName.isEmpty()) {
@@ -100,19 +113,8 @@ public class Products {
         return revenue;
     }
 
-    public Products() {
-    }
 
-    public Products(String productName, double productPrice, String productDescription, String sku, int quantity) {
-        this.productName = productName;
-        this.productPrice = productPrice;
-        this.productDescription = productDescription;
-        this.sku = sku;
-        this.quantity = quantity;
-        this.unitsSold = 0;
-        this.totalRevenue = 0.0;
-        this.isDiscountActive = false;
-    }
+
 
 
     public double getPrice() {
@@ -146,6 +148,9 @@ public class Products {
     public int getUnitsSold() {
         return unitsSold;
     }
+    public void setUnitsSold(int unitsSold) {
+        this.unitsSold=unitsSold;
+    }
 
     public double getTotalRevenue() {
         return totalRevenue;
@@ -162,8 +167,6 @@ public class Products {
     public boolean isDiscountActive() {
         return isDiscountActive;
     }
-
-
 
     public void deleteSweet(String sweet) {
         if (is_logged_in) {
@@ -289,12 +292,6 @@ public class Products {
         );
     }
 
-    public Products(String name, int quantity, double price) {
-        this.productName = name;
-        this.quantity = quantity;
-        this.productPrice = price;
-    }
-
     public String getName() {
         if (this.products == null) {
             return "No product";
@@ -314,7 +311,6 @@ public class Products {
         this.quantity = quantity;
     }
 
-
     public char[] getProductRating() {
         String ratingStr = String.valueOf(productRating);
         return ratingStr.toCharArray();
@@ -324,5 +320,8 @@ public class Products {
         return category;
     }
 
+    public void setName(String productName) {
+        this.productName = productName;
+    }
 
 }

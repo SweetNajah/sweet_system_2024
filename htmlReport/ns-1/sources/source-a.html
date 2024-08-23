@@ -1,0 +1,446 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > Products</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">sweet_2024</a>
+</div>
+
+<h1>Coverage Summary for Class: Products (sweet_2024)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Products</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    9.8%
+  </span>
+  <span class="absValue">
+    (4/41)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/40)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    15.2%
+  </span>
+  <span class="absValue">
+    (19/125)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package sweet_2024;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Comparator;
+&nbsp;import java.util.List;
+&nbsp;import java.util.logging.Logger;
+&nbsp;
+&nbsp;public class Products {
+&nbsp;
+&nbsp;
+&nbsp;    float rateAvg;
+&nbsp;
+&nbsp;    int quantity;
+&nbsp;    private int quantityInStock;
+&nbsp;    private int unitsSold;
+&nbsp;    private double productPrice;
+&nbsp;    private double totalRevenue;
+&nbsp;    private double productRating;
+&nbsp;    private double discountPercentage;
+&nbsp;    private double revenue;
+&nbsp;
+&nbsp;    private String category;
+&nbsp;    private String discountDuration;
+&nbsp;    private String productName;
+&nbsp;    private String productDescription;
+&nbsp;    private String sku;
+&nbsp;
+<b class="fc">&nbsp;    public boolean is_logged_in = true;</b>
+&nbsp;    private boolean isDiscountActive;
+&nbsp;
+&nbsp;    private Products products;
+<b class="fc">&nbsp;    protected List&lt;Integer&gt; rates = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;    protected List&lt;String&gt; reviews = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;    static public ArrayList&lt;String&gt; Sweets = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;    static public ArrayList&lt;String&gt; Sweetes = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;    private static final Logger LOGGER = Logger.getLogger(Products.class.getName());</b>
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    public String getProductName() {
+<b class="nc">&nbsp;        return productName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public int getQuantityInStock() {
+<b class="nc">&nbsp;        return quantityInStock;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setQuantityInStock(int quantityInStock) {
+<b class="nc">&nbsp;        this.quantityInStock = quantityInStock;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void saveSweet(String sweet, String pageName) {
+<b class="nc">&nbsp;        if (navigateToPage(pageName)) {</b>
+<b class="nc">&nbsp;            if (is_logged_in) {</b>
+<b class="nc">&nbsp;                Sweetes.add(sweet);</b>
+<b class="nc">&nbsp;                LOGGER.info(sweet + &quot; has been added to the list.&quot;+ &quot;\n&quot;);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                LOGGER.info(&quot;You need to be logged in to add a sweet.&quot;+ &quot;\n&quot;);</b>
+&nbsp;            }
+&nbsp;        } else {
+<b class="nc">&nbsp;            LOGGER.info(&quot;Failed to navigate to the &quot; + pageName + &quot; page. Sweet not saved.&quot;+ &quot;\n&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public boolean navigateToPage(String pageName) {
+<b class="nc">&nbsp;        if (pageName != null &amp;&amp; !pageName.isEmpty()) {</b>
+<b class="nc">&nbsp;            System.out.println(&quot;Navigated to &quot; + pageName + &quot; page.&quot;);</b>
+<b class="nc">&nbsp;            return true; // Indicate successful navigation</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            System.out.println(&quot;Invalid page name provided.&quot;);</b>
+<b class="nc">&nbsp;            return false; // Indicate unsuccessful navigation</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void setDiscountParameters(double discountPercentage, String discountDuration) {
+<b class="nc">&nbsp;        this.discountPercentage = discountPercentage;</b>
+<b class="nc">&nbsp;        this.discountDuration = discountDuration;</b>
+<b class="nc">&nbsp;        System.out.printf(&quot;Discount parameters set: %.2f%% discount for %s.\n&quot;, discountPercentage, discountDuration);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getDiscountDetails() {
+<b class="nc">&nbsp;        if (isDiscountActive) {</b>
+<b class="nc">&nbsp;            return String.format(&quot;Discount: %.2f%% off for %s!&quot;, discountPercentage, discountDuration);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            return &quot;No discount available. Regular price: $&quot; + productPrice;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;    public Products(String chocolateCake) {</b>
+<b class="nc">&nbsp;        this.productName=chocolateCake;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public double getRevenue() {
+<b class="nc">&nbsp;        return revenue;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;    public Products() {</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public Products(String productName, double productPrice, String productDescription, String sku, int quantity) {</b>
+<b class="fc">&nbsp;        this.productName = productName;</b>
+<b class="fc">&nbsp;        this.productPrice = productPrice;</b>
+<b class="fc">&nbsp;        this.productDescription = productDescription;</b>
+<b class="fc">&nbsp;        this.sku = sku;</b>
+<b class="fc">&nbsp;        this.quantity = quantity;</b>
+<b class="fc">&nbsp;        this.unitsSold = 0;</b>
+<b class="fc">&nbsp;        this.totalRevenue = 0.0;</b>
+<b class="fc">&nbsp;        this.isDiscountActive = false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public double getPrice() {
+<b class="nc">&nbsp;        if (isDiscountActive) {</b>
+<b class="nc">&nbsp;            return Double.parseDouble(String.valueOf(productPrice)) * (1 - discountPercentage / 100);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return productPrice;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setProductName(String productName) {
+<b class="nc">&nbsp;        this.productName = productName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public String getProductDescription() {
+<b class="nc">&nbsp;        return productDescription;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setProductDescription(String productDescription) {
+<b class="nc">&nbsp;        this.productDescription = productDescription;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getSku() {
+<b class="nc">&nbsp;        return sku;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setSku(String sku) {
+<b class="nc">&nbsp;        this.sku = sku;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getUnitsSold() {
+<b class="nc">&nbsp;        return unitsSold;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public double getTotalRevenue() {
+<b class="nc">&nbsp;        return totalRevenue;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public double getDiscountPercentage() {
+<b class="nc">&nbsp;        return discountPercentage;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getDiscountDuration() {
+<b class="nc">&nbsp;        return discountDuration;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isDiscountActive() {
+<b class="nc">&nbsp;        return isDiscountActive;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    public void deleteSweet(String sweet) {
+<b class="nc">&nbsp;        if (is_logged_in) {</b>
+<b class="nc">&nbsp;            if (Sweets.contains(sweet)) {</b>
+<b class="nc">&nbsp;                Sweets.remove(sweet);</b>
+<b class="nc">&nbsp;                LOGGER.info(sweet + &quot; has been removed from the list.&quot;+ &quot;\n&quot;);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                LOGGER.info(sweet + &quot; is not in the list.&quot;+ &quot;\n&quot;);</b>
+&nbsp;            }
+&nbsp;        } else {
+<b class="nc">&nbsp;            LOGGER.info(&quot;You need to be logged in to delete a sweet.&quot;+ &quot;\n&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public void updateSweet(String oldSweet, String newSweet) {
+<b class="nc">&nbsp;        if (is_logged_in) {</b>
+<b class="nc">&nbsp;            int index = Sweets.indexOf(oldSweet);</b>
+<b class="nc">&nbsp;            if (index != -1) {</b>
+<b class="nc">&nbsp;                Sweets.set(index, newSweet);</b>
+<b class="nc">&nbsp;                LOGGER.info(oldSweet + &quot; has been updated to &quot; + newSweet + &quot;.&quot;+ &quot;\n&quot;);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                LOGGER.info(oldSweet + &quot; is not in the list.&quot;+ &quot;\n&quot;);</b>
+&nbsp;            }
+&nbsp;        } else {
+<b class="nc">&nbsp;            LOGGER.info(&quot;You need to be logged in to update a sweet.&quot;+ &quot;\n&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public void listSweets() {
+<b class="nc">&nbsp;        if (is_logged_in) {</b>
+<b class="nc">&nbsp;            LOGGER.info(&quot;Current sweets in the list:&quot;+ &quot;\n&quot;);</b>
+<b class="nc">&nbsp;            for (String sweet : Sweets) {</b>
+<b class="nc">&nbsp;                LOGGER.info(&quot;- &quot; + sweet);</b>
+&nbsp;            }
+&nbsp;        } else {
+<b class="nc">&nbsp;            LOGGER.info(&quot;You need to be logged in to view the sweets.&quot;+ &quot;\n&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public void applyDiscount(double discountPercentage, String discountDuration) {
+<b class="nc">&nbsp;        this.discountPercentage = discountPercentage;</b>
+<b class="nc">&nbsp;        this.discountDuration = discountDuration;</b>
+<b class="nc">&nbsp;        this.isDiscountActive = true;</b>
+<b class="nc">&nbsp;        System.out.printf(&quot;Discount of %.2f%% applied to %s for %s.\n&quot;, discountPercentage, productName, discountDuration);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void removeDiscount() {
+<b class="nc">&nbsp;        this.isDiscountActive = false;</b>
+<b class="nc">&nbsp;        System.out.printf(&quot;Discount removed from %s.\n&quot;, productName);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void registerSale(int quantity) {
+<b class="nc">&nbsp;        if (quantity &lt;= this.quantity) {</b>
+<b class="nc">&nbsp;            this.quantity -= quantity;</b>
+<b class="nc">&nbsp;            unitsSold += quantity;</b>
+<b class="nc">&nbsp;            totalRevenue += quantity * getPrice();</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            LOGGER.info(&quot;Not enough stock to complete the sale.&quot;+ &quot;\n&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public double calculateProfit(double costPrice) {
+<b class="nc">&nbsp;        return totalRevenue - (unitsSold * costPrice);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void displaySalesDashboard(List&lt;Products&gt; productsList) {
+<b class="nc">&nbsp;        LOGGER.info(&quot;Sales Dashboard:&quot;+ &quot;\n&quot;);</b>
+<b class="nc">&nbsp;        LOGGER.info(&quot;----------------------------------------------------&quot;+ &quot;\n&quot;);</b>
+<b class="nc">&nbsp;        double totalProfits = 0.0;</b>
+&nbsp;
+<b class="nc">&nbsp;        for (Products product : productsList) {</b>
+<b class="nc">&nbsp;            System.out.printf(&quot;Product: %s | Units Sold: %d | Revenue: $%.2f\n&quot;,</b>
+<b class="nc">&nbsp;                    product.getName(), product.getUnitsSold(), product.getTotalRevenue());</b>
+<b class="nc">&nbsp;            totalProfits += product.calculateProfit(5.0);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        LOGGER.info(&quot;----------------------------------------------------&quot;+ &quot;\n&quot;);</b>
+<b class="nc">&nbsp;        System.out.printf(&quot;Total Profits: $%.2f\n&quot;, totalProfits);</b>
+<b class="nc">&nbsp;        LOGGER.info(&quot;----------------------------------------------------&quot;+ &quot;\n&quot;);</b>
+<b class="nc">&nbsp;        LOGGER.info(&quot;Sales Trends:&quot;);</b>
+<b class="nc">&nbsp;        for (Products product : productsList) {</b>
+<b class="nc">&nbsp;            System.out.printf(&quot;Product: %s | Sales: %s\n&quot;, product.getName(), &quot;*&quot;.repeat(product.getUnitsSold()));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public void displayBestSellingProducts(List&lt;Products&gt; productsList) {
+<b class="nc">&nbsp;        if (navigateToPage(&quot;Product Analytics&quot;)) {</b>
+<b class="nc">&nbsp;            LOGGER.info(&quot;Navigated to Product Analytics page.\n&quot;);</b>
+<b class="nc">&nbsp;            LOGGER.info(&quot;Best-Selling Products:\n&quot;);</b>
+<b class="nc">&nbsp;            LOGGER.info(&quot;----------------------------------------------------\n&quot;);</b>
+<b class="nc">&nbsp;            productsList.sort(Comparator.comparingInt(Products::getUnitsSold).reversed());</b>
+&nbsp;
+<b class="nc">&nbsp;            for (Products product : productsList) {</b>
+<b class="nc">&nbsp;                System.out.printf(&quot;Product: %s | Units Sold: %d | Revenue: $%.2f\n&quot;,</b>
+<b class="nc">&nbsp;                        product.getName(), product.getUnitsSold(), product.getTotalRevenue());</b>
+<b class="nc">&nbsp;                if (product == productsList.get(0)) {</b>
+<b class="nc">&nbsp;                    LOGGER.info(&quot;-&gt; Best-Selling Product!\n&quot;);</b>
+&nbsp;                }
+<b class="nc">&nbsp;                if (product.getQuantity() &lt; 10) {</b>
+<b class="nc">&nbsp;                    System.out.printf(&quot;-&gt; Recommend Restocking: Only %d units left in stock!\n&quot;, product.getQuantity());</b>
+&nbsp;                }
+&nbsp;            }
+<b class="nc">&nbsp;            LOGGER.info(&quot;----------------------------------------------------\n&quot;);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            LOGGER.warning(&quot;Failed to navigate to the Product Analytics page.\n&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="nc">&nbsp;        return &quot;Products{&quot; +</b>
+&nbsp;                &quot;productName=&#39;&quot; + productName + &#39;\&#39;&#39; +
+&nbsp;                &quot;, productPrice=&#39;&quot; + productPrice + &#39;\&#39;&#39; +
+&nbsp;                &quot;, productDescription=&#39;&quot; + productDescription + &#39;\&#39;&#39; +
+&nbsp;                &quot;, sku=&#39;&quot; + sku + &#39;\&#39;&#39; +
+&nbsp;                &quot;, quantityInStock=&quot; + quantity +
+&nbsp;                &#39;}&#39;;
+&nbsp;    }
+&nbsp;
+&nbsp;    public String fillProductDetails() {
+<b class="nc">&nbsp;        return String.format(</b>
+&nbsp;                &quot;Product Name: %s\nDescription: %s\nPrice: %s\nSKU: %s\nQuantity in Stock: %d&quot;,
+<b class="nc">&nbsp;                productName, productDescription, productPrice, sku, quantity</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public Products(String name, int quantity, double price) {</b>
+<b class="fc">&nbsp;        this.productName = name;</b>
+<b class="fc">&nbsp;        this.quantity = quantity;</b>
+<b class="fc">&nbsp;        this.productPrice = price;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getName() {
+<b class="nc">&nbsp;        if (this.products == null) {</b>
+<b class="nc">&nbsp;            return &quot;No product&quot;;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return productName;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setPrice(double price) {
+<b class="nc">&nbsp;        this.productPrice = price;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getQuantity() {
+<b class="nc">&nbsp;        return quantity;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setQuantity(int quantity) {
+<b class="nc">&nbsp;        this.quantity = quantity;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public char[] getProductRating() {
+<b class="nc">&nbsp;        String ratingStr = String.valueOf(productRating);</b>
+<b class="nc">&nbsp;        return ratingStr.toCharArray();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Object getCategory() {
+<b class="nc">&nbsp;        return category;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-08-21 11:17</div>
+</div>
+</body>
+</html>

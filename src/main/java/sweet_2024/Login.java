@@ -20,6 +20,13 @@ public class Login {
     boolean validEmail;
     int userIndex;
 
+    private String username;
+    private String password;
+
+    Login() {
+        this(null);
+    }
+
     Login(User user){
         this.user = user;
         try {
@@ -53,10 +60,24 @@ public class Login {
         isLogged=false;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
     public boolean login() {
-
         if (emailValidator(user.getEmail())) {
-
             for (User s : users) {
                 if (user.getPassword().equals(s.getPassword()) && user.getEmail().equalsIgnoreCase(s.getEmail())) {
                     mailing = new Mailing(user.getEmail());
@@ -175,4 +196,17 @@ public class Login {
         }
         return false;
     }
+
+    public boolean authenticate(String username, String password) {
+        for (User user : users) {
+            if (user.getEmail().equalsIgnoreCase(username) && user.getPassword().equals(password)) {
+                this.username = username;
+                this.password = password;
+                setUser(user);
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
