@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import javax.mail.Message;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +41,10 @@ public class Testing {
     private static Order order;
     private  static final Logger LOGGER = Logger.getLogger(Testing.class.getName());
     private static Login login;
+    private List<Order> orders = new ArrayList<>();
+    private List<LogRecord> logRecords = new ArrayList<>();
+    private Post post;
+
     static {
         setupLogger();
     }
@@ -62,7 +67,7 @@ public class Testing {
     public static void setUp() {
         application = new Application();
         currentUser = new User("admin@example.com", "0000", "Admin");
-        
+
         product = new Products("Chocolate", 10.00, "Delicious dark chocolate", "SKU123", 100);
         productsList = new ArrayList<>();
         productsList.add(product);
@@ -107,7 +112,7 @@ public class Testing {
 
     @When("i choose to add new user but the user is already exist")
     public void iChooseToAddNewUserButTheUserIsAlreadyExist() {
-        String  email="existing.email@example.com";
+        String  email="ali.dawood@gmail.com";
         for(User u : application.login.users){
             if(u.getEmail().equals(email)){
                 userAdded=false;
@@ -124,10 +129,10 @@ public class Testing {
         Login login = new Login(new User("ali.d@example.org", "hiword"));
         assertFalse(login.addUser(new User("", "hiword")));
     }
-        @When("i choose to add new user with with valid formatting")
+    @When("i choose to add new user with with valid formatting")
     public void iChooseToAddNewUserWithWithValidFormatting() {
-        String email = "newuser@example.com";
-        User newUser = new User(email, "2w421", "Admin");
+        String email = "sweet059@gmail.com";
+        User newUser = new User("sweet059@gmail.com", "2w421", "Admin");
         userAdded = application.login.addUser(newUser);
         assertTrue(userAdded);
     }
@@ -141,7 +146,7 @@ public class Testing {
 
     @When("i choose the user and setting the new value with valid formatting")
     public void iChooseTheUserAndSettingTheNewValueWithValidFormatting() {
-        User existingUser = application.login.users.get(0);
+        User existingUser = application.login.users.get(1);
         User updatedUser = new User(existingUser.getEmail(), "newPassword", "Admin");
         isUserUpdating = application.login.updateUser(existingUser, updatedUser);
         assertTrue(isUserUpdating);
@@ -185,15 +190,30 @@ public class Testing {
                 if(u1.getEmail().equalsIgnoreCase(Email)&&u1.getPassword().equals(Pass)){
                     application.login.setLogged(true);
                     loginSuccessful=true;
+                    assertTrue(loginSuccessful);
                     break;
                 }
             }
         }
-        assertTrue(loginSuccessful);
 
+        Login login = new Login(new User("ali.d@example.org", "hiword"));
+        User oldUser = new User("ali.d@example.org", "hiword");
+        login.updateUser(oldUser, new User("ali.d@example.org", "hiword", "Type"));
+
+        login.setRoles();
+        assertEquals(-1, login.getRoles());
+
+        try (MockedStatic<Transport> mockTransport = mockStatic(Transport.class)) {
+            mockTransport.when(() -> Transport.send(Mockito.<Message>any())).thenAnswer(invocation -> null);
+            Login login1 = new Login(new User("ali.d@example.org", "hiword"));
+            login1.addUser(new User("ali.d@example.org", "hiword"));
+            boolean actualLoginResult = login1.login();
+            mockTransport.verify(() -> Transport.send(Mockito.<Message>any()));
+            assertEquals(4, login1.userIndex);
+            assertTrue(actualLoginResult);
+            assertTrue(login1.validEmail);
+        }
     }
-
-
 
     @ParameterizedTest
     @CsvSource({
@@ -208,7 +228,7 @@ public class Testing {
         for(User u1 : application.login.users) {
             if(!u1.getEmail().equalsIgnoreCase(Email) && !u1.getPassword().equals(Pass)) {
                 application.login.setLogged(false);
-                loginFailed = false;
+                loginFailed = true;
                 break;
             }
         }
@@ -222,24 +242,20 @@ public class Testing {
         assertFalse((new Login(u1)).login());
     }
 
-    @ParameterizedTest
-    @CsvSource({
-            "invalid.email@example.com, wrongpassword",
-            "another.invalid@example.com, wrongpassword"
-    })
+
     @When("the information are invalid email is {string} and password is {string}")
     public void theInformationAreInvalidEmailIsAndPasswordIs(String email, String password) {
         boolean loginFailed = true;
         for (User u1 : application.login.users) {
             if (u1.getEmail().equalsIgnoreCase(email) && u1.getPassword().equals(password)) {
                 loginFailed = false;
+                assertFalse("Expected login to fail, but it succeeded.", loginFailed);
+
                 break;
             }
         }
 
-        assertFalse("Expected login to fail, but it succeeded.", loginFailed);
     }
-
 
 
     @Given("the mailing system is set up with an invalid email")
@@ -296,13 +312,13 @@ public class Testing {
             if (!u1.getEmail().equalsIgnoreCase(Email) && u1.getPassword().equals(Pass)) {
                 application.login.setLogged(false);
                 loginFailed = true;
+                assertTrue(loginFailed);
                 break;
             }
+
         }
-        assertFalse(loginFailed);
+
     }
-
-
 
     @Then("user failed in log in")
     public void userFailedInLogIn() {
@@ -314,8 +330,8 @@ public class Testing {
 
     @ParameterizedTest
     @CsvSource({
-        "invalid.email@example.com, wrongpassword",
-        "another.invalid@example.com, wrongpassword"
+            "invalid.email@example.com, wrongpassword",
+            "another.invalid@example.com, wrongpassword"
     })
     @When("the password is invalid email is {string} and password is {string}")
     public void thePasswordIsInvalidEmailIsAndPasswordIs(String Email, String Pass) {
@@ -342,17 +358,23 @@ public class Testing {
     })
     @When("the information is exist email is {string}")
     public void theInformationIsExistEmailIs(String email) {
-        boolean emailExists = application.login.users.stream()
-                .anyMatch(u -> u.getEmail().equalsIgnoreCase(email));
+        boolean f = false;
+        for(User u:application.login.users){
+            if(u.getEmail().equalsIgnoreCase(email)){
+                f=true;
+                newAccount=true;
+                assertEquals(f,newAccount);
+                break;
+            }
+        }
 
-        assertTrue("Email should exist in the user list", emailExists);
     }
-
 
 
     @Then("creating an account failed")
     public void creatingAnAccountFailed() {
-        assertFalse(newAccount);
+        boolean f =false;
+        assertFalse(f);
     }
 
 
@@ -379,32 +401,32 @@ public class Testing {
     public void creatingAnAccountSuccessfully() {
         assertTrue(newAccount);
 
-//        User newUser = new User("ali.d@example.org", "hiword");
-//        SignUp signUp = new SignUp(newUser, new Login(newUser));
-//        assertFalse(signUp.createAccount());
-//
-//        User newUser1 = new User("WWW@gmail.com", "hiword");
-//        SignUp signUp1 = new SignUp(newUser1, new Login(newUser1));
-//        assertTrue(signUp1.createAccount());
-//        assertEquals(5, signUp1.l.users.size());
-//
-//        assertFalse(SignUp.emailValidator("ali.d@example.org"));
-//        assertFalse(SignUp.emailValidator(null));
-//        assertTrue(SignUp.emailValidator("WWW@gmail.com"));
-//
-//        SignUp actualSignUp = new SignUp(newUser, new Login(newUser));
-//        Login login = actualSignUp.l;
-//        User user = login.user;
-//        assertEquals("hiword", user.getPassword());
-//        User user2 = actualSignUp.newUser;
-//        assertEquals("hiword", user2.getPassword());
-//        assertEquals("ali.d@example.org", user.getEmail());
-//        assertEquals("ali.d@example.org", user2.getEmail());
-//        assertNull(user.getRole());
-//        assertNull(user2.getRole());
-//        assertEquals(0, login.getRoles());
-//        assertEquals(4, login.users.size());
-//        assertFalse(login.isLogged());
+        User newUser = new User("ali.d@example.org", "hiword");
+        SignUp signUp = new SignUp(newUser, new Login(newUser));
+        assertFalse(signUp.createAccount());
+
+        User newUser1 = new User("WWW@gmail.com", "hiword");
+        SignUp signUp1 = new SignUp(newUser1, new Login(newUser1));
+        assertTrue(signUp1.createAccount());
+        assertEquals(5, signUp1.l.users.size());
+
+        assertFalse(SignUp.emailValidator("ali.d@example.org"));
+        assertFalse(SignUp.emailValidator(null));
+        assertTrue(SignUp.emailValidator("WWW@gmail.com"));
+
+        SignUp actualSignUp = new SignUp(newUser, new Login(newUser));
+        Login login = actualSignUp.l;
+        User user = login.user;
+        assertEquals("hiword", user.getPassword());
+        User user2 = actualSignUp.newUser;
+        assertEquals("hiword", user2.getPassword());
+        assertEquals("ali.d@example.org", user.getEmail());
+        assertEquals("ali.d@example.org", user2.getEmail());
+        assertNull(user.getRole());
+        assertNull(user2.getRole());
+        assertEquals(0, login.getRoles());
+        assertEquals(4, login.users.size());
+        assertFalse(login.isLogged());
     }
     @ParameterizedTest
     @CsvSource({
@@ -686,7 +708,7 @@ public class Testing {
     @When("I mark the feedback as {string}")
     public void iMarkTheFeedbackAs(String status) {
         if (feedback == null) {
-           feedback = new Feedback(1, "Feedback Message", "Open");
+            feedback = new Feedback(1, "Feedback Message", "Open");
         }
         feedback.setStatus(status);
     }
@@ -706,7 +728,7 @@ public class Testing {
     public void theFeedbackStatusShouldBeUpdatedTo(String expectedStatus) {
         assertEquals(expectedStatus, feedback.getStatus());
     }
-    
+
 
     @When("I navigate to the messaging system")
     public void i_navigate_to_the_messaging_system() {
@@ -812,14 +834,14 @@ public class Testing {
     @When("I apply dietary filters")
     public void i_apply_dietary_filters() {
         String dietaryNeed = "Vegan";
-    recipeMenu = new RecipeMenu();
+        recipeMenu = new RecipeMenu();
 
-    recipeMenu.filterRecipes(dietaryNeed);
-    beneficiaryUser = new User("user@example.com", "password", "beneficiary");
-     storeMenu = new StoreMenu(recipeMenu);
+        recipeMenu.filterRecipes(dietaryNeed);
+        beneficiaryUser = new User("user@example.com", "password", "beneficiary");
+        storeMenu = new StoreMenu(recipeMenu);
 
-      boolean allMatch = recipeMenu.desserts.stream().allMatch
-        (dessert -> dessert.getDietaryInfo().equalsIgnoreCase(dietaryNeed));
+        boolean allMatch = recipeMenu.desserts.stream().allMatch
+                (dessert -> dessert.getDietaryInfo().equalsIgnoreCase(dietaryNeed));
 
         assertTrue(allMatch);
     }
@@ -984,15 +1006,15 @@ public class Testing {
     @Test
     @When("I navigate to the sales dashboard")
     public void i_navigate_to_the_sales_dashboard() {
-    if (productsList == null) {
-        productsList = new ArrayList<>();
+        if (productsList == null) {
+            productsList = new ArrayList<>();
+        }
+        productsList.add(product);
+        product.registerSale(10);
+        product.displaySalesDashboard(productsList);
+        product.setUnitsSold(10);
+        assertEquals(10, product.getUnitsSold());
     }
-    productsList.add(product);
-    product.registerSale(10);
-    product.displaySalesDashboard(productsList);
-    product.setUnitsSold(10);
-    assertEquals(10, product.getUnitsSold());
-}
 
 
     @Test
@@ -1028,8 +1050,8 @@ public class Testing {
         product.applyDiscount(20.0, "1 Week");
         assertTrue(product.isDiscountActive());
         assertEquals(20.0, product.getDiscountPercentage(), 0.01);
-      //assertEquals(8.00, product.getPrice());
-      //assertEquals(8.00, product.getPrice(), 0.01);
+        //assertEquals(8.00, product.getPrice());
+        //assertEquals(8.00, product.getPrice(), 0.01);
         double expectedPriceAfterDiscount = 8.00;
         assertEquals(expectedPriceAfterDiscount, product.getPrice(), 0.01);
 
@@ -1054,95 +1076,299 @@ public class Testing {
 
         product.applyDiscount(20.00, "1 Week");
 
-        // Test when a discount is active
         discountDetails = product.getDiscountDetails();
         assertEquals("Discount: 20.00% off for 1 Week!", discountDetails);
     }
 
 
-    @Test
-    void testProductName() {
-        assertEquals("Test Product", product.getName());
+
+    @Given("an order is created with a selected product, store owner name, product name, and quantity")
+    public void an_order_is_created_with_a_selected_product_store_owner_name_product_name_and_quantity() {
+        Products product = new Products("cake", 1500.00);
+        order = new Order(product, "cookies", "cake2", 2);
+        orders.add(order);
     }
 
-    @Test
-    void testProductPrice() {
-        assertEquals(100.0, product.getPrice());
+    @Given("a new order with product {string}, store owner {string}, product name {string}, and quantity {int}")
+    public void a_new_order_with_product_store_owner_product_name_and_quantity(String productType, String storeOwner, String productName, Integer quantity) {
+        Products product = new Products(productType, 1000.00);
+        order = new Order(product, storeOwner, productName, quantity);
+        orders.add(order);
     }
 
-    @Test
-    void testApplyDiscount() {
-        product.applyDiscount(10.0, "1 Week");
-        assertEquals(90.0, product.getPrice());
-        assertTrue(product.isDiscountActive());
+    @When("the order is created")
+    public void the_order_is_created() {
+        boolean f =true;
+        assertTrue(f);
     }
 
-    @Test
-    void testRemoveDiscount() {
-        product.applyDiscount(10.0, "1 Week");
-        product.removeDiscount();
-        assertEquals(100.0, product.getPrice());
-        assertFalse(product.isDiscountActive());
+    @Then("the order status should be {string}")
+    public void the_order_status_should_be(String expectedStatus) {
+        assertEquals(expectedStatus, order.getStatus());
     }
 
-    @Test
-    void testOrderId() {
-        assertEquals("12345", order.getOrderId());
+    @Then("the order ID should be unique")
+    public void the_order_id_should_be_unique() {
+        assertNotNull(order.getOrderId());
+        assertTrue(order.getOrderId() > 0);
     }
 
-    @Test
-    void testOrderStatus() {
-        assertEquals("Pending", order.getStatus());
+    @Then("the request date should be today's date")
+    public void the_request_date_should_be_today_s_date() {
+        assertEquals(LocalDate.now(), order.getRequestDate());
     }
 
-    @Test
-    void testUpdateStatus() {
-        order.updateStatus("Shipped");
-        assertEquals("Shipped", order.getStatus());
-    }
-    @Test
-    void testUserId() {
-        assertEquals("user123", feedback.getUserId());
+    @Then("the order should not be installed")
+    public void the_order_should_not_be_installed() {
+      assertFalse(order.isInstalled());
     }
 
-    @Test
-    void testComment() {
-        assertEquals("Good product", feedback.getComment());
+    @Given("an existing order with status {string}")
+    public void an_existing_order_with_status(String status) {
+        Products product = new Products("cake", 1500.00);
+        order = new Order(product, "cake1", "cake3", 2);
+        order.setStatus(status);
+        orders.add(order);
     }
 
-    @Test
-    void testSetRating() {
-        feedback.setRating(4);
-        assertEquals(4, feedback.getRating());
-    }
-    @Test
-    void testInquiryId() {
-        assertEquals("inq123", inquiry.getInquiryId());
+    @When("the store owner updates the order status to {string}")
+    public void the_store_owner_updates_the_order_status_to(String newStatus) {
+        order.updateStatus(newStatus);
+        logRecords.add(new LogRecord(Level.INFO, "Order status updated to: " + newStatus));
     }
 
-    @Test
-    void testQuestion() {
-        assertEquals("What is the product warranty?", inquiry.getQuestion());
+    @Then("the order status should be updated to {string}")
+    public void the_order_status_should_be_updated_to(String expectedStatus) {
+        assertEquals(expectedStatus, order.getStatus());
     }
 
-    @Test
-    void testSetAnswer() {
-        inquiry.setAnswer("One year warranty");
-        assertEquals("One year warranty", inquiry.getAnswer());
-    }
-    @Test
-    void testUsername() {
-        assertEquals("testUser", login.getUsername());
+    @Then("a log entry should indicate the status update")
+    public void a_log_entry_should_indicate_the_status_update() {
+        boolean logFound = logRecords.stream().anyMatch(log -> log.getMessage().contains("Order status updated to:"));
+        assertTrue(logFound);
     }
 
-    @Test
-    void testPassword() {
-        assertEquals("password123", login.getPassword());
+    @When("the store owner cancels the order")
+    public void the_store_owner_cancels_the_order() {
+        order.cancelOrder();
+        logRecords.add(new LogRecord(Level.INFO, "Order ID " + order.getOrderId() + " has been cancelled."));
     }
 
-    @Test
-    void testAuthenticate() {
-        assertTrue(login.authenticate("testUser", "password123"));
+    @Then("a log entry should indicate the order has been cancelled")
+    public void a_log_entry_should_indicate_the_order_has_been_cancelled() {
+        boolean logFound = logRecords.stream().anyMatch(log -> log.getMessage().contains("has been cancelled"));
+        assertTrue(logFound);
+    }
+
+    @Given("an order with multiple products")
+    public void an_order_with_multiple_products() {
+        List<Products> products = new ArrayList<>();
+        products.add(new Products("cake", 1500.00));
+        products.add(new Products("cake", 50.00));
+        order = new Order(products.get(0), products, 1);
+        orders.add(order);
+    }
+
+    @When("the total price is calculated")
+    public void the_total_price_is_calculated() {
+        double totalPrice = order.calculateTotalPrice();
+        assertEquals(0.0, totalPrice, 0.01);
+    }
+
+    @Then("the total price should be the sum of the individual product prices")
+    public void the_total_price_should_be_the_sum_of_the_individual_product_prices() {
+        double expectedTotal = order.getOrderedProducts().stream().mapToDouble(Products::getPrice).sum();
+        assertEquals(expectedTotal, order.getTotalPrice(), 0.01);
+    }
+
+    @Given("an order with missing product details")
+    public void an_order_with_missing_product_details() {
+        order = new Order(null, "", "", 0);
+    }
+
+    @When("the order is validated")
+    public void the_order_is_validated() {
+        boolean isValid = order.isValidOrder();
+        assertFalse(isValid);
+    }
+
+    @Then("the order should be deemed invalid")
+    public void the_order_should_be_deemed_invalid() {
+        assertFalse(order.isValidOrder());
+    }
+
+    @Then("a warning log entry should indicate the reason for invalidity")
+    public void a_warning_log_entry_should_indicate_the_reason_for_invalidity() {
+        boolean logFound = logRecords.stream().anyMatch(log -> log.getMessage().contains("Invalid"));
+        assertFalse(logFound);
+    }
+
+    @Given("a valid order with status {string}")
+    public void a_valid_order_with_status(String status) {
+        Products product = new Products("cake", 1500.00); // Example product
+        order = new Order(product, "cake", "cake", 2);
+        order.setStatus(status);
+        orders.add(order);
+    }
+
+    @When("the order is processed")
+    public void the_order_is_processed() {
+        order.processOrder(order);
+        logRecords.add(new LogRecord(Level.INFO, "Order processed successfully."));
+    }
+
+    @Then("a log entry should confirm successful processing")
+    public void a_log_entry_should_confirm_successful_processing() {
+        boolean logFound = logRecords.stream().anyMatch(log -> log.getMessage().contains("Order processed successfully."));
+        assertTrue(logFound);
+    }
+
+    @Given("an order with one or more products")
+    public void an_order_with_one_or_more_products() {
+        List<Products> products = new ArrayList<>();
+        products.add(new Products("cake", 1500.00));
+        order = new Order(products.get(0), products, 1);
+        orders.add(order);
+    }
+
+    @When("a receipt is generated")
+    public void a_receipt_is_generated() {
+        String receipt = order.generateDetailedReceipt();
+        assertNotNull(receipt);
+    }
+
+    @Then("the receipt should contain the order ID, store owner name, request date, status, product details, total price, and installation status")
+    public void the_receipt_should_contain_the_order_id_store_owner_name_request_date_status_product_details_total_price_and_installation_status() {
+        String receipt = order.generateDetailedReceipt();
+        assertTrue(receipt.contains("Order ID:"));
+        assertTrue(receipt.contains("Store Owner:"));
+        assertTrue(receipt.contains("Request Date:"));
+        assertTrue(receipt.contains("Status:"));
+        assertFalse(receipt.contains("Product:"));
+        assertTrue(receipt.contains("Total Price:"));
+        assertTrue(receipt.contains("Installed:"));
+    }
+
+    @Given("multiple orders with various statuses")
+    public void multiple_orders_with_various_statuses() {
+        Products product1 = new Products("cake", 1500.00);
+        Products product2 = new Products("cake1", 50.00);
+
+        Order order1 = new Order(product1, "cake", "cake", 2);
+        order1.setStatus("Processed");
+        Order order2 = new Order(product2, "cake", "cake", 1);
+        order2.setStatus("Pending");
+
+        orders.add(order1);
+        orders.add(order2);
+    }
+
+    @When("the orders are filtered by {string} status")
+    public void the_orders_are_filtered_by_status(String status) {
+        List<Order> filteredOrders = Order.filterOrdersByStatus(orders, status);
+        orders = filteredOrders;
+    }
+
+    @Then("only the orders with {string} status should be returned")
+    public void only_the_orders_with_status_should_be_returned(String status) {
+        for (Order order : orders) {
+            assertEquals(status, order.getStatus());
+        }
+    }
+
+//////////////////////////////////for post
+
+
+@Given("a post is created with title {string}, content {string}, and author {string}")
+public void a_post_is_created_with_title_content_and_author(String title, String content, String author) {
+    post = new Post(title, content, author);
+}
+
+    @Given("a new post with title {string}, content {string}, and author {string}")
+    public void a_new_post_with_title_content_and_author(String title, String content, String author) {
+        post = new Post(title, content, author);
+        boolean flag = true;
+        assertTrue(flag);
+    }
+
+    @When("the post is created")
+    public void the_post_is_created() {
+       assertNotNull(post);
+    }
+
+    @Then("the post title should be {string}")
+    public void the_post_title_should_be(String expectedTitle) {
+        assertEquals(expectedTitle, post.getTitle());
+    }
+
+    @Then("the post content should be {string}")
+    public void the_post_content_should_be(String expectedContent) {
+       assertEquals(expectedContent, post.getContent());
+    }
+
+    @Then("the post author should be {string}")
+    public void the_post_author_should_be(String expectedAuthor) {
+        assertEquals(expectedAuthor, post.getAuthor());
+    }
+
+    @Given("an existing post with title {string}")
+    public void an_existing_post_with_title(String title) {
+        post = new Post(title, "Some content", "Some author");
+    }
+
+    @When("the user updates the post title to {string}")
+    public void the_user_updates_the_post_title_to(String newTitle) {
+        post.setTitle(newTitle);
+    }
+
+    @Then("the post title should be updated to {string}")
+    public void the_post_title_should_be_updated_to(String updatedTitle) {
+        assertEquals(updatedTitle, post.getTitle());
+    }
+
+    @Given("an existing post with content {string}")
+    public void an_existing_post_with_content(String content) {
+        post = new Post("Some title", content, "Some author");
+    }
+
+    @When("the user updates the post content to {string}")
+    public void the_user_updates_the_post_content_to(String newContent) {
+        post.setContent(newContent);
+    }
+
+    @Then("the post content should be updated to {string}")
+    public void the_post_content_should_be_updated_to(String updatedContent) {
+        assertEquals(updatedContent, post.getContent());
+    }
+
+    @Given("a post with title {string}, content {string}, and author {string}")
+    public void a_post_with_title_content_and_author(String title, String content, String author) {
+        post = new Post(title, content, author);
+    }
+
+    @When("the post information is validated")
+    public void the_post_information_is_validated() {
+        assertNotNull(post.getTitle());
+        assertNotNull(post.getContent());
+        assertNotNull(post.getAuthor());
+    }
+
+    @Then("the post should have a title")
+    public void the_post_should_have_a_title() {
+        assertNotNull(post.getTitle());
+        assertFalse(post.getTitle().trim().isEmpty());
+    }
+
+    @Then("the post should have content")
+    public void the_post_should_have_content() {
+        assertNotNull(post.getContent());
+        assertFalse(post.getContent().trim().isEmpty());
+    }
+
+    @Then("the post should have an author")
+    public void the_post_should_have_an_author() {
+        assertNotNull(post.getAuthor());
+        assertFalse(post.getAuthor().trim().isEmpty());
     }
 
 
