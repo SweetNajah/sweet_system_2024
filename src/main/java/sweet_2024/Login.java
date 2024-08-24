@@ -49,7 +49,7 @@ public class Login {
         catch (Exception e) {
             LOGGER.log(Level.SEVERE, "An unexpected error occurred during logger configuration", e);
         }
-        User u1=new User("ali.dawood@gmail.com","123456", adminString);
+        User u1=new User("alidawood@gmail.com","123456", adminString);
         User u2=new User("loay@gmail.com","654321", installerString);
         User u3=new User("abdalbaset@gmail.com","987654", installerString);
         User u4=new User("ali55@gmail.com","123123", adminString);

@@ -1,6 +1,5 @@
 package sweet_2024;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -50,6 +49,10 @@ public class Products {
         this.unitsSold = 0;
         this.totalRevenue = 0.0;
         this.isDiscountActive = false;
+    }
+
+    public Products(String cake, double v) {
+
     }
 
 

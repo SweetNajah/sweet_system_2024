@@ -16,7 +16,12 @@ public class Supply {
         this.quantity = quantityRequested;
         this.status = status;
     }
-
+    public Supply(String name, int quantity) {
+        this.name = name;
+        this.quantity = quantity;
+        this.price = 0.0;
+        this.status = "Pending";
+    }
     public String getName() {
         return name;
     }
