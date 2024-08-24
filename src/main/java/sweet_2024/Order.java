@@ -1,5 +1,6 @@
 package sweet_2024;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.time.LocalDate;
@@ -58,7 +59,24 @@ public class Order {
         this.isInstalled = false;
     }
 
-    private double calculateTotalPrice() {
+
+    public static List<Order> filterOrdersByStatus(List<Order> orders, String status) {
+        List<Order> filteredOrders = new ArrayList<>();
+
+        if (orders == null || status == null || status.trim().isEmpty()) {
+            return filteredOrders; // Return an empty list if input is invalid
+        }
+
+        for (Order order : orders) {
+            if (order.getStatus().equalsIgnoreCase(status)) {
+                filteredOrders.add(order);
+            }
+        }
+
+        return filteredOrders;
+    }
+
+    double calculateTotalPrice() {
         double total = 0.0;
         if (orderedProducts != null) {
             for (Products product : orderedProducts) {
@@ -151,6 +169,65 @@ public class Order {
     public void updateStatus(String newStatus) {
         this.status = newStatus;
         LOGGER.info("Order status updated to: " + newStatus);
+    }
+
+    public void cancelOrder() {
+        if ("Pending".equals(this.status)) {
+            this.status = "Cancelled";
+            LOGGER.info("Order ID " + orderId + " has been cancelled.");
+        } else {
+            LOGGER.warning("Order ID " + orderId + " cannot be cancelled. Current status: " + status);
+        }
+    }
+
+    
+    public String generateDetailedReceipt() {
+        StringBuilder receipt = new StringBuilder();
+
+        receipt.append("Order Receipt\n")
+                .append("Order ID: ").append(orderId).append("\n")
+                .append("Store Owner: ").append(storeOwnerName != null ? storeOwnerName : "N/A").append("\n")
+                .append("Request Date: ").append(requestDate != null ? requestDate.toString() : "N/A").append("\n")
+                .append("Status: ").append(status != null ? status : "N/A").append("\n\n");
+
+        if (orderedProducts != null && !orderedProducts.isEmpty()) {
+            receipt.append("Ordered Products:\n");
+            for (Products product : orderedProducts) {
+                receipt.append("Product Name: ").append(product.getName())
+                        .append(", Price: $").append(product.getPrice())
+                        .append("\n");
+            }
+        } else {
+            receipt.append("Product: ").append(productName != null ? productName : "N/A")
+                    .append("\nQuantity: ").append(quantity)
+                    .append("\n");
+        }
+
+        receipt.append("\nTotal Price: $").append(String.format("%.2f", totalPrice))
+                .append("\nInstalled: ").append(isInstalled ? "Yes" : "No").append("\n");
+
+        return receipt.toString();
+    }
+
+
+    public boolean isValidOrder() {
+        if (selectedProduct == null) {
+            LOGGER.warning("Invalid order: selected product is null.");
+            return false;
+        }
+        if (storeOwnerName == null || storeOwnerName.trim().isEmpty()) {
+            LOGGER.warning("Invalid order: store owner name is missing.");
+            return false;
+        }
+        if (productName == null || productName.trim().isEmpty()) {
+            LOGGER.warning("Invalid order: product name is missing.");
+            return false;
+        }
+        if (quantity <= 0) {
+            LOGGER.warning("Invalid order: quantity must be greater than zero.");
+            return false;
+        }
+        return true;
     }
 
 }

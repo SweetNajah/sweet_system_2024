@@ -3,10 +3,14 @@ package sweet_2024;
 public class Post {
     private String title;
     private String content;
+    private String author;
 
-    public Post(String title, String content) {
+    public Post(String title, String content, String author) {
         this.title = title;
         this.content = content;
+        this.author = author;
+    }
+    public Post() {
     }
 
     public String getTitle() {
@@ -23,7 +27,13 @@ public class Post {
     public void setContent(String content) {
         this.content = content;
     }
+    public String getAuthor() {
+        return author;
+    }
 
+    public void setAuthor(String author) {
+        this.author = author;
+    }
     @Override
     public String toString() {
         return "Post{" +

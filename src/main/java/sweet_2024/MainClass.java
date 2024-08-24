@@ -622,7 +622,9 @@ public class MainClass {
         String title = scanner.nextLine();
         LOGGER.info("Enter post content:");
         String content = scanner.nextLine();
-        Post post = new Post(title, content);
+        LOGGER.info("Enter post author:");
+        String author = scanner.nextLine();
+        Post post = new Post(title, content,author);
         sweetSystem.addPost(post);
         LOGGER.info("Post added successfully.");
     }
