@@ -22,7 +22,7 @@ public class Products {
     private String productName;
     private String productDescription;
     private String sku;
-    private static final boolean IS_LOGGED_IN = true;
+    boolean isLoggedIn=true;
     private boolean isDiscountActive;
     private Products products;
     protected List<Integer> rates = new ArrayList<>();
@@ -77,7 +77,7 @@ public class Products {
 
     public void saveSweet(String sweet, String pageName) {
         if (navigateToPage(pageName)) {
-            if (IS_LOGGED_IN) {
+            if (isLoggedIn) {
                 Sweetes.add(sweet);
                 LOGGER.log(Level.INFO, "{0} has been added to the list.\n", sweet);
             } else {
@@ -178,7 +178,7 @@ public class Products {
     }
 
     public void deleteSweet(String sweet) {
-        if (IS_LOGGED_IN) {
+        if (isLoggedIn) {
             if (Sweets.contains(sweet)) {
                 Sweets.remove(sweet);
                 LOGGER.info(sweet + " has been removed from the list."+ "\n");
@@ -191,7 +191,7 @@ public class Products {
     }
 
     public void updateSweet(String oldSweet, String newSweet) {
-        if (IS_LOGGED_IN) {
+        if (isLoggedIn) {
             int index = Sweets.indexOf(oldSweet);
             if (index != -1) {
                 Sweets.set(index, newSweet);
@@ -205,7 +205,7 @@ public class Products {
     }
 
     public void listSweets() {
-        if (IS_LOGGED_IN) {
+        if (isLoggedIn) {
             LOGGER.info("Current sweets in the list:"+ "\n");
             for (String sweet : Sweets) {
                 LOGGER.info("- " + sweet);

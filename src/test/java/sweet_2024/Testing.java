@@ -964,7 +964,7 @@ public class Testing {
     @Test
     @When("makes changes to the product details")
     public void makes_changes_to_the_product_details() {
-        product.is_logged_in = true;
+        product.isLoggedIn = true;
         String oldSweet = "Chocolate";
         String newSweet = "Vanilla";
 
@@ -983,7 +983,7 @@ public class Testing {
         assertFalse(product.Sweetes.contains(newSweet));
         assertFalse(product.Sweetes.contains("Vanilla"));
 
-        product.is_logged_in = false;
+        product.isLoggedIn = false;
         oldSweet = "Vanilla";
         newSweet = "Strawberry";
 
