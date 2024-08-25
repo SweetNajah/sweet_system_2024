@@ -4,22 +4,24 @@ public class Feedback {
 
 
     private final int id;
-    private String userId;    private String status;
+    private String userId;
+    private String status;
     private User user;
     private Products products;
     private String feedbackMessage;
     private String response;
     private int rating;
     private static int idCounter = 1;
+    private static final String STATUS_PENDING = "Pending";
 
     public Feedback(User user, Products products, String feedbackMessage, int rating) {
         this.id = idCounter++;
         this.user = user;
         this.feedbackMessage = feedbackMessage;
         this.rating = rating;
-        this.response = ""; // Initialize with no response
+        this.response = "";
         this.products = products;
-        this.status = "Pending";
+        this.status = STATUS_PENDING;
         this.userId = (user != null) ? user.getUserName() : "Anonymous";
     }
 
@@ -28,7 +30,7 @@ public class Feedback {
         this.id = id;
         this.feedbackMessage = feedbackMessage;
         this.rating = 0;
-        this.status = "Pending";
+        this.status = STATUS_PENDING;
     }
 
     public Feedback(int i, String feedbackMessage, String open) {
@@ -39,7 +41,7 @@ public class Feedback {
 
     public Feedback() {
         this.id = idCounter++;
-        this.status = "Pending";
+        this.status = STATUS_PENDING;
     }
     public void setUserId(String userId) {
         this.userId = userId;

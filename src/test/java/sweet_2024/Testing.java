@@ -964,7 +964,7 @@ public class Testing {
     @Test
     @When("makes changes to the product details")
     public void makes_changes_to_the_product_details() {
-        product.is_logged_in = true;
+        product.isLoggedIn = true;
         String oldSweet = "Chocolate";
         String newSweet = "Vanilla";
 
@@ -983,7 +983,7 @@ public class Testing {
         assertFalse(product.Sweetes.contains(newSweet));
         assertFalse(product.Sweetes.contains("Vanilla"));
 
-        product.is_logged_in = false;
+        product.isLoggedIn = false;
         oldSweet = "Vanilla";
         newSweet = "Strawberry";
 
@@ -1084,8 +1084,8 @@ public class Testing {
 
     @Given("an order is created with a selected product, store owner name, product name, and quantity")
     public void an_order_is_created_with_a_selected_product_store_owner_name_product_name_and_quantity() {
-        Products product = new Products("cake", 1500.00);
-        order = new Order(product, "cookies", "cake2", 2);
+        Products selectedProduct = new Products("cake", 1500.00);
+        order = new Order(selectedProduct, "cookies", "cake2", 2);
         orders.add(order);
     }
 

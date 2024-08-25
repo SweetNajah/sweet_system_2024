@@ -2,6 +2,7 @@ package sweet_2024;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.time.LocalDate;
 import java.util.stream.Collectors;
@@ -63,12 +64,12 @@ public class Order {
 
     public static List<Order> filterOrdersByStatus(List<Order> orders, String status) {
         if (orders == null || status == null || status.trim().isEmpty()) {
-            return new ArrayList<>(); // Return an empty list if input is invalid
+            return new ArrayList<>();
         }
 
         return orders.stream()
                 .filter(order -> order.getStatus().equalsIgnoreCase(status))
-                .collect(Collectors.toList());
+                .toList();
     }
 
 
@@ -159,17 +160,18 @@ public class Order {
 
     public void updateStatus(String newStatus) {
         this.status = newStatus;
-        LOGGER.info("Order status updated to: " + newStatus);
+        LOGGER.log(Level.INFO, "Order status updated to: {0}", newStatus);
     }
 
     public void cancelOrder() {
         if ("Pending".equals(this.status)) {
             this.status = "Cancelled";
-            LOGGER.info("Order ID " + orderId + " has been cancelled.");
+            LOGGER.log(Level.INFO, "Order ID {0} has been cancelled.", orderId);
         } else {
-            LOGGER.warning("Order ID " + orderId + " cannot be cancelled. Current status: " + status);
+            LOGGER.log(Level.WARNING, "Order ID {0} cannot be cancelled. Current status: {1}", new Object[]{orderId, status});
         }
     }
+
 
     public String generateDetailedReceipt() {
         StringBuilder receipt = new StringBuilder();
