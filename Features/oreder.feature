@@ -7,7 +7,7 @@ Feature: Order Management
     Given an order is created with a selected product, store owner name, product name, and quantity
 
   Scenario: Create an Order with Valid Details
-    Given a new order with product "Laptop", store owner "Alice", product name "Dell XPS", and quantity 2
+    Given a new order with product "Chocolate Cake", store owner "Alice", product name "Cake", and quantity 2
     When the order is created
     Then the order status should be "Pending"
     And the order ID should be unique
