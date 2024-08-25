@@ -1109,7 +1109,6 @@ public class Testing {
 
     @Then("the order ID should be unique")
     public void the_order_id_should_be_unique() {
-        assertNotNull(order.getOrderId());
         assertTrue(order.getOrderId() > 0);
     }
 
