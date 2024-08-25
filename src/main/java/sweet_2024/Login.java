@@ -19,7 +19,7 @@ public class Login {
     User user;
     boolean validEmail;
     int userIndex;
-
+    private User currentUser;
     private String username;
     private String password;
 
@@ -83,7 +83,6 @@ public class Login {
                     mailing = new Mailing(user.getEmail());
                     setValidEmail(true);
                     mailing.sendVerificationCode();
-                    userIndex=users.indexOf(s);
                     return true;
                 }
             }
@@ -91,6 +90,7 @@ public class Login {
         setValidEmail(false);
         return false;
     }
+
 
     public  boolean emailValidator(String email){
         try {
@@ -203,10 +203,15 @@ public class Login {
                 this.username = username;
                 this.password = password;
                 setUser(user);
+                currentUser = user;
                 return true;
             }
         }
         return false;
+    }
+
+    public User getUser() {
+        return currentUser;
     }
 
 }

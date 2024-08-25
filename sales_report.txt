@@ -1,0 +1,6 @@
+Sales Report
+============
+SupplyRequest{supplyName='Chocolate Cake', quantityRequested=20, price=300.0, status='null'}
+SupplyRequest{supplyName='Candy Pack', quantityRequested=50, price=100.0, status='null'}
+SupplyRequest{supplyName='Sugar', quantityRequested=100, price=0.0, status='Pending'}
+SupplyRequest{supplyName='Flour', quantityRequested=200, price=0.0, status='Approved'}

@@ -18,3 +18,12 @@ Feature: Communication and Feedback
     And I provide my feedback
     Then my feedback should be submitted
 
+  Scenario: Receiving notification after successful order placement
+    Given I am logged in as a customer
+    When I place an order successfully
+    Then I should receive a confirmation notification "Your order has been placed successfully!"
+
+  Scenario: Feedback submission notification
+    Given I am logged in as a customer
+    When I submit feedback for a product
+    Then I should receive a notification "Thank you for your feedback!"

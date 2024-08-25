@@ -36,3 +36,15 @@ Feature: Product Management
     And the discount details should be visible to customers
 
 
+  Scenario: Verifying data integrity after order placement
+    Given I am logged in as a customer
+    And I place an order for a product
+    When the order is processed
+    Then the product inventory should reflect the updated quantity
+    And the order details should be accurate in the order history
+
+  Scenario: Consistent reporting after multiple updates
+    Given I am logged in as a store owner
+    When I update the price of several products
+    And I generate a sales report
+    Then the report should accurately reflect the updated product prices

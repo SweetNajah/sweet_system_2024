@@ -21,3 +21,13 @@ Feature: Exploration and Purchase
     And I chose the purchase option.
     Then I should be able to complete the purchase
 
+  Scenario: High load on feedback submission system
+    Given there are multiple users logged in
+    When each user submits feedback simultaneously
+    Then the system should handle all submissions without crashing
+    And each feedback should be correctly saved
+
+  Scenario: Load testing product ordering under high traffic
+    Given multiple users are accessing the store
+    When each user places an order at the same time
+    Then the system should process each order without any delays or errors
