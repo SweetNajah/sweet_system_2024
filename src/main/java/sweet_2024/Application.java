@@ -7,14 +7,13 @@ import java.util.function.Function;
 import java.util.logging.*;
 
 public class Application {
-    private static final String NO_INFORMATIONS = "There is no information";
+
     private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
     private boolean loggedIn;
     Login login;
     private User newUser;
     Report report;
     Scanner scanner = new Scanner(System.in);
-    String carname;
     private Feedback feedbackSystem;
     private RecipeMenu recipeMenu;
     private List<User> users;
@@ -25,7 +24,6 @@ public class Application {
     private List<Post> posts;
     private List<Feedback> feedbackList;
     private List<Supply> supplies;
-    private List<Products> products = new ArrayList<>();
     private List<String> dessertRecipes;
 
     public Application() {
@@ -43,7 +41,6 @@ public class Application {
         this.availableProducts = new ArrayList<>();
         this.customerOrders = new ArrayList<>();
         this.users = new ArrayList<>();
-        this.products = new ArrayList<>();
 
         this.availableProducts.add(new Products("Chocolate Bar", 50, 1.99));
         this.availableProducts.add(new Products("Vanilla Cake", 30, 15.00));
@@ -67,15 +64,15 @@ public class Application {
 
     public void markAsInstalled(Order requestId) {
         for (Order request : installationRequests) {
-
             if (request.getOrderId() == requestId.getOrderId()) {
                 request.setInstalled(true);
-                LOGGER.info("Installation request " + requestId + " marked as installed.");
+                LOGGER.log(Level.INFO, "Installation request {0} marked as installed.", requestId.getOrderId());
                 return;
             }
         }
         LOGGER.warning("Installation request not found.");
     }
+
 
     public boolean submitFeedback(String feedbackMessage, User user, Products product, int rating) {
         Feedback feedback = new Feedback(user, product, feedbackMessage, rating);
@@ -104,7 +101,7 @@ public class Application {
         LOGGER.info("Enter your password: ");
         String password = scanner.nextLine();
 
-        setUser(email, password, ""); // assuming type is not needed for login
+        setUser(email, password, "");
         if (login.login()) {
             LOGGER.info("Login successful!");
             loggedIn = true;
@@ -523,10 +520,6 @@ public class Application {
     }
 
     public String navigateToRecipesMenu() {
-        if (recipeMenu != null) {
-            return "Navigated to the recipes menu.";
-        } else {
-            return "Navigated to the recipes menu.";
-        }
+        return "Navigated to the recipes menu.";
     }
 }

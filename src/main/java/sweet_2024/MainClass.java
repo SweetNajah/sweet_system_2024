@@ -11,7 +11,7 @@ public class MainClass {
     private static final String STORE_OWNER_STRING = "Store Owner";
     private static final String SUPPLIER_STRING = "Supplier";
     private static final String CUSTOMER_STRING = "Customer";
-    private static final String INVALID_INPUT_MESSAGE = "Invalid Input";
+    private static final String INVALID_INPUT_MESSAGE = "Invalid input. Please enter a number.";
     private static final String INVALID_INFORMATION_PLEASE_TRY_AGAIN = "Invalid information! Please try again.";
     private static final String STRING = "*********************************************************************";
     private static final Logger LOGGER = Logger.getLogger(MainClass.class.getName());
@@ -272,7 +272,7 @@ public class MainClass {
             productIndex = scanner.nextInt() - 1;
             scanner.nextLine();
         } catch (InputMismatchException e) {
-            LOGGER.warning("Invalid input. Please enter a number.");
+            LOGGER.warning(INVALID_INPUT_MESSAGE);
             scanner.nextLine();
             return;
         }
@@ -287,7 +287,7 @@ public class MainClass {
             quantity = scanner.nextInt();
             scanner.nextLine();
         } catch (InputMismatchException e) {
-            LOGGER.warning("Invalid input. Please enter a number.");
+            LOGGER.warning(INVALID_INPUT_MESSAGE);
             scanner.nextLine();
             return;
         }

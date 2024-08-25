@@ -3,6 +3,7 @@ package sweet_2024;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Products {
@@ -21,7 +22,7 @@ public class Products {
     private String productName;
     private String productDescription;
     private String sku;
-    public boolean is_logged_in = true;
+    private static final boolean IS_LOGGED_IN = true;
     private boolean isDiscountActive;
     private Products products;
     protected List<Integer> rates = new ArrayList<>();
@@ -52,7 +53,12 @@ public class Products {
     }
 
     public Products(String cake, double v) {
-
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.quantity = 0;
+        this.unitsSold = 0;
+        this.totalRevenue = 0.0;
+        this.isDiscountActive = false;
     }
 
 
@@ -71,20 +77,20 @@ public class Products {
 
     public void saveSweet(String sweet, String pageName) {
         if (navigateToPage(pageName)) {
-            if (is_logged_in) {
+            if (IS_LOGGED_IN) {
                 Sweetes.add(sweet);
-                LOGGER.info(sweet + " has been added to the list."+ "\n");
+                LOGGER.log(Level.INFO, "{0} has been added to the list.\n", sweet);
             } else {
                 LOGGER.info("You need to be logged in to add a sweet."+ "\n");
             }
         } else {
-            LOGGER.info("Failed to navigate to the " + pageName + " page. Sweet not saved."+ "\n");
+            LOGGER.log(Level.INFO, "Failed to navigate to the {0} page. Sweet not saved.\n", pageName);
         }
     }
 
     public boolean navigateToPage(String pageName) {
         if (pageName != null && !pageName.isEmpty()) {
-            LOGGER.info("Navigated to " + pageName + " page.");
+            LOGGER.log(Level.INFO, "Navigated to {0} page.", pageName);
             return true;
         } else {
             LOGGER.warning("Invalid page name provided.");
@@ -172,7 +178,7 @@ public class Products {
     }
 
     public void deleteSweet(String sweet) {
-        if (is_logged_in) {
+        if (IS_LOGGED_IN) {
             if (Sweets.contains(sweet)) {
                 Sweets.remove(sweet);
                 LOGGER.info(sweet + " has been removed from the list."+ "\n");
@@ -185,7 +191,7 @@ public class Products {
     }
 
     public void updateSweet(String oldSweet, String newSweet) {
-        if (is_logged_in) {
+        if (IS_LOGGED_IN) {
             int index = Sweets.indexOf(oldSweet);
             if (index != -1) {
                 Sweets.set(index, newSweet);
@@ -199,7 +205,7 @@ public class Products {
     }
 
     public void listSweets() {
-        if (is_logged_in) {
+        if (IS_LOGGED_IN) {
             LOGGER.info("Current sweets in the list:"+ "\n");
             for (String sweet : Sweets) {
                 LOGGER.info("- " + sweet);
@@ -236,21 +242,21 @@ public class Products {
     }
 
     public void displaySalesDashboard(List<Products> productsList) {
-        LOGGER.info("Sales Dashboard:"+ "\n");
-        LOGGER.info("----------------------------------------------------"+ "\n");
+        LOGGER.info("Sales Dashboard:\n");
+        LOGGER.info("----------------------------------------------------\n");
         double totalProfits = 0.0;
-
         for (Products product : productsList) {
-            System.out.printf("Product: %s | Units Sold: %d | Revenue: $%.2f\n",
-                    product.getName(), product.getUnitsSold(), product.getTotalRevenue());
+            LOGGER.log(Level.INFO, "Product: {0} | Units Sold: {1} | Revenue: ${2,number,#.##}",
+                    new Object[]{product.getName(), product.getUnitsSold(), product.getTotalRevenue()});
+
             totalProfits += product.calculateProfit(5.0);
         }
-        LOGGER.info("----------------------------------------------------"+ "\n");
-        System.out.printf("Total Profits: $%.2f\n", totalProfits);
-        LOGGER.info("----------------------------------------------------"+ "\n");
+        LOGGER.info("----------------------------------------------------\n");
+        LOGGER.log(Level.INFO, "Total Profits: ${0,number,#.##}\n", totalProfits);
+        LOGGER.info("----------------------------------------------------\n");
         LOGGER.info("Sales Trends:");
         for (Products product : productsList) {
-            System.out.printf("Product: %s | Sales: %s\n", product.getName(), "*".repeat(product.getUnitsSold()));
+            LOGGER.log(Level.INFO, "Product: {0} | Sales: {1}");
         }
     }
 
