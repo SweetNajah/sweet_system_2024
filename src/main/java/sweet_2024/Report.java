@@ -52,21 +52,27 @@ public class Report {
 
     public boolean downloadFinancialReportAsPDF() {
         LOGGER.info("Downloading financial report as PDF...");
-
         String pdfFilePath = "financial_report.pdf";
-        try (FileWriter writer = new FileWriter(pdfFilePath)) {
-            writer.write("Financial Report\n");
-            writer.write("=================\n");
-            writer.write("Month: January | Revenue: $15000.00 | Expenses: $7000.00 | Profit: $8000.00\n");
-            writer.write("Month: February | Revenue: $12000.00 | Expenses: $5000.00 | Profit: $7000.00\n");
-            writer.write("Month: March | Revenue: $18000.00 | Expenses: $6000.00 | Profit: $12000.00\n");
+        String reportContent = formatFinancialReportAsPDF();
 
+        try (FileWriter writer = new FileWriter(pdfFilePath)) {
+            writer.write(reportContent);
             LOGGER.info("Financial report downloaded successfully as PDF.");
             return true;
         } catch (IOException e) {
             LOGGER.severe("An error occurred while downloading the report: " + e.getMessage());
             return false;
         }
+    }
+
+    private String formatFinancialReportAsPDF() {
+        StringBuilder content = new StringBuilder();
+        content.append("Financial Report\n")
+                .append("=================\n")
+                .append("Month: January | Revenue: $15000.00 | Expenses: $7000.00 | Profit: $8000.00\n")
+                .append("Month: February | Revenue: $12000.00 | Expenses: $5000.00 | Profit: $7000.00\n")
+                .append("Month: March | Revenue: $18000.00 | Expenses: $6000.00 | Profit: $12000.00\n");
+        return content.toString();
     }
 
     public String generateBestSellingProductsReport() {
@@ -179,22 +185,52 @@ public class Report {
 
 
     public void generateReport(String reportType, String filename) throws IOException {
-        String reportContent = "";
+        String reportContent = getReportContentByType(reportType);
 
-        switch (reportType) {
-            case "Financial":
-                generateFinancialReport();
-                break;
-            case "Sales":
-                generateBestSellingProductsReport();
-                break;
-            case "Inventory":
-                 generateInventoryReport();
-                break;
-            default:
-                reportContent = "No such report type available";
+        if (reportContent.isEmpty()) {
+            LOGGER.warning("No such report type available");
+            return;
         }
 
+        writeReportToFile(filename, reportContent);
+    }
+
+    private String getReportContentByType(String reportType) {
+        switch (reportType) {
+            case "Financial":
+                return generateFinancialReport();
+            case "Sales":
+                return generateBestSellingProductsReport();
+            case "Inventory":
+                return generateInventoryReportAsString();
+            default:
+                return "";
+        }
+    }
+    private String generateInventoryReportAsString() {
+        StringBuilder report = new StringBuilder();
+        report.append("Inventory Report Details:\n");
+        report.append("---------------------------------\n");
+
+        Map<String, Integer> inventoryDetails = getInventoryDetails();
+
+        for (Map.Entry<String, Integer> entry : inventoryDetails.entrySet()) {
+            report.append(String.format("%-15s %-10d units in stock%n", entry.getKey(), entry.getValue()));
+        }
+
+        report.append("---------------------------------\n");
+        report.append("Inventory report generated successfully.\n");
+        return report.toString();
+    }
+    private Map<String, Integer> getInventoryDetails() {
+        Map<String, Integer> inventoryDetails = new HashMap<>();
+        inventoryDetails.put("Product X", 150);
+        inventoryDetails.put("Product Y", 100);
+        inventoryDetails.put("Product Z", 200);
+        return inventoryDetails;
+    }
+
+    private void writeReportToFile(String filename, String reportContent) throws IOException {
         try (FileWriter writer = new FileWriter(filename)) {
             writer.write(reportContent);
             LOGGER.info("Report generated and saved successfully: " + filename);
@@ -241,17 +277,14 @@ public class Report {
     public String generateReport(String type) {
         switch (type) {
             case "Financial Report for Nablus Stores":
-                return generateFinancialReport();
             case "Financial Report for Jenin Stores":
                 return generateFinancialReport();
             case "Best-Selling Products in Nablus":
-                return generateBestSellingProductsReport();
             case "Best-Selling Products in Jenin":
                 return generateBestSellingProductsReport();
             case "Comparison of Best-Selling Products":
                 return compareBestSellingProducts();
             case "Registered Users in Nablus":
-                return generateUserStatisticsByCity();
             case "Registered Users in Jenin":
                 return generateUserStatisticsByCity();
             case "Total Registered Users":

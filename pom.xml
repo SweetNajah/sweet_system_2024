@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.organization>sweetnajah</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.cpd.exclusions>**/MainClass.java,**/Application.java,**/Dessert.java</sonar.cpd.exclusions>
+        <sonar.cpd.exclusions>**/MainClass.java</sonar.cpd.exclusions>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 

@@ -84,11 +84,11 @@ public class Products {
 
     public boolean navigateToPage(String pageName) {
         if (pageName != null && !pageName.isEmpty()) {
-            System.out.println("Navigated to " + pageName + " page.");
-            return true; // Indicate successful navigation
+            LOGGER.info("Navigated to " + pageName + " page.");
+            return true;
         } else {
-            System.out.println("Invalid page name provided.");
-            return false; // Indicate unsuccessful navigation
+            LOGGER.warning("Invalid page name provided.");
+            return false;
         }
     }
 
@@ -254,26 +254,32 @@ public class Products {
         }
     }
 
+
     public void displayBestSellingProducts(List<Products> productsList) {
         if (navigateToPage("Product Analytics")) {
-            LOGGER.info("Navigated to Product Analytics page.\n");
-            LOGGER.info("Best-Selling Products:\n");
-            LOGGER.info("----------------------------------------------------\n");
-            productsList.sort(Comparator.comparingInt(Products::getUnitsSold).reversed());
-
-            for (Products product : productsList) {
-                System.out.printf("Product: %s | Units Sold: %d | Revenue: $%.2f\n",
-                        product.getName(), product.getUnitsSold(), product.getTotalRevenue());
-                if (product == productsList.get(0)) {
-                    LOGGER.info("-> Best-Selling Product!\n");
-                }
-                if (product.getQuantity() < 10) {
-                    System.out.printf("-> Recommend Restocking: Only %d units left in stock!\n", product.getQuantity());
-                }
-            }
-            LOGGER.info("----------------------------------------------------\n");
+            logBestSellingProducts(productsList);
         } else {
             LOGGER.warning("Failed to navigate to the Product Analytics page.\n");
+        }
+    }
+    private void logBestSellingProducts(List<Products> productsList) {
+        LOGGER.info("Navigated to Product Analytics page.\n");
+        LOGGER.info("Best-Selling Products:\n");
+        LOGGER.info("----------------------------------------------------\n");
+        productsList.sort(Comparator.comparingInt(Products::getUnitsSold).reversed());
+        for (Products product : productsList) {
+            logProductDetails(product, productsList.get(0));
+        }
+        LOGGER.info("----------------------------------------------------\n");
+    }
+    private void logProductDetails(Products product, Products bestSellingProduct) {
+        LOGGER.info(String.format("Product: %s | Units Sold: %d | Revenue: $%.2f",
+                product.getName(), product.getUnitsSold(), product.getTotalRevenue()));
+        if (product == bestSellingProduct) {
+            LOGGER.info("-> Best-Selling Product!\n");
+        }
+        if (product.getQuantity() < 10) {
+            LOGGER.info(String.format("-> Recommend Restocking: Only %d units left in stock!", product.getQuantity()));
         }
     }
 

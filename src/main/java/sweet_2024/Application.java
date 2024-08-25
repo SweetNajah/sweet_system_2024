@@ -3,6 +3,7 @@ package sweet_2024;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Function;
 import java.util.logging.*;
 
 public class Application {
@@ -26,7 +27,6 @@ public class Application {
     private List<Supply> supplies;
     private List<Products> products = new ArrayList<>();
     private List<String> dessertRecipes;
-
 
     public Application() {
         this.loggedIn = false;
@@ -60,6 +60,7 @@ public class Application {
 
 
     }
+
     public List<Order> getInstallationRequests() {
         return installationRequests;
     }
@@ -217,25 +218,28 @@ public class Application {
     }
 
     public boolean removeRecipe(String name) {
-        Iterator<RecipeMenu> iterator = recipes.iterator();
-        while (iterator.hasNext()) {
-            RecipeMenu recipe = iterator.next();
-            if (recipe.getName().equalsIgnoreCase(name)) {
-                iterator.remove();
-                return true;
-            }
-        }
-        return false;
+        return removeItemByName(recipes, name, RecipeMenu::getName);
+
     }
 
-    public RecipeMenu findRecipeByName(String name) {
-        for (RecipeMenu recipe : recipes) {
-            if (recipe.getName().equalsIgnoreCase(name)) {
-                return recipe;
+    private <T> T findItemByName(List<T> itemList, String name, Function<T, String> getNameFunc) {
+        for (T item : itemList) {
+            if (getNameFunc.apply(item).equalsIgnoreCase(name)) {
+                return item;
             }
         }
         return null;
     }
+
+
+    public RecipeMenu findRecipeByName(String name) {
+        return findItemByName(recipes, name, RecipeMenu::getName);
+    }
+    public Post findPostByTitle(String title) {
+        return findItemByName(posts, title, Post::getTitle);
+    }
+
+
     public void addPost(Post post) {
         posts.add(post);
     }
@@ -244,11 +248,11 @@ public class Application {
         return posts;
     }
 
-    public boolean removePost(String title) {
-        Iterator<Post> iterator = posts.iterator();
+    private <T> boolean removeItemByName(List<T> itemList, String name, Function<T, String> getNameFunc) {
+        Iterator<T> iterator = itemList.iterator();
         while (iterator.hasNext()) {
-            Post post = iterator.next();
-            if (post.getTitle().equalsIgnoreCase(title)) {
+            T item = iterator.next();
+            if (getNameFunc.apply(item).equalsIgnoreCase(name)) {
                 iterator.remove();
                 return true;
             }
@@ -256,15 +260,12 @@ public class Application {
         return false;
     }
 
-
-    public Post findPostByTitle(String title) {
-        for (Post post : posts) {
-            if (post.getTitle().equalsIgnoreCase(title)) {
-                return post;
-            }
-        }
-        return null;
+    public boolean removePost(String title) {
+        return removeItemByName(posts, title, Post::getTitle);
     }
+
+
+
 
     public List<Feedback> getFeedback() {
         return feedbackList;
@@ -301,7 +302,7 @@ public class Application {
             }
         }
         LOGGER.warning("No inventory item found with the name: " + itemName);
-        return false; // No item found
+        return false;
     }
 
     public List<Products> getInventoryItems() {
@@ -440,29 +441,29 @@ public class Application {
     }
 
     public boolean report(String reportType, String filename) {
-        String reportContent = "";
-
-        switch (reportType) {
-            case "Sales":
-                reportContent = generateSalesReport();
-                break;
-            case "Product rates":
-                reportContent = generateProductRatesReport();
-                break;
-            case "Category products":
-                reportContent = generateCategoryProductsReport();
-                break;
-            case "Rates and reviews":
-                reportContent = generateRatesAndReviewsReport();
-                break;
-            default:
-                LOGGER.warning("Invalid report type: " + reportType);
-                return false;
+        String reportContent = generateReportContent(reportType);
+        if (reportContent.isEmpty()) {
+            LOGGER.warning("Invalid report type: " + reportType);
+            return false;
         }
 
         return printTextToFile(filename, reportContent);
     }
 
+    private String generateReportContent(String reportType) {
+        switch (reportType) {
+            case "Sales":
+                return generateSalesReport();
+            case "Product rates":
+                return generateProductRatesReport();
+            case "Category products":
+                return generateCategoryProductsReport();
+            case "Rates and reviews":
+                return generateRatesAndReviewsReport();
+            default:
+                return "";
+        }
+    }
     private String generateSalesReport() {
         StringBuilder report = new StringBuilder();
         report.append("Sales Report\n");

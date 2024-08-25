@@ -67,9 +67,11 @@ public class Feedback {
 
     public void setUser(User user) {
         this.user = user;
-        if (user != null) {
-            this.userId = user.getUserName();
-        }
+        updateUserName();
+    }
+
+    private void updateUserName() {
+        this.userId = (user != null) ? user.getUserName() : "Anonymous";
     }
 
     public Products getProduct() {
@@ -78,6 +80,7 @@ public class Feedback {
 
     public void setProduct(Products products) {
         this.products = products;
+        updateProductRating(products);
     }
 
     public String getFeedbackMessage() {
@@ -101,27 +104,34 @@ public class Feedback {
     }
 
     public void setRating(int rating) {
-        if(rating >= 0 && rating <= 5){
+        if (rating >= 0 && rating <= 5) {
             this.rating = rating;
-        }
-        else if (rating > 5){
+        } else if (rating > 5) {
             this.rating = 5;
-        }
-        else
+        } else {
             this.rating = 0;
+        }
     }
+
+
+
+
 
     private void addFeedbackToProduct() {
+        if (products == null) {
+            return;
+        }
         products.reviews.add(feedbackMessage);
         products.rates.add(rating);
-        updateProductRating();
+        updateProductRating(products);
     }
 
-    private void updateProductRating() {
-        int sum = 0;
-        for (int rate : products.rates) {
-            sum += rate;
+    private void updateProductRating(Products products) {
+        if (products.rates.isEmpty()) {
+            products.rateAvg = 0;
+            return;
         }
+        int sum = products.rates.stream().mapToInt(Integer::intValue).sum();
         products.rateAvg = sum / (float) products.rates.size();
     }
 

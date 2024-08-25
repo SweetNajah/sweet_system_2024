@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 public class Order {
     private static final Logger LOGGER = Logger.getLogger(Order.class.getName());
@@ -61,30 +62,20 @@ public class Order {
 
 
     public static List<Order> filterOrdersByStatus(List<Order> orders, String status) {
-        List<Order> filteredOrders = new ArrayList<>();
-
         if (orders == null || status == null || status.trim().isEmpty()) {
-            return filteredOrders; // Return an empty list if input is invalid
+            return new ArrayList<>(); // Return an empty list if input is invalid
         }
 
-        for (Order order : orders) {
-            if (order.getStatus().equalsIgnoreCase(status)) {
-                filteredOrders.add(order);
-            }
-        }
-
-        return filteredOrders;
+        return orders.stream()
+                .filter(order -> order.getStatus().equalsIgnoreCase(status))
+                .collect(Collectors.toList());
     }
+
 
     double calculateTotalPrice() {
-        double total = 0.0;
-        if (orderedProducts != null) {
-            for (Products product : orderedProducts) {
-                total += product.getPrice();
-            }
-        }
-        return total;
+        return orderedProducts != null ? orderedProducts.stream().mapToDouble(Products::getPrice).sum() : 0.0;
     }
+
 
     public List<Products> getOrderedProducts() {
         return orderedProducts;
@@ -180,16 +171,24 @@ public class Order {
         }
     }
 
-    
     public String generateDetailedReceipt() {
         StringBuilder receipt = new StringBuilder();
+        appendBasicReceiptInfo(receipt);
+        appendProductDetails(receipt);
+        appendTotalPriceAndInstallation(receipt);
 
+        return receipt.toString();
+    }
+
+    private void appendBasicReceiptInfo(StringBuilder receipt) {
         receipt.append("Order Receipt\n")
                 .append("Order ID: ").append(orderId).append("\n")
                 .append("Store Owner: ").append(storeOwnerName != null ? storeOwnerName : "N/A").append("\n")
                 .append("Request Date: ").append(requestDate != null ? requestDate.toString() : "N/A").append("\n")
                 .append("Status: ").append(status != null ? status : "N/A").append("\n\n");
+    }
 
+    private void appendProductDetails(StringBuilder receipt) {
         if (orderedProducts != null && !orderedProducts.isEmpty()) {
             receipt.append("Ordered Products:\n");
             for (Products product : orderedProducts) {
@@ -202,32 +201,41 @@ public class Order {
                     .append("\nQuantity: ").append(quantity)
                     .append("\n");
         }
+    }
 
+    private void appendTotalPriceAndInstallation(StringBuilder receipt) {
         receipt.append("\nTotal Price: $").append(String.format("%.2f", totalPrice))
                 .append("\nInstalled: ").append(isInstalled ? "Yes" : "No").append("\n");
-
-        return receipt.toString();
     }
 
 
     public boolean isValidOrder() {
         if (selectedProduct == null) {
-            LOGGER.warning("Invalid order: selected product is null.");
+            logInvalidOrder("selected product is null.");
             return false;
         }
-        if (storeOwnerName == null || storeOwnerName.trim().isEmpty()) {
-            LOGGER.warning("Invalid order: store owner name is missing.");
+        if (isNullOrEmpty(storeOwnerName)) {
+            logInvalidOrder("store owner name is missing.");
             return false;
         }
-        if (productName == null || productName.trim().isEmpty()) {
-            LOGGER.warning("Invalid order: product name is missing.");
+        if (isNullOrEmpty(productName)) {
+            logInvalidOrder("product name is missing.");
             return false;
         }
         if (quantity <= 0) {
-            LOGGER.warning("Invalid order: quantity must be greater than zero.");
+            logInvalidOrder("quantity must be greater than zero.");
             return false;
         }
         return true;
     }
+
+    private void logInvalidOrder(String message) {
+        LOGGER.warning("Invalid order: " + message);
+    }
+
+    private boolean isNullOrEmpty(String str) {
+        return str == null || str.trim().isEmpty();
+    }
+
 
 }
