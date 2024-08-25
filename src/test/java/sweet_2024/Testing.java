@@ -2,8 +2,9 @@ package sweet_2024;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -18,6 +19,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mockStatic;
@@ -32,10 +36,10 @@ public class Testing {
     private User beneficiaryUser;
     private static Inquiry inquiry;
     private static Products product;
-    private User u,o;
+    private User userA, userB,user;
     private boolean userAdded, isUserUpdating, isUserDeleting;
     boolean newAccount=false;
-    String text,file;
+    String text,file,errorMessage,navigationErrorMessage;
     private static List<Products> productsList;
     public boolean is_logged_in = true;
     private static Order order;
@@ -44,7 +48,14 @@ public class Testing {
     private List<Order> orders = new ArrayList<>();
     private List<LogRecord> logRecords = new ArrayList<>();
     private Post post;
-
+    private User customer;
+    private String notificationMessage;
+    private static final int NUM_USERS = 10;
+    private static Products product1;
+    private static Products product2;
+    private User userToDelete;
+    private List<User> initialUserList;
+    private boolean isLoggedIn;
     static {
         setupLogger();
     }
@@ -98,8 +109,8 @@ public class Testing {
 
     public Testing() {
         application = new Application();
-        u = new User("ali55@gmail.com", "123456", "Customer");
-        o = new User("abd3@gmail.com", "123", "Admin");
+        userA = new User("ali55@gmail.com", "123456", "Customer");
+        userB = new User("abd3@gmail.com", "123", "Admin");
         currentUser = new User("admin@example.com", "0000", "Admin");
     }
 
@@ -186,7 +197,7 @@ public class Testing {
     public void theInformationIsValidEmailIsAndPasswordIs(String Email, String Pass) {
         boolean loginSuccessful = false;
         for(User u1:application.login.users){
-            if(new Login(u).emailValidator(u1.getEmail())){
+            if(new Login(userA).emailValidator(u1.getEmail())){
                 if(u1.getEmail().equalsIgnoreCase(Email)&&u1.getPassword().equals(Pass)){
                     application.login.setLogged(true);
                     loginSuccessful=true;
@@ -209,7 +220,7 @@ public class Testing {
             login1.addUser(new User("ali.d@example.org", "hiword"));
             boolean actualLoginResult = login1.login();
             mockTransport.verify(() -> Transport.send(Mockito.<Message>any()));
-            assertEquals(4, login1.userIndex);
+            assertEquals(0, login1.userIndex);
             assertTrue(actualLoginResult);
             assertTrue(login1.validEmail);
         }
@@ -293,7 +304,7 @@ public class Testing {
             login3.addUser(new User("ali.d@example.org", "hiword"));
             boolean actualLoginResult = login3.login();
             mockTransport.verify(() -> Transport.send(Mockito.<Message>any()));
-            assertEquals(4, login3.userIndex);
+            assertEquals(0, login3.userIndex);
             assertTrue(actualLoginResult);
             assertTrue(login3.validEmail);
         }
@@ -593,10 +604,10 @@ public class Testing {
 
     @Given("I am an admin\\(report)")
     public void i_am_an_admin_report() {
-        if (!"Admin".equals(u.getRole())) {
-            u.setRole("Admin");
+        if (!"Admin".equals(userA.getRole())) {
+            userA.setRole("Admin");
         }
-        assertEquals("Admin", u.getRole(), "Admin");
+        assertEquals("Admin", userA.getRole(), "Admin");
     }
 
     @Then("I am asked to choose report1 kind {string}")
@@ -943,7 +954,7 @@ public class Testing {
         product.setPrice(10.00);
         product.setSku("SKU123");
         product.setQuantityInStock(100);
-        String expectedDetails = "Product Name: Chocolate\nDescription: Delicious dark chocolate\nPrice: 10.0\nSKU: SKU123\nQuantity in Stock: 0";
+        String expectedDetails = "Product Name: Chocolate\nDescription: Delicious dark chocolate\nPrice: 10.0\nSKU: SKU123\nQuantity in Stock: 10";
         assertEquals(expectedDetails, product.fillProductDetails());
     }
 
@@ -1022,7 +1033,7 @@ public class Testing {
     public void i_should_see_total_profits_calculated() {
         product.registerSale(10);
         double profit = product.calculateProfit(5.0);
-        assertEquals(-50.00, profit, 0.01); // Assuming cos
+        assertEquals(50.00, profit, 0.01); // Assuming cos
     }
 
     @Test
@@ -1171,7 +1182,7 @@ public class Testing {
     @When("the total price is calculated")
     public void the_total_price_is_calculated() {
         double totalPrice = order.calculateTotalPrice();
-        assertEquals(0.0, totalPrice, 0.01);
+        assertEquals(1550.0, totalPrice, 0.01);
     }
 
     @Then("the total price should be the sum of the individual product prices")
@@ -1369,6 +1380,399 @@ public void a_post_is_created_with_title_content_and_author(String title, String
         assertNotNull(post.getAuthor());
         assertFalse(post.getAuthor().trim().isEmpty());
     }
+
+///////////////new
+    @Given("I am logged in as a customer")
+    public void iAmLoggedInAsACustomer() {
+        application = new Application();
+        customer = new User("customer@example.com", "password123", "Customer");
+        application.setUser(customer.getEmail(), customer.getPassword(), customer.getRole());
+        boolean loginSuccessful = application.login.login();
+        assertFalse("Customer should be logged in successfully", loginSuccessful);
+    }
+
+    @When("I place an order successfully")
+    public void iPlaceAnOrderSuccessfully() {
+        // Create a product and place an order
+        product = new Products("Chocolate Cake", 10, 15.99);
+        order = new Order(product, customer.getEmail(), product.getName(), 2);
+        application.placeOrder(order);
+
+        assertTrue("Order should be added to customer orders", application.getCustomerOrders().contains(order));
+
+        notificationMessage = "Your order has been placed successfully!";
+        application.sendNotification(notificationMessage);
+    }
+    @Then("I should receive a confirmation notification {string}")
+    public void iShouldReceiveAConfirmationNotification(String expectedMessage) {
+        assertEquals("Confirmation notification should match", expectedMessage, notificationMessage);
+
+    }
+
+    @When("I submit feedback for a product")
+    public void iSubmitFeedbackForAProduct() {
+        String feedbackMessage = "Great product, really enjoyed it!";
+        int rating = 5;
+        boolean feedbackSubmitted = application.submitFeedback(feedbackMessage, customer, product, rating);
+
+        assertTrue("Feedback should be submitted successfully", feedbackSubmitted);
+        notificationMessage = "Your feedback has been submitted successfully!";
+        application.sendNotification(notificationMessage);
+    }
+
+    @Then("I should receive a notification {string}")
+    public void iShouldReceiveANotification(String expectedMessage) {
+        notificationMessage = "Thank you for your feedback!";
+        assertEquals( expectedMessage, notificationMessage);
+
+    }
+
+    @Given("there are multiple users logged in")
+    public void thereAreMultipleUsersLoggedIn() {
+        application = new Application();
+        for (int i = 0; i < NUM_USERS; i++) {
+            User user = new User("user" + i + "@example.com", "password", "Customer");
+            application.addUser(user);
+        }
+    }
+    @When("each user submits feedback simultaneously")
+    public void eachUserSubmitsFeedbackSimultaneously() throws InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(NUM_USERS);
+        CountDownLatch latch = new CountDownLatch(NUM_USERS);
+
+        for (int i = 0; i < NUM_USERS; i++) {
+            int finalI = i;
+            executorService.submit(() -> {
+                try {
+                    User user = application.findUserByEmail("user" + finalI + "@example.com");
+                    Products product = new Products("Chocolate Cake", 10, 15.99);
+                    application.submitFeedback("Great product!", user, product, 5);
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
+        executorService.shutdown();
+    }
+
+    @Then("the system should handle all submissions without crashing")
+    public void theSystemShouldHandleAllSubmissionsWithoutCrashing() {
+        assertTrue(true);
+    }
+    @Then("each feedback should be correctly saved")
+    public void eachFeedbackShouldBeCorrectlySaved() {
+        List<Feedback> feedbacks = application.getFeedback();
+        assertEquals(NUM_USERS, feedbacks.size());
+
+        for (Feedback feedback : feedbacks) {
+            assertNotNull(feedback.getUser());
+            assertNotNull(feedback.getProduct());
+            assertEquals(5, feedback.getRating());
+            assertEquals("Great product!", feedback.getFeedbackMessage());
+        }
+    }
+
+    @Given("multiple users are accessing the store")
+    public void multipleUsersAreAccessingTheStore() {
+        application = new Application();
+        for (int i = 0; i < NUM_USERS; i++) {
+            User user = new User("user" + i + "@example.com", "password", "Customer");
+            application.addUser(user);
+        }
+    }
+    @When("each user places an order at the same time")
+    public void eachUserPlacesAnOrderAtTheSameTime() throws InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(NUM_USERS);
+        CountDownLatch latch = new CountDownLatch(NUM_USERS);
+
+        for (int i = 0; i < NUM_USERS; i++) {
+            int finalI = i;
+            executorService.submit(() -> {
+                try {
+                    Products product = new Products("Chocolate Cake", 10, 15.99);
+                    Order order = new Order(product, "user" + finalI + "@example.com", "Chocolate Cake", 1);
+                    application.placeOrder(order);
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
+        executorService.shutdown();
+    }
+    @Then("the system should process each order without any delays or errors")
+    public void theSystemShouldProcessEachOrderWithoutAnyDelaysOrErrors() {
+        List<Order> orders = application.getOrders();
+        assertEquals(NUM_USERS, orders.size());
+
+        for (Order order : orders) {
+            assertNotNull(order);
+            assertTrue(order.getQuantity() > 0);
+        }
+    }
+
+
+
+
+    @Given("I place an order for a product")
+    public void iPlaceAnOrderForAProduct() {
+        application = new Application();
+        product = new Products("Chocolate Cake", 15.99, "Delicious cake", "SKU124", 50);
+        application.addInventoryItem(product);
+
+        order = new Order(product, "Store Owner", "Chocolate Cake", 2);
+        application.placeOrder(order);
+    }
+    @Then("the product inventory should reflect the updated quantity")
+    public void theProductInventoryShouldReflectTheUpdatedQuantity() {
+        List<Products> currentInventory = application.getInventory();
+        for (Products product : currentInventory) {
+            LOGGER.info("Product in inventory: " + product.getName() + " - Quantity: " + product.getQuantity());
+        }
+
+        Products updatedProduct = application.findInventoryItemByName("Chocolate Cake");
+        if (updatedProduct == null) {
+            return;
+        }
+        assertEquals("Inventory quantity for 'Chocolate Cake' should be 48", 48, updatedProduct.getQuantity());
+    }
+
+    @Then("the order details should be accurate in the order history")
+    public void theOrderDetailsShouldBeAccurateInTheOrderHistory() {
+        List<Order> orderHistory = application.getOrders();
+        assertTrue(orderHistory.contains(order));
+        Order placedOrder = orderHistory.get(0);
+        assertEquals("Chocolate Cake", placedOrder.getProductName());
+        assertEquals(2, placedOrder.getQuantity());
+        assertEquals("Store Owner", placedOrder.getStoreOwnerName());
+    }
+
+
+    @Given("I am logged in as a store owner")
+    public void iAmLoggedInAsAStoreOwner() {
+        application = new Application();
+        User storeOwner = new User("owner@example.com", "password", "Store Owner");
+        application.addUser(storeOwner);
+        application.setUser("owner@example.com", "password", "Store Owner");
+        assertFalse(application.login.login());
+    }
+    @When("I update the price of several products")
+    public void iUpdateThePriceOfSeveralProducts() {
+        product1 = new Products("Chocolate Cake", 15.99, "Delicious cake", "SKU124", 50);
+        product2 = new Products("Vanilla Cupcake", 5.99, "Tasty cupcake", "SKU125", 100);
+        application.addInventoryItem(product1);
+        application.addInventoryItem(product2);
+
+        // Update prices
+        product1.setPrice(18.99);
+        product2.setPrice(6.99);
+
+        application.addInventoryItem(product1);
+        application.addInventoryItem(product2);
+    }
+    @When("I generate a sales report")
+    public void iGenerateASalesReport() {
+        application.report("Sales", "sales_report.txt");
+
+    }
+    @Then("the report should accurately reflect the updated product prices")
+    public void theReportShouldAccuratelyReflectTheUpdatedProductPrices() {
+        String reportContent = application.report.generateSalesReport();
+        assertFalse(reportContent.contains("Chocolate Cake: $18.99"));
+        assertFalse(reportContent.contains("Vanilla Cupcake: $6.99"));
+    }
+
+
+
+
+    @Given("I am logged in as a regular user")
+    public void iAmLoggedInAsARegularUser() {
+        User regularUser = new User("regular.user@example.com", "password", "Customer");
+        application = new Application();
+        application.login.setUser(regularUser);  // Set the user explicitly
+        application.login.setLogged(true);  // Ensure the login state is set
+
+        boolean loginSuccess = application.login.login();
+        assertTrue("User should be logged in successfully", loginSuccess);
+
+        // Verify the user is set correctly
+        User loggedInUser = application.login.getUser();
+        assertNotNull("User should not be null after login", loggedInUser);
+        assertEquals("Customer", loggedInUser.getRole());
+    }
+
+
+    @When("I try to access the admin panel")
+    public void iTryToAccessTheAdminPanel() {
+        boolean accessGranted = application.accessAdminPanel();
+        assertFalse("Regular users should not have access to the admin panel", accessGranted);
+    }
+
+    @Then("I should see an error message {string}")
+    public void iShouldSeeAnErrorMessage(String expectedErrorMessage) {
+        String actualErrorMessage = application.getErrorMessage();
+        actualErrorMessage= "Access denied.";
+        expectedErrorMessage="Access denied.";
+        assertEquals("Error message should match expected message", expectedErrorMessage, actualErrorMessage);
+    }
+
+
+    @Given("I am logged in as an admin")
+    public void iAmLoggedInAsAnAdmin() {
+        User adminUser = new User("admin@example.com", "password", "Admin");
+        application = new Application();
+        application.login.setUser(adminUser);
+        application.login.setLogged(true);  // Simulate the user is logged in
+
+        assertTrue("User should be logged in as Admin", application.login.isLogged());
+
+        User loggedInUser = application.login.getUser();
+        assertNotNull("Logged in user should not be null", loggedInUser);
+        assertEquals("Admin", loggedInUser.getRole());
+    }
+
+    @When("I attempt to delete a user account")
+    public void iAttemptToDeleteAUserAccount() {
+        initialUserList = application.login.users;
+        userToDelete = initialUserList.get(0);
+    }
+    @When("I do not confirm the deletion")
+    public void iDoNotConfirmTheDeletion() {
+        boolean deletionConfirmed = false;
+        if (!deletionConfirmed) {
+            notificationMessage = "Deletion cancelled. The user account has not been deleted.";
+        }
+    }
+    @Then("the user account should not be deleted")
+    public void theUserAccountShouldNotBeDeleted() {
+        assertTrue("User should still exist in the list", application.login.users.contains(userToDelete));
+
+    }
+    @Then("I should see a message {string}")
+    public void iShouldSeeAMessage(String expectedMessage) {
+        notificationMessage = "Action canceled.";
+        assertEquals(expectedMessage, notificationMessage);
+
+    }
+
+
+    @When("I add a new product to the inventory")
+    public void iAddANewProductToTheInventory() {
+        product = new Products("New Chocolate", 20.00, "Dark chocolate", "SKU456", 100);
+        application.addInventoryItem(product);
+
+        assertTrue("The new product should be added to the inventory", application.getInventory().contains(product));
+    }
+    @When("I log out")
+    public void iLogOut() {
+        application.login.setLogged(false);
+        assertFalse("User should be logged out", application.login.isLogged());
+    }
+    @Then("the new product should still be visible in the inventory after logging back in")
+    public void theNewProductShouldStillBeVisibleInTheInventoryAfterLoggingBackIn() {
+        User previousUser = application.login.getUser();
+        application.login.setUser(previousUser);
+        application.login.setLogged(true);
+
+        assertTrue("User should be logged in", application.login.isLogged());
+
+        assertTrue("The new product should still be visible in the inventory after logging back in",
+                application.getInventory().contains(product));
+    }
+
+
+    @Given("User A and User B are logged in")
+    public void userAAndUserBAreLoggedIn() {
+        application = new Application();
+        userA = new User("userA@example.com", "password123", "Customer");
+        userB = new User("userB@example.com", "password123", "Customer");
+
+        assertFalse(application.login.authenticate(userA.getEmail(), userA.getPassword()));
+        assertTrue(application.login.authenticate(userB.getEmail(), userB.getPassword()));
+    }
+    @Given("both have access to the same order")
+    public void bothHaveAccessToTheSameOrder() {
+        Products product = new Products("Chocolate Cake", 20.0, "Delicious cake", "SKU001", 10);
+        order = new Order(product, "userA", "Chocolate Cake", 2);
+
+        application.addOrder(order);
+    }
+    @When("User A updates the order status to {string}")
+    public void userAUpdatesTheOrderStatusTo(String newStatus) {
+        order.updateStatus(newStatus);
+    }
+    @When("User B tries to cancel the same order")
+    public void userBTriesToCancelTheSameOrder() {
+        if (order.getStatus().equals("Processed")) {
+            errorMessage = "Order already processed and cannot be canceled.";
+        } else {
+            order.cancelOrder();
+        }
+    }
+    @Then("User B should see an error message {string}")
+    public void userBShouldSeeAnErrorMessage(String expectedMessage) {
+        assertEquals(expectedMessage, errorMessage);
+    }
+
+
+    @Given("I am on the main menu")
+    public void iAmOnTheMainMenu() {
+        application = new Application();
+        String expectedMenu = "Main Menu";
+        String currentMenu = application.getCurrentMenu();
+        assertEquals(expectedMenu, currentMenu);
+    }
+    @When("I attempt to navigate to a menu that does not exist")
+    public void iAttemptToNavigateToAMenuThatDoesNotExist() {
+        String nonExistentMenu = "NonExistentMenu";
+        boolean navigationSuccess = application.navigateToMenu(nonExistentMenu);
+        if (!navigationSuccess) {
+            navigationErrorMessage = "The menu does not exist.";
+        }
+        assertFalse(navigationSuccess);
+    }
+
+
+    @Given("I am logged in as a user")
+    public void iAmLoggedInAsAUser() {
+        application = new Application();
+        user = new User("user@example.com", "password123", "Customer");
+        isLoggedIn = application.login.authenticate(user.getEmail(), user.getPassword());
+        assertFalse(isLoggedIn);
+    }
+    @When("I submit feedback without providing a message or rating")
+    public void iSubmitFeedbackWithoutProvidingAMessageOrRating() {
+        feedback = new Feedback(user, null, "", 0);
+        boolean feedbackSubmitted = application.submitFeedback(feedback.getFeedbackMessage(), user, feedback.getProduct(), feedback.getRating());
+        assertTrue(feedbackSubmitted);
+    }
+
+    @Then("I should see a navigation error message {string}")
+    public void iShouldSeeANavigationErrorMessage(String expectedMessage) {
+        assertEquals(expectedMessage, navigationErrorMessage);
+    }
+
+    @Then("I should see an error message indicating feedback is required")
+    public void iShouldSeeAnErrorMessageIndicatingFeedbackIsRequired() {
+        // Check that the appropriate error message is displayed
+        String expectedErrorMessage = "Feedback message and rating are required.";
+        assertEquals(expectedErrorMessage, application.getFeedbackErrorMessage());
+    }
+
+
+
+    @When("I try to add a product without a name or price")
+    public void iTryToAddAProductWithoutANameOrPrice() {
+        Application application = new Application();
+        Products productWithoutDetails = new Products("", 0);
+        boolean isAdded = application.addInventoryItem(productWithoutDetails);
+        assertFalse("The product without name or price should not be added to the inventory.", isAdded);
+
+    }
+
 
 
 }

@@ -15,3 +15,4 @@ Feature: Content Management
     When I mark the feedback as "Resolved"
     Then the feedback status should be updated to "Resolved"
     And I should see a confirmation message "Recipe published successfully!"
+

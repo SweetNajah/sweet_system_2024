@@ -303,4 +303,30 @@ public class Report {
     }
 
 
+    public String generateSalesReport() {
+        StringBuilder report = new StringBuilder();
+        report.append("Sales Report\n");
+        report.append("====================\n");
+
+        List<Products> productsList = Application.getAvailableProducts();
+        double totalRevenue = 0.0;
+
+        if (productsList == null || productsList.isEmpty()) {
+            report.append("No sales data available.\n");
+        } else {
+            for (Products product : productsList) {
+                double productRevenue = product.getUnitsSold() * product.getPrice();
+                totalRevenue += productRevenue;
+                report.append(String.format("%-20s: $%.2f\n", product.getProductName(), product.getPrice()));
+                report.append(String.format("Units Sold: %-10d | Revenue: $%.2f\n", product.getUnitsSold(), productRevenue));
+            }
+        }
+
+        report.append("====================\n");
+        report.append(String.format("Total Revenue: $%.2f\n", totalRevenue));
+
+        LOGGER.info("Sales report generated successfully.");
+        return report.toString();
+    }
+
 }

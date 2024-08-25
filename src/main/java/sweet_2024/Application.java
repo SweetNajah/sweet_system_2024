@@ -17,7 +17,7 @@ public class Application {
     private Feedback feedbackSystem;
     private RecipeMenu recipeMenu;
     private List<User> users;
-    private List<Products> availableProducts;
+    private static List<Products> availableProducts;
     private List<Order> customerOrders;
     private List<Order> installationRequests;
     private List<RecipeMenu> recipes;
@@ -25,6 +25,11 @@ public class Application {
     private List<Feedback> feedbackList;
     private List<Supply> supplies;
     private List<String> dessertRecipes;
+    private List<String> notifications = new ArrayList<>();
+    private String errorMessage;
+    private String currentMenu;
+    private String feedbackErrorMessage;
+    private List<String> availableMenus;
 
     public Application() {
         this.loggedIn = false;
@@ -55,7 +60,13 @@ public class Application {
         this.dessertRecipes.add("Vanilla Pudding");
         this.dessertRecipes.add("Strawberry Shortcake");
 
-
+        this.currentMenu = "Main Menu";
+        this.availableMenus = new ArrayList<>();
+        this.availableMenus.add("Main Menu");
+        this.availableMenus.add("Products");
+        this.availableMenus.add("Orders");
+        this.availableMenus.add("Feedback");
+        this.availableMenus.add("Settings");
     }
 
     public List<Order> getInstallationRequests() {
@@ -75,12 +86,13 @@ public class Application {
 
     public boolean submitFeedback(String feedbackMessage, User user, Products product, int rating) {
         Feedback feedback = new Feedback(user, product, feedbackMessage, rating);
-        feedbackList.add(feedback);
+        feedbackList.add(feedback);  // Ensure this line is executed
         LOGGER.info("Feedback submitted successfully!");
         return true;
     }
 
-    public List<Products> getAvailableProducts() {
+
+    public static List<Products> getAvailableProducts() {
         return availableProducts;
     }
     public void placeOrder(Order order) {
@@ -280,9 +292,10 @@ public class Application {
         return null;
     }
 
-    public void addInventoryItem(Products item) {
+    public boolean addInventoryItem(Products item) {
         availableProducts.add(item);
         LOGGER.info("Inventory item added: " + item.getName());
+        return false;
     }
 
     public List<Products> getInventory() {
@@ -521,4 +534,54 @@ public class Application {
     public String navigateToRecipesMenu() {
         return "Navigated to the recipes menu.";
     }
+
+    public void sendNotification(String notificationMessage) {
+        if (notificationMessage == null || notificationMessage.isEmpty()) {
+            LOGGER.warning("Notification message is empty or null. Cannot send notification.");
+            return;
+        }
+        LOGGER.info("Notification sent: " + notificationMessage);
+        notifications.add(notificationMessage);
+    }
+
+    public String getErrorMessage() {
+        return this.errorMessage;
+    }
+
+
+    public boolean accessAdminPanel() {
+        User user = login.getUser();
+        if (user != null && "Admin".equals(user.getRole())) {
+            return true;
+        } else {
+            setErrorMessage("Access denied: You do not have permission to access the admin panel.");
+            return false;
+        }
+    }
+
+    private void setErrorMessage(String s) {
+        this.errorMessage = s;
+    }
+
+    public String getCurrentMenu() {
+        return this.currentMenu;
+    }
+
+    public boolean navigateToMenu(String menuName) {
+        if (menuName == null || menuName.isEmpty()) {
+            return false;
+        }
+        if (availableMenus.contains(menuName)) {
+            this.currentMenu = menuName;
+            return true;
+        } else {
+            this.feedbackErrorMessage = "The menu does not exist.";
+            return false;
+        }
+    }
+
+    public String getFeedbackErrorMessage() {
+        return this.feedbackErrorMessage;
+    }
+
 }

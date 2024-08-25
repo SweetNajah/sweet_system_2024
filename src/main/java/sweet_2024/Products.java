@@ -53,8 +53,8 @@ public class Products {
     }
 
     public Products(String cake, double v) {
-        this.productName = productName;
-        this.productPrice = productPrice;
+        this.productName = cake;
+        this.productPrice = v;
         this.quantity = 0;
         this.unitsSold = 0;
         this.totalRevenue = 0.0;
